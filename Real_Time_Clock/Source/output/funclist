@@ -1,0 +1,25 @@
+___awdiv: CODE, 477 0 106
+_Disp_Time: CODE, 1214 0 261
+__stringtab: STRING, 5 0 1
+_Read_RTC: CODE, 299 0 84
+_Dec2bcd: CODE, 117 0 47
+___awmod: CODE, 383 0 94
+_sevenSegTableGen: STRING, 19 0 21
+_main: CODE, 164 0 53
+_sevenSegTableMin: STRING, 40 0 17
+_I2C_Write: CODE, 583 0 116
+_Write_RTC: CODE, 699 0 143
+_Delay_Ms: CODE, 80 0 37
+__initialization: CODE, 2037 0 8
+_Edit_Min: CODE, 60 0 20
+_Bcd2dec: CODE, 4065 0 31
+_I2C_Read: CODE, 842 0 165
+_InitializeSystem: CODE, 4000 0 20
+_I2C_Init: CODE, 3989 0 11
+_Read_Sw: CODE, 1007 0 207
+_Init_All: CODE, 217 0 82
+_sevenSegTableHr: STRING, 6 0 13
+_Disp_Init: CODE, 1475 0 562
+_Edit_Hr: CODE, 4020 0 20
+___bmul: CODE, 4040 0 25
+Total: 2144

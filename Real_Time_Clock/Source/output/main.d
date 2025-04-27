@@ -1,0 +1,1 @@
+ main.d  main.p1:  C:/Nandu/Per/Projects/Rtc/v4/main.c C:/Nandu/Per/Projects/Rtc/v4/types.h C:/Nandu/Per/Projects/Rtc/v4/pic12f1840.h

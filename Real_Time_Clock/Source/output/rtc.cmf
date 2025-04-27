@@ -1,0 +1,995 @@
+%CMF
+# %PSECTS Section
+# For each object file, details of its psects are enumerated here.
+# The begining of the section is indicated by %PSECTS.  The first
+# line indicates the name of the first object file, e.g.
+#    $foo.obj
+# Each line that follows describes a psect in that object file, until
+# the next object file.  The lines that describe a psect have the
+# format:
+#    <psect name> <class name> <space> <link address> <load addresses> <length> <delta>
+# All addresses and the length are given in unqualified hexadecimal
+# in delta units.  Any other numeric values are decimal.
+%PSECTS
+$C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+end_init CODE 0 3 3 2 2
+reset_vec CODE 0 0 0 3 2
+$rtc.obj
+cinit CODE 0 7F5 7F5 B 2
+text18 CODE 0 1DD 1DD 6A 2
+text17 CODE 0 50 50 25 2
+text16 CODE 0 247 247 74 2
+text15 CODE 0 5C3 5C3 232 2
+text14 CODE 0 17F 17F 5E 2
+text13 CODE 0 4BE 4BE 105 2
+text12 CODE 0 F95 F95 B 2
+text11 CODE 0 34A 34A A5 2
+text10 CODE 0 D9 D9 52 2
+text9 CODE 0 FA0 FA0 14 2
+text8 CODE 0 FC8 FC8 19 2
+text7 CODE 0 FE1 FE1 1F 2
+text6 CODE 0 12B 12B 54 2
+text5 CODE 0 75 75 2F 2
+text4 CODE 0 FB4 FB4 14 2
+text3 CODE 0 3C 3C 14 2
+text2 CODE 0 3EF 3EF CF 2
+text1 CODE 0 2BB 2BB 8F 2
+maintext CODE 0 A4 A4 35 2
+cstackBANK0 BANK0 1 38 38 15 1
+cstackCOMMON COMMON 1 70 70 E 1
+clrtext CODE 0 F8F F8F 6 2
+bssBANK0 BANK0 1 20 20 18 1
+strings STRING 0 5 5 34 2
+# %UNUSED Section
+# This section enumerates the unused ranges of each CLASS. Each entry
+# is described on a single line as follows:
+#    <class name> <range> <delta>
+# Addresses given in the range are in hexadecimal and units of delta.
+%UNUSED
+BANK0 004D-006F 1
+BANK1 00A0-00EF 1
+BANK2 0120-016F 1
+BIGRAM 2000-20EF 1
+CODE 0039-003B 2
+CODE 0800-0F8E 2
+CONFIG 8007-8008 2
+CONST 0039-003B 2
+CONST 0800-0F8E 2
+EEDATA F000-F0FF 2
+ENTRY 0039-003B 2
+ENTRY 0800-0F8E 2
+IDLOC 8000-8003 2
+RAM 004D-006F 1
+RAM 00A0-00EF 1
+RAM 0120-016F 1
+SFR0 0000-001F 1
+SFR1 0080-009F 1
+SFR10 0500-056F 1
+SFR11 0580-05EF 1
+SFR12 0600-066F 1
+SFR13 0680-06EF 1
+SFR14 0700-076F 1
+SFR15 0780-07EF 1
+SFR16 0800-086F 1
+SFR17 0880-08EF 1
+SFR18 0900-096F 1
+SFR19 0980-09EF 1
+SFR2 0100-011F 1
+SFR20 0A00-0A6F 1
+SFR21 0A80-0AEF 1
+SFR22 0B00-0B6F 1
+SFR23 0B80-0BEF 1
+SFR24 0C00-0C6F 1
+SFR25 0C80-0CEF 1
+SFR26 0D00-0D6F 1
+SFR27 0D80-0DEF 1
+SFR28 0E00-0E6F 1
+SFR29 0E80-0EEF 1
+SFR3 0180-01EF 1
+SFR30 0F00-0F6F 1
+SFR31 0F80-0FEF 1
+SFR4 0200-026F 1
+SFR5 0280-02EF 1
+SFR6 0300-036F 1
+SFR7 0380-03EF 1
+SFR8 0400-046F 1
+SFR9 0480-04EF 1
+STACK 202D-20EF 1
+STRCODE 0039-003B 2
+STRCODE 0800-0F8E 2
+STRING 0039-003B 2
+STRING 0800-0F8E 2
+# %LINETAB Section
+# This section enumerates the file/line to address mappings.
+# The beginning of the section is indicated by %LINETAB.
+# The first line indicates the name of the first object file, e.g.
+#   $foo.obj
+# Each line that follows describes a single mapping until the next
+# object file.  Mappings have the following format:
+#    <file name>:<line number> <address> <psect name> <class name>
+# The address is absolute and given given in unqualified hex 
+# in delta units of the psect. All mappings within an object file
+# are in ascending order of addresses.
+# All other numeric values are in decimal.
+%LINETAB
+$rtc.obj
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":739 3C text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":741 3C text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":742 41 text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":744 4C text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":745 4F text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":746 4F text3 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":151 50 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":154 50 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":156 51 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":157 53 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":158 54 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":159 55 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":160 5B text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":154 6B text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":161 6B text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":162 74 text17 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":728 75 text5 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":730 76 text5 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":731 A3 text5 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":77 A4 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":79 A4 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":80 A6 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":83 A8 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":84 AC maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":86 BD maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":87 C0 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":88 C3 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":89 C6 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":91 C9 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":93 C9 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":94 CC maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":95 CF maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":96 D2 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":91 D6 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":97 D6 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":98 D7 maintext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":412 D9 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":414 D9 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":417 E0 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":419 EA text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":422 F4 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":423 104 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":424 109 text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":425 10E text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":426 11A text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":429 12A text10 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":387 12B text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":392 12B text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":394 139 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":395 142 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":396 142 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":394 147 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":399 152 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":401 161 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":402 16B text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":403 174 text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":404 17E text6 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":405 17E text6 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":6 17F text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":13 17F text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":14 180 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":15 184 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":16 189 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":17 18C text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":18 18C text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":19 190 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":20 196 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":21 19C text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":22 19E text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":23 19F text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":24 1A4 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":22 1A9 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":25 1A9 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":26 1AF text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":27 1AF text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":28 1B9 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":29 1BE text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":30 1C3 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":31 1CB text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":32 1CB text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":33 1CF text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":34 1D5 text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awmod.c":35 1DC text14 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":6 1DD text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":14 1DD text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":15 1DE text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":16 1E2 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":17 1E7 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":18 1EA text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":19 1EA text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":20 1EE text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":21 1F3 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":22 1F8 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":23 1F8 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":24 1FA text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":25 200 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":26 202 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":27 203 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":28 208 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":26 20D text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":29 20D text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":30 213 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":31 213 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":32 218 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":33 222 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":34 226 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":35 228 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":36 228 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":37 22D text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":38 235 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":39 235 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":40 239 text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":41 23F text18 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\awdiv.c":42 246 text18 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":311 247 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":315 249 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":318 24B text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":321 24C text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":324 24E text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":327 24F text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":328 255 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":330 256 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":332 259 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":333 25F text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":338 260 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":340 265 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":341 267 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":342 268 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":344 268 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":345 26C text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":347 26C text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":350 273 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":351 279 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":354 27A text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":356 27F text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":359 295 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":360 298 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":361 298 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":362 299 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":363 29A text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":365 29A text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":344 29E text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":366 29E text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":369 2B1 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":371 2B1 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":374 2B3 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":375 2B9 text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":378 2BA text16 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":651 2BB text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":653 2BB text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":655 2C9 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":657 2D6 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":658 2E6 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":659 2EB text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":660 2F0 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":662 2FC text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":663 2FE text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":664 2FF text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":665 307 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":666 30F text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":667 317 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":668 31F text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":669 327 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":670 32F text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":671 33B text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":672 346 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":673 349 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":674 349 text1 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":187 34A text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":193 34B text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":194 34F text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":196 350 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":199 352 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":201 354 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":205 358 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":208 359 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":209 35F text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":211 360 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":213 363 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":214 369 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":217 36A text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":219 36F text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":220 370 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":221 371 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":223 371 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":225 373 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":226 379 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":228 37A text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":237 380 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":240 381 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":241 387 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":242 388 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":245 388 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":248 38A text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":249 390 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":251 391 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":253 395 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":254 39B text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":259 39C text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":261 3A1 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":262 3A2 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":263 3A3 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":265 3A3 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":266 3A5 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":267 3A5 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":269 3A7 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":270 3AD text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":273 3AE text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":276 3B6 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":278 3C8 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":279 3CA text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":280 3CE text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":281 3CF text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":283 3CF text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":284 3D1 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":285 3D1 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":288 3D2 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":289 3D8 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":265 3D9 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":293 3E5 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":296 3E5 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":299 3E7 text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":300 3ED text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":303 3EE text11 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":572 3EF text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":574 3EF text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":576 3F0 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":578 3FD text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":579 404 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":581 40A text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":583 410 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":585 41B text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":586 41F text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":587 427 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":588 42A text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":589 42B text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":591 436 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":592 43A text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":593 442 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":594 445 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":595 446 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":598 449 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":599 44A text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":602 44D text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":603 44E text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":606 44F text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":607 452 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":608 457 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":611 457 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":613 45D text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":615 468 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":616 46C text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":617 474 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":618 477 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":619 478 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":621 483 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":622 487 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":623 48F text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":624 492 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":625 493 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":628 496 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":629 497 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":632 49A text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":633 49B text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":636 49C text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":637 49F text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":638 4A4 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":639 4A4 text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":641 4AC text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":642 4BD text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":643 4BD text2 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":521 4BE text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":525 4BE text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":529 4C1 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":530 4DA text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":531 4DF text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":532 4E9 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":534 4F4 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":535 50E text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":536 513 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":537 51D text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":540 528 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":542 52F text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":543 537 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":544 53B text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":546 53B text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":548 541 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":549 55A text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":550 564 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":551 565 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":553 565 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":554 58E text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":555 599 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":556 599 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":557 59E text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":558 5A8 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":559 5B3 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":560 5B8 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":563 5C2 text13 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":436 5C3 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":438 5C3 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":439 5C8 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":440 5C9 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":441 5CD text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":443 5CE text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":444 5D8 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":445 5DD text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":446 5E7 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":447 5F2 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":448 5FC text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":449 601 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":450 60B text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":451 616 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":452 620 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":453 625 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":454 62F text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":441 63B text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":455 63B text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":456 645 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":457 649 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":458 653 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":459 658 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":461 659 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":462 663 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":463 668 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":464 672 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":465 67D text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":466 687 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":467 68C text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":468 696 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":469 6A1 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":470 6AB text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":471 6B0 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":472 6BA text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":459 6C6 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":473 6C6 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":474 6D0 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":475 6D4 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":476 6DE text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":477 6E3 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":479 6E4 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":480 6EE text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":481 6F3 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":482 6FD text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":483 708 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":484 712 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":485 717 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":486 721 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":487 72C text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":488 736 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":489 73B text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":490 745 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":477 751 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":491 751 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":492 75B text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":493 75F text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":494 769 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":495 76E text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":497 76F text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":498 779 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":499 77E text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":500 788 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":501 793 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":502 79D text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":503 7A2 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":504 7AC text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":505 7B7 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":506 7C1 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":507 7C6 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":508 7D0 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":495 7DC text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":509 7DC text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":510 7E6 text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":511 7EA text15 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":513 7F4 text15 CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":467 7F5 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":470 7F5 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":529 7F5 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":530 7F6 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":531 7F7 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":532 7F8 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":533 7F9 cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":534 7FA cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":540 7FD cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":541 7FD cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":542 7FE cinit CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":518 F8F clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":519 F8F clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":520 F90 clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":521 F90 clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":522 F91 clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":523 F92 clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":524 F93 clrtext CODE
+"C:\Users\nandu\AppData\Local\Temp\s23ps.":525 F94 clrtext CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":130 F95 text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":133 F95 text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":135 F98 text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":137 F9A text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":139 F9B text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":141 F9C text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":142 F9E text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":143 F9F text12 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":106 FA0 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":109 FA0 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":110 FA3 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":111 FA5 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":112 FA8 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":116 FAB text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":117 FAD text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":118 FAE text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":119 FAF text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":120 FB0 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":121 FB1 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":126 FB2 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":128 FB3 text9 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":754 FB4 text4 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":756 FB4 text4 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":757 FB9 text4 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":759 FC4 text4 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":760 FC7 text4 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":761 FC7 text4 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":2 FC8 text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":4 FC9 text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":6 FCB text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":7 FCB text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":8 FCF text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":9 FD4 text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":10 FD6 text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":11 FD8 text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":12 FDE text8 CODE
+"C:\Program Files (x86)\Microchip\xc8\v1.30\sources\common\bmul.c":13 FE0 text8 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":718 FE1 text7 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":720 FE2 text7 CODE
+"C:\Nandu\Per\Projects\Rtc\v4\main.c":721 FFF text7 CODE
+# %SYMTAB Section
+# An enumeration of all symbols in the program.
+# The beginning of the section is indicated by %SYMTAB.
+# Each line describes a single symbol as follows:
+#    <label> <value> [-]<load-adj> <class> <space> <psect> <file-name>
+# The value and load-adj are both in unqualified hexadecimal.
+# All other numeric values are in decimal.  The load-adj is the
+# quantity one needs to add to the symbol value in order to obtain the load
+# address of the symbol.  This value may be signed. If the symbol
+# was defined in a psect then <psect> will be "-". File-name
+# is the name of the object file in which the symbol was defined.
+%SYMTAB
+__size_of_Write_RTC 0 0 ABS 0 - rtc.obj
+___awdiv@counter 75 0 COMMON 1 cstackCOMMON rtc.obj
+_h 30 0 BANK0 1 bssBANK0 rtc.obj
+_m 31 0 BANK0 1 bssBANK0 rtc.obj
+_s 35 0 BANK0 1 bssBANK0 rtc.obj
+__S0 1000 0 ABS 0 - -
+__S1 7E 0 ABS 0 - -
+__S2 0 0 ABS 0 - -
+__S3 0 0 ABS 0 - -
+__Hintentry 6 0 CODE 0 intentry -
+__Lintentry 6 0 CODE 0 intentry -
+__end_of___awdiv 48E 0 CODE 0 text18 rtc.obj
+_I2C_Read 694 0 CODE 0 text11 rtc.obj
+_TMR0 15 0 ABS 0 - rtc.obj
+_PEIE 5E 0 ABS 0 - rtc.obj
+_main 148 0 CODE 0 maintext rtc.obj
+___sp 0 0 STACK 2 stack C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+btemp 7E 0 ABS 0 - rtc.obj
+ltemp 7E 0 ABS 0 - rtc.obj
+ttemp 7E 0 ABS 0 - rtc.obj
+wtemp 7E 0 ABS 0 - rtc.obj
+I2C_Write@i 3D 0 BANK0 1 cstackBANK0 rtc.obj
+start 6 0 CODE 0 init C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+Write_RTC@F2194 20 0 BANK0 1 bssBANK0 rtc.obj
+main@data 4B 0 BANK0 1 cstackBANK0 rtc.obj
+_Init_All 1B2 0 CODE 0 text10 rtc.obj
+_Delay_Ms A0 0 CODE 0 text17 rtc.obj
+reset_vec 0 0 CODE 0 reset_vec C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+ltemp0 7E 0 ABS 0 - rtc.obj
+ttemp0 7E 0 ABS 0 - rtc.obj
+wtemp0 7E 0 ABS 0 - rtc.obj
+ltemp1 82 0 ABS 0 - rtc.obj
+ttemp1 81 0 ABS 0 - rtc.obj
+wtemp1 80 0 ABS 0 - rtc.obj
+ltemp2 86 0 ABS 0 - rtc.obj
+ttemp2 84 0 ABS 0 - rtc.obj
+wtemp2 82 0 ABS 0 - rtc.obj
+ltemp3 80 0 ABS 0 - rtc.obj
+ttemp3 87 0 ABS 0 - rtc.obj
+wtemp3 84 0 ABS 0 - rtc.obj
+ttemp4 7F 0 ABS 0 - rtc.obj
+wtemp4 86 0 ABS 0 - rtc.obj
+wtemp5 88 0 ABS 0 - rtc.obj
+wtemp6 7F 0 ABS 0 - rtc.obj
+__end_of_Disp_Time B86 0 CODE 0 text13 rtc.obj
+_Edit_Min 78 0 CODE 0 text3 rtc.obj
+_Disp_Time$232 42 0 BANK0 1 cstackBANK0 rtc.obj
+__Hconfig 0 0 CONFIG 0 config -
+__Lconfig 0 0 CONFIG 0 config -
+__size_of_Edit_Hr 0 0 ABS 0 - rtc.obj
+?___awmod 70 0 COMMON 1 cstackCOMMON rtc.obj
+__end_of__stringtab C 0 STRING 0 strings rtc.obj
+__Hbigram 0 0 ABS 0 bigram -
+__Lbigram 0 0 ABS 0 bigram -
+__Hram 0 0 ABS 0 ram -
+__Lram 0 0 ABS 0 ram -
+_sevenSegTableHr C 0 STRING 0 strings rtc.obj
+_I2C_Init 1F2A 0 CODE 0 text12 rtc.obj
+_TRISA0 460 0 ABS 0 - rtc.obj
+__Hfunctab 0 0 CODE 0 functab -
+_TRISA1 461 0 ABS 0 - rtc.obj
+__Lfunctab 0 0 CODE 0 functab -
+_TRISA2 462 0 ABS 0 - rtc.obj
+_TRISA3 463 0 ABS 0 - rtc.obj
+_TRISA4 464 0 ABS 0 - rtc.obj
+_TRISA5 465 0 ABS 0 - rtc.obj
+_OPTION_REG 95 0 ABS 0 - rtc.obj
+__Hcommon 0 0 ABS 0 common -
+__Lcommon 0 0 ABS 0 common -
+__Heeprom_data 0 0 EEDATA 3 eeprom_data -
+__Leeprom_data 0 0 EEDATA 3 eeprom_data -
+_PIR1bits 11 0 ABS 0 - rtc.obj
+_TMR0IE 5D 0 ABS 0 - rtc.obj
+_TMR0IF 5A 0 ABS 0 - rtc.obj
+___int_sp 0 0 STACK 2 stack C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+__size_of_Disp_Init 0 0 ABS 0 - rtc.obj
+_ANSELA 18C 0 ABS 0 - rtc.obj
+?___awdiv 70 0 COMMON 1 cstackCOMMON rtc.obj
+_Disp_Time 97C 0 CODE 0 text13 rtc.obj
+_OSCCON 99 0 ABS 0 - rtc.obj
+__Habs1 0 0 ABS 0 abs1 -
+__Labs1 0 0 ABS 0 abs1 -
+__Hsfr0 0 0 ABS 0 sfr0 -
+__Lsfr0 0 0 ABS 0 sfr0 -
+__Hsfr1 0 0 ABS 0 sfr1 -
+__Lsfr1 0 0 ABS 0 sfr1 -
+__Hsfr2 0 0 ABS 0 sfr2 -
+__Lsfr2 0 0 ABS 0 sfr2 -
+__Hsfr3 0 0 ABS 0 sfr3 -
+__Lsfr3 0 0 ABS 0 sfr3 -
+__Hsfr4 0 0 ABS 0 sfr4 -
+__Lsfr4 0 0 ABS 0 sfr4 -
+__Hsfr5 0 0 ABS 0 sfr5 -
+__Lsfr5 0 0 ABS 0 sfr5 -
+__Hsfr6 0 0 ABS 0 sfr6 -
+__Lsfr6 0 0 ABS 0 sfr6 -
+__Hsfr7 0 0 ABS 0 sfr7 -
+__Lsfr7 0 0 ABS 0 sfr7 -
+__Hsfr8 0 0 ABS 0 sfr8 -
+__Lsfr8 0 0 ABS 0 sfr8 -
+__Hsfr9 0 0 ABS 0 sfr9 -
+__Lsfr9 0 0 ABS 0 sfr9 -
+__end_of_Read_RTC 2FE 0 CODE 0 text6 rtc.obj
+__end_of_Dec2bcd 148 0 CODE 0 text5 rtc.obj
+I2C_Read@ret 77 0 COMMON 1 cstackCOMMON rtc.obj
+_I2C_Write 48E 0 CODE 0 text16 rtc.obj
+__end_of___awmod 3BA 0 CODE 0 text14 rtc.obj
+Disp_Time@temp 46 0 BANK0 1 cstackBANK0 rtc.obj
+__Hcode 0 0 ABS 0 code -
+__Lcode 0 0 ABS 0 code -
+_prev_sw1_pin 32 0 BANK0 1 bssBANK0 rtc.obj
+stackhi 20EF 0 ABS 0 - C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+__end_of_sevenSegTableGen 50 0 STRING 0 strings rtc.obj
+_Disp_Time$233 44 0 BANK0 1 cstackBANK0 rtc.obj
+__HcstackBANK0 0 0 ABS 0 cstackBANK0 -
+__LcstackBANK0 0 0 ABS 0 cstackBANK0 -
+_prev_sw2_pin 33 0 BANK0 1 bssBANK0 rtc.obj
+__pcstackBANK0 38 0 BANK0 1 cstackBANK0 rtc.obj
+___awmod@sign 76 0 COMMON 1 cstackCOMMON rtc.obj
+_rtc_write 34 0 BANK0 1 bssBANK0 rtc.obj
+stacklo 202D 0 ABS 0 - C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+___bmul 1F90 0 CODE 0 text8 rtc.obj
+__Hinit 6 0 CODE 0 init -
+__Linit 6 0 CODE 0 init -
+__end_of_main 1B2 0 CODE 0 maintext rtc.obj
+__end_of_sevenSegTableMin 72 0 STRING 0 strings rtc.obj
+__Htext 0 0 ABS 0 text -
+__Ltext 0 0 ABS 0 text -
+___bmul@multiplier 7C 0 COMMON 1 cstackCOMMON rtc.obj
+end_of_initialization FFA 0 CODE 0 cinit rtc.obj
+___awdiv@sign 76 0 COMMON 1 cstackCOMMON rtc.obj
+Disp_Time@dot_toggle 2E 0 BANK0 1 bssBANK0 rtc.obj
+_CM1CON0 111 0 ABS 0 - rtc.obj
+___bmul@multiplicand 79 0 COMMON 1 cstackCOMMON rtc.obj
+__size_of_I2C_Write 0 0 ABS 0 - rtc.obj
+__Hsfr10 0 0 ABS 0 sfr10 -
+__Lsfr10 0 0 ABS 0 sfr10 -
+__Hsfr20 0 0 ABS 0 sfr20 -
+__Lsfr20 0 0 ABS 0 sfr20 -
+_Disp_Init B86 0 CODE 0 text15 rtc.obj
+__Hsfr30 0 0 ABS 0 sfr30 -
+__Hsfr11 0 0 ABS 0 sfr11 -
+__Lsfr30 0 0 ABS 0 sfr30 -
+__Lsfr11 0 0 ABS 0 sfr11 -
+__Hsfr21 0 0 ABS 0 sfr21 -
+__Lsfr21 0 0 ABS 0 sfr21 -
+__stringtab A 0 STRING 0 strings rtc.obj
+__Hsfr31 0 0 ABS 0 sfr31 -
+__Hsfr12 0 0 ABS 0 sfr12 -
+__Lsfr31 0 0 ABS 0 sfr31 -
+__Lsfr12 0 0 ABS 0 sfr12 -
+__Hsfr22 0 0 ABS 0 sfr22 -
+__Lsfr22 0 0 ABS 0 sfr22 -
+__Hsfr13 0 0 ABS 0 sfr13 -
+__Lsfr13 0 0 ABS 0 sfr13 -
+__Hsfr23 0 0 ABS 0 sfr23 -
+__Lsfr23 0 0 ABS 0 sfr23 -
+__Hsfr14 0 0 ABS 0 sfr14 -
+__Lsfr14 0 0 ABS 0 sfr14 -
+__Hsfr24 0 0 ABS 0 sfr24 -
+__Lsfr24 0 0 ABS 0 sfr24 -
+__Hsfr15 0 0 ABS 0 sfr15 -
+__Lsfr15 0 0 ABS 0 sfr15 -
+__Hsfr25 0 0 ABS 0 sfr25 -
+__Lsfr25 0 0 ABS 0 sfr25 -
+__Hsfr16 0 0 ABS 0 sfr16 -
+__Lsfr16 0 0 ABS 0 sfr16 -
+I2C_Read@data 70 0 COMMON 1 cstackCOMMON rtc.obj
+__Hsfr26 0 0 ABS 0 sfr26 -
+__Lsfr26 0 0 ABS 0 sfr26 -
+__Hsfr17 0 0 ABS 0 sfr17 -
+__Lsfr17 0 0 ABS 0 sfr17 -
+__Hsfr27 0 0 ABS 0 sfr27 -
+__Lsfr27 0 0 ABS 0 sfr27 -
+__Hsfr18 0 0 ABS 0 sfr18 -
+__Lsfr18 0 0 ABS 0 sfr18 -
+__Hsfr28 0 0 ABS 0 sfr28 -
+_SSP1ADD 212 0 ABS 0 - rtc.obj
+__Lsfr28 0 0 ABS 0 sfr28 -
+__Hsfr19 0 0 ABS 0 sfr19 -
+__Lsfr19 0 0 ABS 0 sfr19 -
+__Hsfr29 0 0 ABS 0 sfr29 -
+__Lsfr29 0 0 ABS 0 sfr29 -
+__Hstrings 0 0 ABS 0 strings -
+__Lstrings 0 0 ABS 0 strings -
+__pstrings A 0 STRING 0 strings rtc.obj
+I2C_Read@i2c_addr 76 0 COMMON 1 cstackCOMMON rtc.obj
+Init_All@data 3F 0 BANK0 1 cstackBANK0 rtc.obj
+_SSP1BUF 211 0 ABS 0 - rtc.obj
+__end_of_I2C_Write 576 0 CODE 0 text16 rtc.obj
+I2C_Write@addr 3C 0 BANK0 1 cstackBANK0 rtc.obj
+__Hbank0 0 0 ABS 0 bank0 -
+__Lbank0 0 0 ABS 0 bank0 -
+__Hbank1 0 0 ABS 0 bank1 -
+__Lbank1 0 0 ABS 0 bank1 -
+__end_of_Write_RTC 694 0 CODE 0 text1 rtc.obj
+__Hbank2 0 0 ABS 0 bank2 -
+__Lbank2 0 0 ABS 0 bank2 -
+__Hbank3 0 0 BANK3 1 bank3 -
+__Lbank3 0 0 BANK3 1 bank3 -
+___latbits 1 0 ABS 0 - rtc.obj
+__Hbank4 0 0 BANK4 1 bank4 -
+__Lbank4 0 0 BANK4 1 bank4 -
+__end_of_Delay_Ms EA 0 CODE 0 text17 rtc.obj
+__Hbank5 0 0 BANK5 1 bank5 -
+__Lbank5 0 0 BANK5 1 bank5 -
+__Hpowerup 0 0 CODE 0 powerup -
+__Lpowerup 0 0 CODE 0 powerup -
+__Hbank6 0 0 BANK6 1 bank6 -
+__Lbank6 0 0 BANK6 1 bank6 -
+__Hbank7 0 0 BANK7 1 bank7 -
+__Lbank7 0 0 BANK7 1 bank7 -
+__Hbank8 0 0 BANK8 1 bank8 -
+__Lbank8 0 0 BANK8 1 bank8 -
+__Hbank9 0 0 BANK9 1 bank9 -
+__Lbank9 0 0 BANK9 1 bank9 -
+__ptext1 576 0 CODE 0 text1 rtc.obj
+__ptext2 7DE 0 CODE 0 text2 rtc.obj
+__ptext3 78 0 CODE 0 text3 rtc.obj
+__ptext4 1F68 0 CODE 0 text4 rtc.obj
+__ptext5 EA 0 CODE 0 text5 rtc.obj
+__ptext6 256 0 CODE 0 text6 rtc.obj
+__ptext7 1FC2 0 CODE 0 text7 rtc.obj
+__ptext8 1F90 0 CODE 0 text8 rtc.obj
+__ptext9 1F40 0 CODE 0 text9 rtc.obj
+__Hclrtext 0 0 ABS 0 clrtext -
+__Lclrtext 0 0 ABS 0 clrtext -
+I2C_Read@addr_byte 72 0 COMMON 1 cstackCOMMON rtc.obj
+__end_of__initialization FFA 0 CODE 0 cinit rtc.obj
+Write_RTC@data 3F 0 BANK0 1 cstackBANK0 rtc.obj
+__end_of_Edit_Min A0 0 CODE 0 text3 rtc.obj
+_Dec2bcd EA 0 CODE 0 text5 rtc.obj
+_Bcd2dec 1FC2 0 CODE 0 text7 rtc.obj
+_Edit_Hr 1F68 0 CODE 0 text4 rtc.obj
+__Hidloc 0 0 IDLOC 0 idloc -
+__Lidloc 0 0 IDLOC 0 idloc -
+__end_of_Bcd2dec 2000 0 CODE 0 text7 rtc.obj
+__Hstack 0 0 STACK 2 stack -
+__Lstack 0 0 STACK 2 stack -
+__end_of_I2C_Read 7DE 0 CODE 0 text11 rtc.obj
+_Read_Sw 7DE 0 CODE 0 text2 rtc.obj
+___awmod 2FE 0 CODE 0 text14 rtc.obj
+__size_of_Edit_Min 0 0 ABS 0 - rtc.obj
+_sw1_pin 36 0 BANK0 1 bssBANK0 rtc.obj
+_sw2_pin 37 0 BANK0 1 bssBANK0 rtc.obj
+__size_of_Read_Sw 0 0 ABS 0 - rtc.obj
+I2C_Write@ret 3B 0 BANK0 1 cstackBANK0 rtc.obj
+__Hcinit 1000 0 CODE 0 cinit -
+__Lcinit FEA 0 CODE 0 cinit -
+Disp_Init@blank_disp_seg 3F 0 BANK0 1 cstackBANK0 rtc.obj
+__end_of_InitializeSystem 1F68 0 CODE 0 text9 rtc.obj
+___awdiv 3BA 0 CODE 0 text18 rtc.obj
+__size_of_InitializeSystem 0 0 ABS 0 - rtc.obj
+__size_of_main 0 0 ABS 0 - rtc.obj
+__end_of_I2C_Init 1F40 0 CODE 0 text12 rtc.obj
+main@data1 4A 0 BANK0 1 cstackBANK0 rtc.obj
+Dec2bcd@num 79 0 COMMON 1 cstackCOMMON rtc.obj
+Bcd2dec@num 7D 0 COMMON 1 cstackCOMMON rtc.obj
+__end_of_Read_Sw 97C 0 CODE 0 text2 rtc.obj
+clear_ram0 1F1E 0 CODE 0 clrtext rtc.obj
+__size_of_I2C_Read 0 0 ABS 0 - rtc.obj
+_Write_RTC 576 0 CODE 0 text1 rtc.obj
+__HbssBANK0 0 0 ABS 0 bssBANK0 -
+__LbssBANK0 0 0 ABS 0 bssBANK0 -
+_SSP1CON1 215 0 ABS 0 - rtc.obj
+__Hbank10 0 0 BANK10 1 bank10 -
+__pbssBANK0 20 0 BANK0 1 bssBANK0 rtc.obj
+__Lbank10 0 0 BANK10 1 bank10 -
+_sevenSegTableMin 50 0 STRING 0 strings rtc.obj
+__Hbank20 0 0 BANK20 1 bank20 -
+__Lbank20 0 0 BANK20 1 bank20 -
+_SSP1CON2 216 0 ABS 0 - rtc.obj
+__Hbank30 0 0 BANK30 1 bank30 -
+__Hbank11 0 0 BANK11 1 bank11 -
+__Lbank30 0 0 BANK30 1 bank30 -
+__Lbank11 0 0 BANK11 1 bank11 -
+__Hbank21 0 0 BANK21 1 bank21 -
+__Lbank21 0 0 BANK21 1 bank21 -
+_SSP1CON3 217 0 ABS 0 - rtc.obj
+__Hbank31 0 0 BANK31 1 bank31 -
+__Hbank12 0 0 BANK12 1 bank12 -
+__Lbank31 0 0 BANK31 1 bank31 -
+__Lbank12 0 0 BANK12 1 bank12 -
+__Hbank22 0 0 BANK22 1 bank22 -
+__Lbank22 0 0 BANK22 1 bank22 -
+__Hbank13 0 0 BANK13 1 bank13 -
+__Lbank13 0 0 BANK13 1 bank13 -
+__Hbank23 0 0 BANK23 1 bank23 -
+__Lbank23 0 0 BANK23 1 bank23 -
+__Hbank14 0 0 BANK14 1 bank14 -
+__Lbank14 0 0 BANK14 1 bank14 -
+Disp_Init@cnt 40 0 BANK0 1 cstackBANK0 rtc.obj
+__Hbank24 0 0 BANK24 1 bank24 -
+__Lbank24 0 0 BANK24 1 bank24 -
+__ptext10 1B2 0 CODE 0 text10 rtc.obj
+__Hbank15 0 0 BANK15 1 bank15 -
+Read_Sw@data 7B 0 COMMON 1 cstackCOMMON rtc.obj
+__Lbank15 0 0 BANK15 1 bank15 -
+__Hbank25 0 0 BANK25 1 bank25 -
+__Lbank25 0 0 BANK25 1 bank25 -
+__ptext11 694 0 CODE 0 text11 rtc.obj
+__Hbank16 0 0 BANK16 1 bank16 -
+__Lbank16 0 0 BANK16 1 bank16 -
+__Hbank26 0 0 BANK26 1 bank26 -
+__Lbank26 0 0 BANK26 1 bank26 -
+__ptext12 1F2A 0 CODE 0 text12 rtc.obj
+__Hbank17 0 0 BANK17 1 bank17 -
+__Lbank17 0 0 BANK17 1 bank17 -
+__end_of_Init_All 256 0 CODE 0 text10 rtc.obj
+__Hbank27 0 0 BANK27 1 bank27 -
+__Lbank27 0 0 BANK27 1 bank27 -
+__ptext13 97C 0 CODE 0 text13 rtc.obj
+__Hbank18 0 0 BANK18 1 bank18 -
+__Lbank18 0 0 BANK18 1 bank18 -
+__Hbank28 0 0 BANK28 1 bank28 -
+__size_of___awdiv 0 0 ABS 0 - rtc.obj
+__Lbank28 0 0 BANK28 1 bank28 -
+__ptext14 2FE 0 CODE 0 text14 rtc.obj
+__Hbank19 0 0 BANK19 1 bank19 -
+__Lbank19 0 0 BANK19 1 bank19 -
+__Hbank29 0 0 BANK29 1 bank29 -
+__Lbank29 0 0 BANK29 1 bank29 -
+__ptext15 B86 0 CODE 0 text15 rtc.obj
+__end_of_sevenSegTableHr 26 0 STRING 0 strings rtc.obj
+__ptext16 48E 0 CODE 0 text16 rtc.obj
+__ptext17 A0 0 CODE 0 text17 rtc.obj
+___awmod@divisor 70 0 COMMON 1 cstackCOMMON rtc.obj
+__ptext18 3BA 0 CODE 0 text18 rtc.obj
+__size_of_Disp_Time 0 0 ABS 0 - rtc.obj
+__size_of_I2C_Init 0 0 ABS 0 - rtc.obj
+_InitializeSystem 1F40 0 CODE 0 text9 rtc.obj
+__Hend_init A 0 CODE 0 end_init -
+__Lend_init 6 0 CODE 0 end_init -
+__end_of_Disp_Init FEA 0 CODE 0 text15 rtc.obj
+Disp_Time@data 47 0 BANK0 1 cstackBANK0 rtc.obj
+___awdiv@divisor 70 0 COMMON 1 cstackCOMMON rtc.obj
+I2C_Write@data 79 0 COMMON 1 cstackCOMMON rtc.obj
+__Hreset_vec 6 0 CODE 0 reset_vec -
+__Lreset_vec 0 0 CODE 0 reset_vec -
+__size_of_Init_All 0 0 ABS 0 - rtc.obj
+_Read_RTC 256 0 CODE 0 text6 rtc.obj
+intlevel0 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+Disp_Init@data 41 0 BANK0 1 cstackBANK0 rtc.obj
+_SSP1STAT 214 0 ABS 0 - rtc.obj
+intlevel1 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+Init_All@F2138 2C 0 BANK0 1 bssBANK0 rtc.obj
+intlevel2 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+intlevel3 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+intlevel4 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+_sevenSegTableGen 26 0 STRING 0 strings rtc.obj
+_SSP1CON1bits 215 0 ABS 0 - rtc.obj
+intlevel5 0 0 CODE 0 functab C:\Users\nandu\AppData\Local\Temp\s23ps.obj
+_SSP1CON2bits 216 0 ABS 0 - rtc.obj
+Disp_Time@prev_s 2F 0 BANK0 1 bssBANK0 rtc.obj
+__size_of_Dec2bcd 0 0 ABS 0 - rtc.obj
+__size_of_Read_RTC 0 0 ABS 0 - rtc.obj
+Read_RTC@i 45 0 BANK0 1 cstackBANK0 rtc.obj
+__HcstackCOMMON 0 0 ABS 0 cstackCOMMON -
+__LcstackCOMMON 0 0 ABS 0 cstackCOMMON -
+__pcstackCOMMON 70 0 COMMON 1 cstackCOMMON rtc.obj
+Delay_Ms@dlyMs 70 0 COMMON 1 cstackCOMMON rtc.obj
+start_initialization FEA 0 CODE 0 cinit rtc.obj
+__size_of_Bcd2dec 0 0 ABS 0 - rtc.obj
+__size_of_Delay_Ms 0 0 ABS 0 - rtc.obj
+___awdiv@quotient 77 0 COMMON 1 cstackCOMMON rtc.obj
+__Hmaintext 0 0 ABS 0 maintext -
+__Lmaintext 0 0 ABS 0 maintext -
+__pmaintext 148 0 CODE 0 maintext rtc.obj
+I2C_Read@len 73 0 COMMON 1 cstackCOMMON rtc.obj
+__size_of___awmod 0 0 ABS 0 - rtc.obj
+I2C_Write@len 7B 0 COMMON 1 cstackCOMMON rtc.obj
+__initialization FEA 0 CODE 0 cinit rtc.obj
+___awmod@dividend 72 0 COMMON 1 cstackCOMMON rtc.obj
+___bmul@product 7B 0 COMMON 1 cstackCOMMON rtc.obj
+___awmod@counter 75 0 COMMON 1 cstackCOMMON rtc.obj
+Read_RTC@data_temp 3E 0 BANK0 1 cstackBANK0 rtc.obj
+main@time2read 48 0 BANK0 1 cstackBANK0 rtc.obj
+_sw_settle_cnt 28 0 BANK0 1 bssBANK0 rtc.obj
+__end_of_Edit_Hr 1F90 0 CODE 0 text4 rtc.obj
+__size_of___bmul 0 0 ABS 0 - rtc.obj
+__end_of___bmul 1FC2 0 CODE 0 text8 rtc.obj
+I2C_Read@restart_required 71 0 COMMON 1 cstackCOMMON rtc.obj
+I2C_Read@i 78 0 COMMON 1 cstackCOMMON rtc.obj
+___awdiv@dividend 72 0 COMMON 1 cstackCOMMON rtc.obj
+# %SPLITSTAB Section
+# This section enumerates all the psect splits performed by the assembler.
+# The beginning of the section is indicated by %SPLITSTAB.
+# Each line is a record a particular split, where the parent psect in on
+# the left and the child on the right.  Note that a child psect is always
+# split form the top of the parent psect. All splits from a given parent
+# are listed in the order in which they occurred.
+%SPLITSTAB
+# %DABS Section
+# This section contains a table of all usuage of the assember
+# directive DABS in the program. Each line has the following format:
+#   <name> <space> <address> <size>
+# If the DABS was originally labelled then that shall be <name>,
+# otherwise name will be "-".  The <space> number is in decimal.
+# <address> and <size> are in byte units as unqaulified hexadecimal
+%DABS
+- 1 7E 2
+# %SEGMENTS Section
+# This sections enumerates the segments of the program.  Each segment
+# is described on a single line as follows:
+#    <name> <space> <link address> <file address> <size> <delta>
+# Addresses and size are in unqualified hexadecimal.  The link address
+# and size are in units of delta. The file address is in units of bytes.
+# All other numeric quantities are in decimal.
+%SEGMENTS
+reset_vec 0 0 0 5 2
+cinit 0 7F5 FEA B 2
+cstackCOMMON 1 70 70 E 1
+bssBANK0 1 20 20 2D 1
+text15 0 5C3 B86 232 2
+text13 0 4BE 97C 105 2
+text2 0 3EF 7DE CF 2
+text11 0 34A 694 A5 2
+text1 0 2BB 576 8F 2
+text16 0 247 48E 74 2
+text18 0 1DD 3BA 6A 2
+text14 0 17F 2FE 5E 2
+text6 0 12B 256 54 2
+text10 0 D9 1B2 52 2
+maintext 0 A4 148 35 2
+strings 0 5 A 34 2
+text5 0 75 EA 2F 2
+text17 0 50 A0 25 2
+text7 0 FE1 1FC2 1F 2
+text8 0 FC8 1F90 19 2
+text3 0 3C 78 14 2
+text4 0 FB4 1F68 14 2
+text9 0 FA0 1F40 14 2
+text12 0 F95 1F2A B 2
+clrtext 0 F8F 1F1E 6 2
