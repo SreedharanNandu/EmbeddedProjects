@@ -1,0 +1,57 @@
+[
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/buttons.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/const.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/eeprom.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/i2c.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/led.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/main.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/radio.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/rotary.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/timer.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/uart.c"
+   },
+   {
+      "directory" : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Debug",
+      "command"   : "clang++ -I\"C:/ti/ccs2001/ccs/ccs_base/msp430/include\" -I\"C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5\" -I\"C:/ti/ccs2001/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include\" -D__MSP430G2553__",
+      "file"      : "C:/Nandu/Per/Projects/Fm_Radio_Amul_Box/MSP430G2553_Si4703/v5/Fault.c"
+   }
+]

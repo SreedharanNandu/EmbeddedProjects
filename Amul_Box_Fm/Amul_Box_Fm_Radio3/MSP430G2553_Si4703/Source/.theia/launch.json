@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "FM",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "FM",
+                "resourceId": "/FM"
+            }
+        }
+    ]
+}

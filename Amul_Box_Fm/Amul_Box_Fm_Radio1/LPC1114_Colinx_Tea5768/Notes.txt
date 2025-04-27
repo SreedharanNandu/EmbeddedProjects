@@ -1,0 +1,16 @@
+This project was rebuilt on 30/12/24 due to bad 3.3v regulator and AMP replace.
+This project uses TEA5768 and LPC1114 micro, uses LM75 for Temp sensing and AT24 EE for NVM. The coocox link and related files doesn't work in Win11 
+so use Keil with legacy pack which supports this micro.
+
+The radio works on power up with channel 0 frequency preloaded in manual mode,then use rotarty +/- to tune manually
+By pressing rotary button, preset mode is entered with 10 preloaded frequency.
+Then again pressing the rotary button moves to manual mode, then use long press to store that frequency to preset
+The disp info is sent over UART 9600bps optionally on BT SPP board like HC06 which prints frequency /Temperature etc
+
+The BT HC-0x introduces 2.4gnz ping noise over UART lines and Power lines esp can be heard on certain freq bands
+--used DC DC converted but noise was not eliminated.
+
+Futurue work :-
+ Porting if micro gone bad
+ Move chassis if broken
+ Add disp or serial BT with low noise floor after extreme testing

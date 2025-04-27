@@ -1,0 +1,8 @@
+-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0 -c
+-fno-rtti -funsigned-char -fshort-enums -fshort-wchar
+-D__EVAL -gdwarf-3 -Oz -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../include -I ../project -I ../source/App -I ../source/Common -I ../source/Driver
+-I./RTE/_FM
+-IC:/Keil_v5/ARM/PACK/ARM/CMSIS/5.4.0/CMSIS/Core/Include
+-IC:/Keil_v5/ARM/PACK/Keil/LPC1100_DFP/1.4.1/Device/Include/LPC11xx
+-D__UVISION_VERSION="526" -D_RTE_
+-o ./timer32.o -MD "../source/Driver/timer32.c"
