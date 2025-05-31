@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>3255581536</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\HAL\HAL_SYSCLK.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_SYSCLK_API.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_ADC_API.h</file>
+      <file>$PROJ_DIR$\EAL\EAL_CAN.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_CAN.c</file>
+      <file>$PROJ_DIR$\HAL\cstartup.s26</file>
+      <file>$PROJ_DIR$\APP\APP_Serial.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_ADC.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_CAN_API.h</file>
+      <file>$PROJ_DIR$\APP\APP_Serial.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_CAN_Config.h</file>
+      <file>$PROJ_DIR$\EAL\INTF_UTL.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_Init.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_Interrupts.c</file>
+      <file>$PROJ_DIR$\APP\App_Can.c</file>
+      <file>$PROJ_DIR$\APP\App_Can.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_PortPin.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_Interrupt_API.h</file>
+      <file>$PROJ_DIR$\EAL\INTF_VTMR.c</file>
+      <file>$PROJ_DIR$\EAL\INTF_VTMR_API.h</file>
+      <file>$PROJ_DIR$\EAL\EAL_CAN.h</file>
+      <file>$PROJ_DIR$\EAL\INTF_UTL.h</file>
+      <file>$PROJ_DIR$\EAL\INTF_VTMR_Config.h</file>
+      <file>$PROJ_DIR$\HAL\CG_timer.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_Init.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_PortPin_API.h</file>
+      <file>$PROJ_DIR$\SCHEDULER\system_def.h</file>
+      <file>$PROJ_DIR$\HAL\io78f1827_48.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Interrupts.pbi</file>
+      <file>$PROJ_DIR$\HAL\HAL_USART.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_ADC.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Init.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\EAL_CAN.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\INTF_UTL.r26</file>
+      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Timer.pbi</file>
+      <file>$PROJ_DIR$\HAL\io78f1827_48_ext.h</file>
+      <file>$PROJ_DIR$\SCHEDULER\MOS.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\cstartup.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_Can.pbi</file>
+      <file>$PROJ_DIR$\HAL\HAL_Timer.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Interrupts.r26</file>
+      <file>$PROJ_DIR$\HAL\HAL_WDT.c</file>
+      <file>$PROJ_DIR$\HAL\HAL_Timer0.c</file>
+      <file>$PROJ_DIR$\SCHEDULER\MOS.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_Timer_API.h</file>
+      <file>$PROJ_DIR$\HAL\HAL_USART.h</file>
+      <file>$PROJ_DIR$\SCHEDULER\MOS_cfg.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_PortPin.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Timer.r26</file>
+      <file>$PROJ_DIR$\HAL\HAL_WDT_API.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\INTF_VTMR.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\APP_Serial.pbi</file>
+      <file>$PROJ_DIR$\HAL\HAL_LIN.c</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\APP_Serial.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_WDT.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Timer0.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_SYSCLK.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\ctype.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_CAN.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdlib.h</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl78knn3.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_USART.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\MOS.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_Init.r26</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\INTF_UTL.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\math.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\CAN.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_USART.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\INTF_VTMR.r26</file>
+      <file>$PROJ_DIR$\Debug\Exe\CAN.d26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_LIN.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_ADC.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_WDT.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_Can.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_CAN.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_SYSCLK.r26</file>
+      <file>$PROJ_DIR$\Debug\List\CAN.map</file>
+      <file>$TOOLKIT_DIR$\config\lnk78f1827_48.xcl</file>
+      <file>$PROJ_DIR$\Debug\Obj\HAL_PortPin.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\EAL_CAN.r26</file>
+      <file>$PROJ_DIR$\Debug\Obj\MOS.r26</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_SYSCLK.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 79</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1 36 27 26</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 1</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\EAL\EAL_CAN.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 32</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 83</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15 34 26 27 45 61 20 2 36 59 65 8 12 54 9 67 10 46 1 50 25 19</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 67 54 34 59 61 65 26 27 8 10 20 15 12 46 1 36 45 50 25 2 19 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_CAN.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 60</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 78</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 27 20 10 36 8 15</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 8 10 26 27 20 15 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\cstartup.s26</name>
+      <outputs>
+        <tool>
+          <name>A78000</name>
+          <file> 38</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\APP\APP_Serial.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 55</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 69 19 46 27 45 8 54 26 2 9 65 50 15 36 25 12 20 67 61 1 34 10</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 25 45 12 46 1 50 8 10 20 15 2 19 9 65 34 67 54 69 61</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_ADC.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 75</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36 26 2 27</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\EAL\INTF_UTL.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 68</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 33</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 2 36 27 20 46 45 21 9 8 15 34 12 19 65 1 50 25 10</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 21 12 46 1 45 50 8 10 20 15 25 2 19 9 65 34</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_Interrupts.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 28</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36 2 10 26 27 20 45 8 9 17 44 47 12 46 1 50 25 19 15</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 17 26 44 47 12 46 1 45 50 8 10 20 15 25 2 19 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\APP\App_Can.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 77</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 27 65 25 20 45 15 36 34</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 15 26 27 20 25 45 36 65 34</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_PortPin.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 48</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 82</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 27 25 36 26</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 25</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\EAL\INTF_VTMR.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 72</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 27 22 19</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 19 26 27 22</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_Init.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 66</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 50 26 46 19 1 25 36 27 20 15 45 8 2 9 10 12</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 12 26 27 46 1 36 45 50 8 10 20 15 25 2 19 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_USART.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 63</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19 26 27 54 61 9 34 59 65 36 46 67</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 67 54 34 59 61 65 27 36 26 46 19 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\SCHEDULER\MOS.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 84</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19 12 46 36 27 26 20 50 44 47 1 25 45 8 2 9 10 15</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 26 27 44 47 12 46 1 36 45 50 8 10 20 15 25 2 19 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_Timer.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 35</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 49</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 23 36 26 45 27</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 45 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_WDT.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 76</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 36 27 50</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 27 36 26 50</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_Timer0.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 73 80</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\HAL\HAL_LIN.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 74</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34 65</file>
+        </tool>
+        <tool>
+          <name>ICC78000</name>
+          <file> 65 34</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\CAN.d26</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 80</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 81 77 55 38 83 75 78 66 41 82 79 49 63 76 33 72 84 62</file>
+        </tool>
+      </inputs>
+    </file>
+    <forcedrebuild>
+      <name>$PROJ_DIR$\HAL\HAL_LIN.c</name>
+      <tool>ICC78000</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>[REBUILD_ALL]</name>
+    </forcedrebuild>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>[REBUILD_ALL]</name>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+
