@@ -18,13 +18,14 @@ void Init_HW(void)
    HAL_Port_Init();
    TAU0_Init();
    WDT_Init();
+   HAL_ADC_Init();
 
    UARTF1_Init();//ILIN - P1.0 and P1.1 mapped to ILIN(marked as LIN_TX2 and LIN_RX2 in schematic
    UARTF0_Init();//TLIN - P1.3 and P1.4 mapped to TLIN(marked as LIN_TX1 and LIN_RX1 in schematic
 
-
+   
    WAKEUPTM_Init();
-
+   HAL_ADC_Start_Operation();
 
 }
 

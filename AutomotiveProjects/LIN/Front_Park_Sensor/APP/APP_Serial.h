@@ -63,6 +63,7 @@ extern void APP_Task_10ms(void);
 extern void APP_Task_5ms(void);
 extern void App_Dist_Task(void);
 extern void App_Chime_Task(void);
+extern void App_Read_Sw(void);
 
 
 

@@ -27,11 +27,9 @@
 **                  M A C R O   D E F I N I T I O N S
 ******************************************************************************/
 
-#define HAL_SLAVE_BATTERY_VOLTAGE 2
 /******************************************************************************
 **               D A T A
 ******************************************************************************/
-u16 fl_ADC_Counts_u16[4]={0u,0u,0u,0u};
 
 /******************************************************************************
 **                  F U N C T I O N     D E F I N I T I O N S
@@ -46,7 +44,7 @@ u16 fl_ADC_Counts_u16[4]={0u,0u,0u,0u};
 ******************************************************************************/
 void HAL_ADC_Init(void)
 {
-   ADCEN = 0U;   /* supply AD clock */
+   ADCEN = 1U;   /* supply AD clock */
 }
 /******************************************************************************
 * Function Name     : HAL_ADC_Start_Operation
@@ -80,22 +78,9 @@ void HAL_ADC_Read_Channel_Counts(u16 * buffer)
 {
   
    u8  adchan = ADS;
-   switch(adchan)
+   if(ADCHANNEL0 == adchan)
    {
-    case  ADCHANNEL1:
-          *buffer = (ADCR1>>6); 
-          break;
-    case  ADCHANNEL2:
-          *buffer = (ADCR2>>6); 
-          break;
-    case  ADCHANNEL4:
-          *buffer = (ADCR4>>6); 
-          break;
-    case  ADCHANNEL5:
-          *buffer = (ADCR5>>6); 
-          break;
-    default:
-          break;
+      *buffer = (ADCR0>>6); 
    }
 }
 /*
@@ -118,57 +103,22 @@ void HAL_ADC_Select_Channel(enum ADChannel channel)
    ADS = (u8)channel;
 }
 /******************************************************************************
-* Function Name     : Task_ADC_Convert
+* Function Name     : HAL_ADC_Read_Counts
 * Input Params      : None
 * Output Params     : None
 * Description       : This function is used to ADC conversion.
 ******************************************************************************/
-void Task_ADC_Convert(void)
+u8 HAL_ADC_Read_Counts(u16 *adcValptr)
 {
-   static u8 ad_sel_cnt=0;
-   
-   switch(ad_sel_cnt)
+   u8 returnVal = 0u;
+   if(ADIF)
    {
-   
-      case 0:
-            if(ADIF)
-            {
-               HAL_ADC_Read_Channel_Counts(&fl_ADC_Counts_u16[0]);
-               ad_sel_cnt = 1;
-               ADIF = 0;
-               HAL_ADC_Select_Channel(ADCHANNEL1);
-            }
-            break;
-      case 1:
-            if(ADIF)
-            {
-               HAL_ADC_Read_Channel_Counts(&fl_ADC_Counts_u16[1]);
-               ad_sel_cnt = 2;
-               ADIF = 0;
-               HAL_ADC_Select_Channel(ADCHANNEL2);
-            }
-            break;
-      case 2:
-            if(ADIF)
-            {
-               HAL_ADC_Read_Channel_Counts(&fl_ADC_Counts_u16[2]);
-               ad_sel_cnt = 3;
-               ADIF = 0;
-               HAL_ADC_Select_Channel(ADCHANNEL4);
-            }
-            break;
-      case 3:
-            if(ADIF)
-            {
-               HAL_ADC_Read_Channel_Counts(&fl_ADC_Counts_u16[3]);
-               ad_sel_cnt = 0;
-               ADIF = 0;
-               HAL_ADC_Select_Channel(ADCHANNEL5);
-            }
-            break;
-      default:
-            break; 
-   }            
+      HAL_ADC_Read_Channel_Counts(adcValptr);
+      ADIF = 0;
+      HAL_ADC_Select_Channel(ADCHANNEL0);
+      returnVal = 1u;
+   }
+   return returnVal;
 }
 /******************************************************************************
 **                  R E V I S I O N     H I S T O R Y

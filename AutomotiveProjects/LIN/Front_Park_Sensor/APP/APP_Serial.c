@@ -82,6 +82,7 @@ u8 Distance_Received[7];
 
 u8 Lin_Next_Transmit_Msg_Timer0;
 
+u16 SwV_in_mV,PinV_in_mV;
 
 /**************************************************************************
  *       local prototypes
@@ -119,7 +120,26 @@ void APP_Task_10ms(void)
 {
    App_Dist_Task();
    App_Chime_Task();
+   App_Read_Sw();
+}
 
+/******************************************************************************
+* Function Name     : App_Read_Sw
+* Input Params      : None
+* Output Params     : None
+* Description       : This fuction reads switch
+******************************************************************************/
+void App_Read_Sw(void)
+{
+   u16 tempAdc = 0u;
+   if(HAL_ADC_Read_Counts(&tempAdc))
+   {
+      if(tempAdc != 0xFFFFu)
+      {
+         PinV_in_mV = ((u32)tempAdc * 825u)/256u;
+         SwV_in_mV = (tempAdc * 93u)/5u;
+      }
+   }
 }
 
 /******************************************************************************

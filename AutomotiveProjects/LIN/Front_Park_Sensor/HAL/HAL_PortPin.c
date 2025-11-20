@@ -44,7 +44,7 @@
 ******************************************************************************/
 void HAL_Port_Init(void)
 {  
-   ADPC =0;/*an0 to an23 as digital io*/
+   ADPC =1;/*an1 to an23 as digital io , an0 is switch*/
    
   /*################ PORT MODE ###########
    0 Output mode (output buffer on)
@@ -96,8 +96,9 @@ void HAL_Port_Init(void)
    PM8.4 = 0;//nc
    PM8.2 = 0;//nc
    PM8.1 = 0;//nc
-   PM8.0 = 0;//nc
-   
+   #if 0   
+   PM8.0 = 1;//nc
+   #endif   
    /*Port 9 registers*/
    PM9.0 = 0;//nc
    PM9.1 = 0;//nc
@@ -147,8 +148,9 @@ void HAL_Port_Init(void)
    P8.4 = 0; 
    P8.5 = 0; 
    P8.6 = 0; 
+   #if 0
    P8.0 = 0; 
-
+   #endif 
    P9.0 = 0;
    P9.1 = 0;
    P9.2 = 0;

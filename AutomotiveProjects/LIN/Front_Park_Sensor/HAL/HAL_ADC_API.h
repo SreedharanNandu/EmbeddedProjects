@@ -187,7 +187,6 @@ enum ADChannel
 /******************************************************************************
 **               D A T A
 ******************************************************************************/
-extern u16 fl_ADC_Counts_u16[4];
 
 
 /******************************************************************************
@@ -199,7 +198,7 @@ extern void HAL_ADC_Init(void);
 extern void HAL_ADC_Read_Channel_Counts(u16 * buffer);
 extern void HAL_ADC_Start_Operation(void);
 extern void HAL_ADC_Select_Channel(enum ADChannel channel);
-extern void Task_ADC_Convert(void);
+extern u8 HAL_ADC_Read_Counts(u16 * adcValptr);
 
 #endif 
 
