@@ -44,7 +44,7 @@
 ******************************************************************************/
 void HAL_Port_Init(void)
 {  
-   ADPC =1;/*an1 to an23 as digital io , an0 is switch*/
+   ADPC = 1;/*an1 to an23 as digital io , an0 is switch*/
    
   /*################ PORT MODE ###########
    0 Output mode (output buffer on)

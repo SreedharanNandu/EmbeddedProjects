@@ -32,7 +32,7 @@
 #include "system_def.h"
 #include "HAL_USART.h"
 #include "system_def.h"
-#include "APP_Serial.h"
+#include "APP_Main.h"
 #include "HAL_LIN.h"
 
 /******************************************************************************
@@ -45,25 +45,6 @@
 /******************************************************************************
 **               D A T A
 ******************************************************************************/
-/* local variables  */
-u8  gIic11MasterStatusFlag;   /* iic11 start flag for send address check by master mode */
-u8  *gpIic11TxAddress;   /* iic11 send data pointer by master mode */
-u16 gIic11TxCnt;      /* iic11 send data size by master mode */
-u8  *gpIic11RxAddress;	/* iic11 receive data pointer by master mode */
-u16 gIic11RxCnt;		/* iic11 receive data size by master mode */
-u16 gIic11RxLen;		/* iic11 receive data length by master mode */
-u8  gpUARTF1TxBuffer[MAX_BUF_SIZE];   /* UARTF1 transmit data address */
-u16 gUARTF1Quotient;      /* UARTF1 transmit buffer data count */
-u16 gUARTF1Remainder;   /* UARTF1 transmit buffer data remainer */
-u16 gUARTF1TxCnt;      /* UARTF1 transmit data number */
-u8  *gpUARTF1RxAddress;   /* UARTF1 receive data address */
-u8 gUARTF1IndxCnt;
-u8 Tx_Flag;
-u8 Q_busy;
-
-
-u8 usart_rx_data[MAX_BUF_SIZE];
-volatile USART_WAIT_STATE state;
 /******************************************************************************
 **                  F U N C T I O N     D E F I N I T I O N S
 ******************************************************************************/
@@ -259,71 +240,8 @@ void UARTF1_Stop(void)
 }
 
 
-/*
-**-----------------------------------------------------------------------------
-**
-**  Abstract:
-**   This function stores UARTF1 data.
-**
-**  Parameters:
-**   txbuf: transfer buffer pointer
-**   txnum: buffer size
-**
-**  Returns:
-**   MD_OK
-**   MD_ARGERROR
-**   MD_DATAEXISTS
-**
-**-----------------------------------------------------------------------------
-*/
-bool UARTF1_Store_Data_In_Q(u8 *txbuf, u16 txnum)
-{
-   bool status = 1u;
-
-   if(!Q_busy)
-   {
-      if(txnum!=0)
-      {
-         LTMK1 = 1U;   /* disable INTLT1 interrupt */
-         memcpy(gpUARTF1TxBuffer,txbuf,txnum);
-         gUARTF1TxCnt = txnum-1;
-         gUARTF1IndxCnt = 0u;
-         Q_busy = 1u;
-         status = 0u;
-         if((UF1STR & 0x0080U) == 0U)
-         {
-            UF1TXB = gpUARTF1TxBuffer[gUARTF1IndxCnt];
-         }
-         LTMK1 = 0U;   /* enable INTLT1 interrupt */
-      }
-   }   
-   return (status);
-}
 
 
-
-/******************************************************************************/
-u8 Calculate_Checksum( u8 * const buffer,const u8 length )
-{
-  unsigned int checksum=0;
-  u8 i;
-  
-  // Process the received character
-  //-----------------------------------------------------------------
-  
-  //
-  // A Checksum Error shall be detected if the inverted modulo-256 sum
-  // over all received data bytes and the protected identifier (when using
-  // enhanced checksum) and the received checksum byte field does not
-  // result in $FF.
-  // Calculate checksum using the received data
-  for (i = 0u; i < length; i++)
-  {
-    checksum = checksum + (unsigned short)buffer[i];
-    checksum = ( (unsigned char)checksum + ( checksum >> 8 ) );
-  }
-  return ((u8)checksum);
-}
 
 
 

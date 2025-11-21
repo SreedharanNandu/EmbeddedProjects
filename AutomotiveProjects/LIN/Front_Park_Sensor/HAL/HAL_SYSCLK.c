@@ -89,12 +89,12 @@ void HAL_SYSCLK_Clock_Init(void)
    HAL_CPU_Peripheral_Clock_Select = HAL_PLL_CLOCK_OR_CLOCK_THROUGH_SELECT;  /*Fclk = Clock through*/
    
    /*Clear Division of PLL clock (fPLL) bits*/
-   HAL_System_Clock_Control_Reg &= (u8)~0x07; 
+   HAL_System_Clock_Control_Reg &= (u8)~0x07u; 
 
    /*fCLK = fPLL*/
    HAL_System_Clock_Control_Reg |= 0x00u; 
    
-   HAL_High_Speed_Internal_Clock_Stop_Control = 1;
+   HAL_High_Speed_Internal_Clock_Stop_Control = 1u;
    /* after writing e CSC register clear the GDCSC bit of the GUARD register to 1 */
    HAL_GUARD_Wrte_Enable_For_CSC_Reg = DISABLE;
   

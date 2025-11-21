@@ -2,15 +2,15 @@
 ** #include's
 *******************************************************************************
 ** Project Name      : 
-** File Name         : APP_Serial.h
+** File Name         : APP_Main.h
 ** Description       : 
 ** Date              : 
 ** Version           : 
 ** Author            : 
 ******************************************************************************/
 
-#ifndef APP_SERIAL_H
-#define APP_SERIAL_H
+#ifndef APP_MAIN_H
+#define APP_MAIN_H
 
 /*****************************************************************************
 System/Project Includes                            *
@@ -48,22 +48,21 @@ typedef struct
 
 } buzzerPattern_t;
 
-extern u8 Distance_Received[7];
+extern volatile u8 Distance_Received[7];
 extern volatile u8 Lin_Comm_Count;
 extern volatile u8 Lin_Comm_Count0;
-extern u8 Lin_Next_Transmit_Msg_Timer0;
+extern volatile u8 Lin_Next_Transmit_Msg_Timer0;
 
 
 /******************************************************************************
 *                             Function Declarations
 *******************************************************************************/
 extern void Init_APP(void);
-extern void APP_Task_100ms(void);
-extern void APP_Task_10ms(void);
-extern void APP_Task_5ms(void);
+extern void APP_Main_Task_100ms(void);
+extern void APP_Main_Task_10ms(void);
+extern void APP_Main_Task_5ms(void);
 extern void App_Dist_Task(void);
 extern void App_Chime_Task(void);
-extern void App_Read_Sw(void);
 
 
 

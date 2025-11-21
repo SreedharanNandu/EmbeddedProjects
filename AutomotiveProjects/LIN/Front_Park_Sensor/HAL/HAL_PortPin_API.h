@@ -50,10 +50,9 @@
 #define NFC_PROGM_ALT_MODE_0(x)     (P12.5=x)
 #define WAKE_UP_FIDM_ALT_MODE_1(x)  (P3.2=x)
 #define Set_Buzz(x)                 (P3.0=x)
-#define Set_Led(x)                  (P3.1=!x)
+#define Set_Led0(x)                 (P3.1=!x)
 #define Set_Led1(x)                 (P1.2=!x)
 #define Set_Led2(x)                 (P12.5=!x)
-#define Set_Led3(x)                 (P7.1=!x)
 
 /******************************************************************************
 **                 G L O B A L   F U N C T I O N S

@@ -1,4 +1,4 @@
-//filename :-App_Serial.c
+//filename :-App_Main.c
 /******************************************************************************
 **                  S Y S T E M     I N C L U D E S
 ******************************************************************************/
@@ -15,7 +15,7 @@
 #include "HAL_ADC_API.h"
 #include "HAL_USART.h"
 #include "HAL_Timer_API.h"
-#include "App_Serial.h"
+#include "App_Main.h"
 
 #include "string.h"
 #include <stdio.h>
@@ -70,20 +70,21 @@ const buzzerZone_t buzzerZoneMap[BUZZER_ZONE_MAX][BUZZER_ZONE_MAX] =
 
 
 volatile u8 buzzer_state;
-volatile u16 buzzer_timer;
-volatile buzzerZone_t curr_zone[SENSOR_MAX]={BUZZER_ZONE4,BUZZER_ZONE4},final_zone;
-volatile u16 stop_count;
-volatile buzzerZone_t prev_zone;
-volatile u8 distance_valid[SENSOR_MAX];
 volatile u8 Lin_Comm_Count;
 volatile u8 Lin_Comm_Count0;
+volatile u8 Distance_Received[7];
+volatile u8 Lin_Next_Transmit_Msg_Timer0;
+volatile u8 distance_valid[SENSOR_MAX];
+
+volatile u16 buzzer_timer;
+volatile u16 stop_count;
+volatile buzzerZone_t curr_zone[SENSOR_MAX];
+volatile buzzerZone_t final_zone;
+volatile buzzerZone_t prev_zone;
+
+#if 0
 volatile u8 dist_dbg[SENSOR_MAX];
-u8 Distance_Received[7];
-
-u8 Lin_Next_Transmit_Msg_Timer0;
-
-u16 SwV_in_mV,PinV_in_mV;
-
+#endif
 /**************************************************************************
  *       local prototypes
  *************************************************************************/
@@ -105,50 +106,33 @@ void bin_to_strhex(unsigned char *bin, unsigned int binsz, char **result);
 void Init_APP(void)
 {
    prev_zone = BUZZER_ZONE4;//No beep
+   curr_zone[SENSOR_L] = BUZZER_ZONE4;
+   curr_zone[SENSOR_R] = BUZZER_ZONE4;
    LIN_Initialize();
    Init_Buzz();
    
 }
 
 /******************************************************************************
-* Function Name     : APP_Task_10ms
+* Function Name     : APP_Main_Task_10ms
 * Input Params      : None
 * Output Params     : None
 * Description       : This fuction is calling periodically from scheduler
 ******************************************************************************/
-void APP_Task_10ms(void)
+void APP_Main_Task_10ms(void)
 {
    App_Dist_Task();
    App_Chime_Task();
-   App_Read_Sw();
 }
 
-/******************************************************************************
-* Function Name     : App_Read_Sw
-* Input Params      : None
-* Output Params     : None
-* Description       : This fuction reads switch
-******************************************************************************/
-void App_Read_Sw(void)
-{
-   u16 tempAdc = 0u;
-   if(HAL_ADC_Read_Counts(&tempAdc))
-   {
-      if(tempAdc != 0xFFFFu)
-      {
-         PinV_in_mV = ((u32)tempAdc * 825u)/256u;
-         SwV_in_mV = (tempAdc * 93u)/5u;
-      }
-   }
-}
 
 /******************************************************************************
-* Function Name     : APP_Task_5ms
+* Function Name     : APP_Main_Task_5ms
 * Input Params      : None
 * Output Params     : None
 * Description       : This fuction is calling periodically from scheduler
 ******************************************************************************/
-void APP_Task_5ms(void)
+void APP_Main_Task_5ms(void)
 {
    
    if(Lin_Periodic_Timer0 < LIN_PERIODIC_MSG_CNT)
@@ -157,19 +141,19 @@ void APP_Task_5ms(void)
    }
    else
    {
-      Lin_Periodic_Timer0 = 0;
+      Lin_Periodic_Timer0 = 0u;
       //next frame transmit offset timer i.e between frames (not period)
-      if( Lin_Next_Transmit_Msg_Timer0 > 1)//5msec skip 
+      if( Lin_Next_Transmit_Msg_Timer0 > 1u)//5msec skip 
       {
          Lin_Next_Transmit_Msg_Timer0--;
       }
-      else if(Lin_Next_Transmit_Msg_Timer0 == 1)//10msec over after checksum of either 14 or 5e transmitted previously,not next one
+      else if(Lin_Next_Transmit_Msg_Timer0 == 1u)//10msec over after checksum of either 14 or 5e transmitted previously,not next one
       {
          Lin_Next_Transmit_Msg_Timer0--;
          Lin_Next_Index0++;
          if(Lin_Next_Index0 >= NO_OF_TX_ID)//mean all frames for that period is over,wait for next schedule/period
          {
-            Lin_Next_Index0 = 0;
+            Lin_Next_Index0 = 0u;
          }
          LIN_Send_Wakeup_Signal0();
       }
@@ -180,26 +164,24 @@ void APP_Task_5ms(void)
    
 }
  /******************************************************************************
-* Function Name     : APP_Task_100ms
+* Function Name     : APP_Main_Task_100ms
 * Input Params      : None
 * Output Params     : None
 * Description       : This fuction is calling periodically from scheduler
 ******************************************************************************/
-void APP_Task_100ms(void)
+void APP_Main_Task_100ms(void)
 {
    static u8 _xs_cnter;
    
    if(_xs_cnter < _XS_CNT)
    {
       _xs_cnter++;
-      Set_Led(0);
    }
    else 
    {
       if(_xs_cnter >= _XS_CNT)
       {
          _xs_cnter=0u;
-         Set_Led(1);
       }
    }   
    
@@ -251,52 +233,52 @@ void App_Dist_Task(void)
       Set_Led2(0);
    }
 
-   for(j=0;j<3;j++)
+   for(j=0;j<3u;j++)
    {
       Lin_Tx_Msg[0].buf_ptr[j] = Distance_Received[j];
       lin_tx_data[0].transmit_data[j] = Distance_Received[j] ;
    }
    
-   if(Distance_Received[3] != 0)
+   if(Distance_Received[3] != 0u)
    {
       lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = Distance_Received[5];
    }
    else
    {
-      if(Distance_Received[3] == 0)
+      if(Distance_Received[3] == 0u)
       {
          lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = 0xFFu;
       }
    }
-   if(Distance_Received[4] != 0)
+   if(Distance_Received[4] != 0u)
    {
       lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = Distance_Received[5];
    }
    else
    {
-      if(Distance_Received[4] == 0)
+      if(Distance_Received[4] == 0u)
       {
          lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = 0xFFu;
       }
    }
-   if(Distance_Received[5] != 0)
+   if(Distance_Received[5] != 0u)
    {
       lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = Distance_Received[6];
    }
    else
    {
-      if(Distance_Received[5] == 0)
+      if(Distance_Received[5] == 0u)
       {
          lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = 0xFFu;
       }
    }
-   if(Distance_Received[6] != 0)
+   if(Distance_Received[6] != 0u)
    {
       lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = Distance_Received[6];
    }
    else
    {
-      if(Distance_Received[6] == 0)
+      if(Distance_Received[6] == 0u)
       {
          lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = 0xFFu;
       }
@@ -312,11 +294,11 @@ void App_Dist_Task(void)
          if((Distance_Received[5] != 0u))
          {
             temp = Distance_Received[5];
-            distance_valid[j] = 1;
+            distance_valid[j] = 1u;
          }
          else
          {
-            distance_valid[j] = 0;
+            distance_valid[j] = 0u;
          }
       }
       else 
@@ -326,11 +308,11 @@ void App_Dist_Task(void)
             if((Distance_Received[6] != 0u))
             {
                temp = Distance_Received[6];
-               distance_valid[j] = 1;
+               distance_valid[j] = 1u;
             }
             else
             {
-               distance_valid[j] = 0;
+               distance_valid[j] = 0u;
             }
          }
       }
@@ -345,7 +327,9 @@ void App_Dist_Task(void)
                   (dist[j] <= Buzzer_Range_Map[i][1])) 
                {
                   curr_zone[j] = (buzzerZone_t)i;
+                  #if 0
                   dist_dbg[j] = temp;
+                  #endif
                   break;
                }
             }

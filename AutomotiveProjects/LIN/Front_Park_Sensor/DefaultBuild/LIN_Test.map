@@ -1,0 +1,597 @@
+
+
+
+78K0R Linker W1.80                            Date:21 Nov 2025 Page:   1
+
+Command:   -yC:\Program Files (x86)\Renesas Electronics\CS+\CACX\Device\
+           78K0R\Devicefile -_msgoff -oDefaultBuild\LIN_Test.lmf -gi0FFF
+           FFFFFFFFFFFFFFFFFh -go04h,2FC00h,1024 -gb0FF7FFFH -mi0 -s -pD
+           efaultBuild\LIN_Test.map C:\Program Files (x86)\Renesas Elect
+           ronics\CS+\CACX\CA78K0R\V1.72\lib78k0r\s0rll.rel DefaultBuild
+           \APP_Btn.rel DefaultBuild\APP_LIN.rel DefaultBuild\INTF_LIN_C
+           ONFIG.rel DefaultBuild\HAL_ADC.rel DefaultBuild\HAL_Init.rel 
+           DefaultBuild\HAL_Interrupts.rel DefaultBuild\HAL_LIN.rel Defa
+           ultBuild\HAL_PortPin.rel DefaultBuild\HAL_SYSCLK.rel DefaultB
+           uild\HAL_Timer.rel DefaultBuild\HAL_USART.rel DefaultBuild\HA
+           L_WDT.rel DefaultBuild\MOS.rel DefaultBuild\CG_main.rel Defau
+           ltBuild\CG_systeminit.rel DefaultBuild\CG_system.rel DefaultB
+           uild\CG_system_user.rel DefaultBuild\APP_Main.rel -bcl0rdm.li
+           b -bcl0rm.lib -bcl0rmf.lib -iC:\Program Files (x86)\Renesas E
+           lectronics\CS+\CACX\CA78K0R\V1.72\lib78k0r
+Para-file:
+Out-file:  DefaultBuild\LIN_Test.lmf
+Map-file:  DefaultBuild\LIN_Test.map
+Direc-file:
+Directive:
+
+
+*** Link information ***
+
+    51 output segment(s)
+ 15FBH byte(s) real data
+  1947 symbol(s) defined
+
+
+*** Memory map ***
+
+
+  SPACE=REGULAR
+
+  MEMORY=ROM
+  BASE ADDRESS=00000H   SIZE=10000H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         @@VECT00                     00000H    00002H  CSEG AT
+                  @@VECT00 @cstart    00000H    00002H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  @cstart    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  APP_Btn    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  APP_LIN    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  INTF_LIN_CONFIG
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_ADC    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_Init   00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_Interrupts
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_LIN    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_PortPin
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_SYSCLK
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_Timer
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_USART
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  HAL_WDT    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  MOS        00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  CG_main    00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  CG_systeminit
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  CG_system
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  CG_system_user
+                                      00002H    00000H
+         @@CNSTL                      00002H    00000H  CSEG PAGE64KP
+                  @@CNSTL  APP_Main   00002H    00000H
+         @@RLINIT                     00002H    00000H  CSEG UNIT64KP
+                  @@RLINIT @cstart    00002H    00000H
+                  @@RLINIT APP_Btn    00002H    00000H
+                  @@RLINIT APP_LIN    00002H    00000H
+                  @@RLINIT INTF_LIN_CONFIG
+                                      00002H    00000H
+                  @@RLINIT HAL_ADC    00002H    00000H
+                  @@RLINIT HAL_Init   00002H    00000H
+                  @@RLINIT HAL_Interrupts
+                                      00002H    00000H
+                  @@RLINIT HAL_LIN    00002H    00000H
+                  @@RLINIT HAL_PortPin
+                                      00002H    00000H
+                  @@RLINIT HAL_SYSCLK
+                                      00002H    00000H
+                  @@RLINIT HAL_Timer
+                                      00002H    00000H
+                  @@RLINIT HAL_USART
+                                      00002H    00000H
+                  @@RLINIT HAL_WDT    00002H    00000H
+                  @@RLINIT MOS        00002H    00000H
+                  @@RLINIT CG_main    00002H    00000H
+                  @@RLINIT CG_systeminit
+                                      00002H    00000H
+                  @@RLINIT CG_system
+                                      00002H    00000H
+                  @@RLINIT CG_system_user
+                                      00002H    00000H
+                  @@RLINIT APP_Main   00002H    00000H
+                  @@RLINIT @rom       00002H    00000H
+         @@R_INIS                     00002H    00000H  CSEG UNIT64KP
+                  @@R_INIS @cstart    00002H    00000H
+                  @@R_INIS APP_Btn    00002H    00000H
+                  @@R_INIS APP_LIN    00002H    00000H
+                  @@R_INIS INTF_LIN_CONFIG
+                                      00002H    00000H
+                  @@R_INIS HAL_ADC    00002H    00000H
+                  @@R_INIS HAL_Init   00002H    00000H
+                  @@R_INIS HAL_Interrupts
+                                      00002H    00000H
+                  @@R_INIS HAL_LIN    00002H    00000H
+                  @@R_INIS HAL_PortPin
+                                      00002H    00000H
+                  @@R_INIS HAL_SYSCLK
+                                      00002H    00000H
+                  @@R_INIS HAL_Timer
+                                      00002H    00000H
+                  @@R_INIS HAL_USART
+                                      00002H    00000H
+                  @@R_INIS HAL_WDT    00002H    00000H
+                  @@R_INIS MOS        00002H    00000H
+                  @@R_INIS CG_main    00002H    00000H
+                  @@R_INIS CG_systeminit
+                                      00002H    00000H
+                  @@R_INIS CG_system
+                                      00002H    00000H
+                  @@R_INIS CG_system_user
+                                      00002H    00000H
+                  @@R_INIS APP_Main   00002H    00000H
+                  @@R_INIS @rom       00002H    00000H
+         @@CALT                       00002H    00000H  CSEG
+                  @@CALT   @cstart    00002H    00000H
+                  @@CALT   APP_Btn    00002H    00000H
+                  @@CALT   APP_LIN    00002H    00000H
+                  @@CALT   INTF_LIN_CONFIG
+                                      00002H    00000H
+                  @@CALT   HAL_ADC    00002H    00000H
+                  @@CALT   HAL_Init   00002H    00000H
+                  @@CALT   HAL_Interrupts
+                                      00002H    00000H
+                  @@CALT   HAL_LIN    00002H    00000H
+                  @@CALT   HAL_PortPin
+                                      00002H    00000H
+                  @@CALT   HAL_SYSCLK
+                                      00002H    00000H
+                  @@CALT   HAL_Timer
+                                      00002H    00000H
+                  @@CALT   HAL_USART
+                                      00002H    00000H
+                  @@CALT   HAL_WDT    00002H    00000H
+                  @@CALT   MOS        00002H    00000H
+                  @@CALT   CG_main    00002H    00000H
+                  @@CALT   CG_systeminit
+                                      00002H    00000H
+                  @@CALT   CG_system
+                                      00002H    00000H
+                  @@CALT   CG_system_user
+                                      00002H    00000H
+                  @@CALT   APP_Main   00002H    00000H
+         ??NMIROM                     00002H    00002H  CSEG
+         @@VECT04                     00004H    00002H  CSEG AT
+                  @@VECT04 HAL_Interrupts
+                                      00004H    00002H
+* gap *                               00006H    00010H
+         @@VECT16                     00016H    00002H  CSEG AT
+                  @@VECT16 HAL_Interrupts
+                                      00016H    00002H
+* gap *                               00018H    00006H
+         @@VECT1E                     0001EH    00002H  CSEG AT
+                  @@VECT1E HAL_Interrupts
+                                      0001EH    00002H
+* gap *                               00020H    00002H
+         @@VECT22                     00022H    00006H  CSEG AT
+                  @@VECT22 HAL_Interrupts
+                                      00022H    00006H
+* gap *                               00028H    00004H
+         @@VECT2C                     0002CH    00002H  CSEG AT
+                  @@VECT2C HAL_Interrupts
+                                      0002CH    00002H
+* gap *                               0002EH    00008H
+         @@VECT36                     00036H    00006H  CSEG AT
+                  @@VECT36 HAL_Interrupts
+                                      00036H    00006H
+* gap *                               0003CH    00004H
+         @@VECT40                     00040H    00002H  CSEG AT
+                  @@VECT40 HAL_Interrupts
+                                      00040H    00002H
+         @@R_INIT                     00042H    00012H  CSEG UNIT64KP
+                  @@R_INIT @cstart    00042H    00000H
+                  @@R_INIT APP_Btn    00042H    00000H
+                  @@R_INIT APP_LIN    00042H    00000H
+                  @@R_INIT INTF_LIN_CONFIG
+                                      00042H    00000H
+                  @@R_INIT HAL_ADC    00042H    00000H
+                  @@R_INIT HAL_Init   00042H    00000H
+                  @@R_INIT HAL_Interrupts
+                                      00042H    00000H
+                  @@R_INIT HAL_LIN    00042H    00000H
+                  @@R_INIT HAL_PortPin
+                                      00042H    00000H
+                  @@R_INIT HAL_SYSCLK
+                                      00042H    00000H
+                  @@R_INIT HAL_Timer
+                                      00042H    00000H
+                  @@R_INIT HAL_USART
+                                      00042H    00000H
+                  @@R_INIT HAL_WDT    00042H    00000H
+                  @@R_INIT MOS        00042H    00012H
+                  @@R_INIT CG_main    00054H    00000H
+                  @@R_INIT CG_systeminit
+                                      00054H    00000H
+                  @@R_INIT CG_system
+                                      00054H    00000H
+                  @@R_INIT CG_system_user
+                                      00054H    00000H
+                  @@R_INIT APP_Main   00054H    00000H
+                  @@R_INIT @rom       00054H    00000H
+* gap *                               00054H    00002H
+         @@VECT56                     00056H    00006H  CSEG AT
+                  @@VECT56 HAL_Interrupts
+                                      00056H    00006H
+* gap *                               0005CH    00064H
+         ?CSEGOB0                     000C0H    00004H  CSEG OPT_BYTE
+         @@CODE                       000C4H    00000H  CSEG BASE
+                  @@CODE   APP_Btn    000C4H    00000H
+                  @@CODE   APP_LIN    000C4H    00000H
+                  @@CODE   INTF_LIN_CONFIG
+                                      000C4H    00000H
+                  @@CODE   HAL_ADC    000C4H    00000H
+                  @@CODE   HAL_Init   000C4H    00000H
+                  @@CODE   HAL_Interrupts
+                                      000C4H    00000H
+                  @@CODE   HAL_LIN    000C4H    00000H
+                  @@CODE   HAL_PortPin
+                                      000C4H    00000H
+                  @@CODE   HAL_SYSCLK
+                                      000C4H    00000H
+                  @@CODE   HAL_Timer
+                                      000C4H    00000H
+                  @@CODE   HAL_USART
+                                      000C4H    00000H
+                  @@CODE   HAL_WDT    000C4H    00000H
+                  @@CODE   MOS        000C4H    00000H
+                  @@CODE   CG_main    000C4H    00000H
+                  @@CODE   CG_systeminit
+                                      000C4H    00000H
+                  @@CODE   CG_system
+                                      000C4H    00000H
+                  @@CODE   CG_system_user
+                                      000C4H    00000H
+                  @@CODE   APP_Main   000C4H    00000H
+         ?CSEGSI                      000C4H    0000AH  CSEG
+         ?OCDSTAD                     000CEH    0000AH  CSEG
+         @@LCODE                      000D8H    0014BH  CSEG BASE
+                  @@LCODE  @cstart    000D8H    000ADH
+                  @@LCODE  @lmul      00185H    0002BH
+                  @@LCODE  @ludiv     001B0H    0003FH
+                  @@LCODE  @divuw     001EFH    00034H
+         @@BASE                       00223H    0020EH  CSEG BASE
+                  @@BASE   APP_Btn    00223H    00000H
+                  @@BASE   APP_LIN    00223H    00000H
+                  @@BASE   INTF_LIN_CONFIG
+                                      00223H    00000H
+                  @@BASE   HAL_ADC    00223H    00000H
+                  @@BASE   HAL_Init   00223H    00000H
+                  @@BASE   HAL_Interrupts
+                                      00223H    0020EH
+                  @@BASE   HAL_LIN    00431H    00000H
+                  @@BASE   HAL_PortPin
+                                      00431H    00000H
+                  @@BASE   HAL_SYSCLK
+                                      00431H    00000H
+                  @@BASE   HAL_Timer
+                                      00431H    00000H
+                  @@BASE   HAL_USART
+                                      00431H    00000H
+                  @@BASE   HAL_WDT    00431H    00000H
+                  @@BASE   MOS        00431H    00000H
+                  @@BASE   CG_main    00431H    00000H
+                  @@BASE   CG_systeminit
+                                      00431H    00000H
+                  @@BASE   CG_system
+                                      00431H    00000H
+                  @@BASE   CG_system_user
+                                      00431H    00000H
+                  @@BASE   APP_Main   00431H    00000H
+         @@LCODEL                     00431H    0007AH  CSEG
+                  @@LCODEL @stkinit   00431H    00044H
+                  @@LCODEL exit       00475H    0001CH
+                  @@LCODEL memcpy_n   00491H    0001AH
+* gap *                               004ABH    00B55H
+         @@CNST                       01000H    00086H  CSEG MIRRORP
+                  @@CNST   @cstart    01000H    00000H
+                  @@CNST   APP_Btn    01000H    00000H
+                  @@CNST   APP_LIN    01000H    00000H
+                  @@CNST   INTF_LIN_CONFIG
+                                      01000H    00010H
+                  @@CNST   HAL_ADC    01010H    00000H
+                  @@CNST   HAL_Init   01010H    00000H
+                  @@CNST   HAL_Interrupts
+                                      01010H    00000H
+                  @@CNST   HAL_LIN    01010H    00000H
+                  @@CNST   HAL_PortPin
+                                      01010H    00000H
+                  @@CNST   HAL_SYSCLK
+                                      01010H    00000H
+                  @@CNST   HAL_Timer
+                                      01010H    00000H
+                  @@CNST   HAL_USART
+                                      01010H    00000H
+                  @@CNST   HAL_WDT    01010H    00000H
+                  @@CNST   MOS        01010H    0003CH
+                  @@CNST   CG_main    0104CH    00000H
+                  @@CNST   CG_systeminit
+                                      0104CH    00000H
+                  @@CNST   CG_system
+                                      0104CH    00000H
+                  @@CNST   CG_system_user
+                                      0104CH    00000H
+                  @@CNST   APP_Main   0104CH    0003AH
+         @@CODEL                      01086H    01158H  CSEG
+                  @@CODEL  APP_Btn    01086H    00125H
+                  @@CODEL  APP_LIN    011ABH    0003FH
+                  @@CODEL  INTF_LIN_CONFIG
+                                      011EAH    00000H
+                  @@CODEL  HAL_ADC    011EAH    00065H
+                  @@CODEL  HAL_Init   0124FH    00024H
+                  @@CODEL  HAL_Interrupts
+                                      01273H    00000H
+                  @@CODEL  HAL_LIN    01273H    003DCH
+                  @@CODEL  HAL_PortPin
+                                      0164FH    000E4H
+                  @@CODEL  HAL_SYSCLK
+                                      01733H    00040H
+                  @@CODEL  HAL_Timer
+                                      01773H    00286H
+                  @@CODEL  HAL_USART
+                                      019F9H    00120H
+                  @@CODEL  HAL_WDT    01B19H    00014H
+                  @@CODEL  MOS        01B2DH    002C3H
+                  @@CODEL  CG_main    01DF0H    0000BH
+                  @@CODEL  CG_systeminit
+                                      01DFBH    00014H
+                  @@CODEL  CG_system
+                                      01E0FH    0004AH
+                  @@CODEL  CG_system_user
+                                      01E59H    00005H
+                  @@CODEL  APP_Main   01E5EH    00380H
+* gap *                               021DEH    0DE22H
+
+  MEMORY=RAM
+  BASE ADDRESS=FCF00H   SIZE=03100H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         @@DATA                       FCF00H    00140H  DSEG BASEP
+                  @@DATA   @cstart    FCF00H    000BAH
+                  @@DATA   APP_Btn    FCFBAH    0000EH
+                  @@DATA   APP_LIN    FCFC8H    00000H
+                  @@DATA   INTF_LIN_CONFIG
+                                      FCFC8H    00014H
+                  @@DATA   HAL_ADC    FCFDCH    00000H
+                  @@DATA   HAL_Init   FCFDCH    00000H
+                  @@DATA   HAL_Interrupts
+                                      FCFDCH    00000H
+                  @@DATA   HAL_LIN    FCFDCH    0003AH
+                  @@DATA   HAL_PortPin
+                                      FD016H    00000H
+                  @@DATA   HAL_SYSCLK
+                                      FD016H    00000H
+                  @@DATA   HAL_Timer
+                                      FD016H    00000H
+                  @@DATA   HAL_USART
+                                      FD016H    00000H
+                  @@DATA   HAL_WDT    FD016H    00000H
+                  @@DATA   MOS        FD016H    00010H
+                  @@DATA   CG_main    FD026H    00000H
+                  @@DATA   CG_systeminit
+                                      FD026H    00000H
+                  @@DATA   CG_system
+                                      FD026H    00000H
+                  @@DATA   CG_system_user
+                                      FD026H    00000H
+                  @@DATA   APP_Main   FD026H    0001AH
+                  @@DATA   @rom       FD040H    00000H
+         @@INIT                       FD040H    00012H  DSEG BASEP
+                  @@INIT   @cstart    FD040H    00000H
+                  @@INIT   APP_Btn    FD040H    00000H
+                  @@INIT   APP_LIN    FD040H    00000H
+                  @@INIT   INTF_LIN_CONFIG
+                                      FD040H    00000H
+                  @@INIT   HAL_ADC    FD040H    00000H
+                  @@INIT   HAL_Init   FD040H    00000H
+                  @@INIT   HAL_Interrupts
+                                      FD040H    00000H
+                  @@INIT   HAL_LIN    FD040H    00000H
+                  @@INIT   HAL_PortPin
+                                      FD040H    00000H
+                  @@INIT   HAL_SYSCLK
+                                      FD040H    00000H
+                  @@INIT   HAL_Timer
+                                      FD040H    00000H
+                  @@INIT   HAL_USART
+                                      FD040H    00000H
+                  @@INIT   HAL_WDT    FD040H    00000H
+                  @@INIT   MOS        FD040H    00012H
+                  @@INIT   CG_main    FD052H    00000H
+                  @@INIT   CG_systeminit
+                                      FD052H    00000H
+                  @@INIT   CG_system
+                                      FD052H    00000H
+                  @@INIT   CG_system_user
+                                      FD052H    00000H
+                  @@INIT   APP_Main   FD052H    00000H
+                  @@INIT   @rom       FD052H    00000H
+         @@INIS                       FD052H    00000H  DSEG UNITP
+                  @@INIS   @cstart    FD052H    00000H
+                  @@INIS   APP_Btn    FD052H    00000H
+                  @@INIS   APP_LIN    FD052H    00000H
+                  @@INIS   INTF_LIN_CONFIG
+                                      FD052H    00000H
+                  @@INIS   HAL_ADC    FD052H    00000H
+                  @@INIS   HAL_Init   FD052H    00000H
+                  @@INIS   HAL_Interrupts
+                                      FD052H    00000H
+                  @@INIS   HAL_LIN    FD052H    00000H
+                  @@INIS   HAL_PortPin
+                                      FD052H    00000H
+                  @@INIS   HAL_SYSCLK
+                                      FD052H    00000H
+                  @@INIS   HAL_Timer
+                                      FD052H    00000H
+                  @@INIS   HAL_USART
+                                      FD052H    00000H
+                  @@INIS   HAL_WDT    FD052H    00000H
+                  @@INIS   MOS        FD052H    00000H
+                  @@INIS   CG_main    FD052H    00000H
+                  @@INIS   CG_systeminit
+                                      FD052H    00000H
+                  @@INIS   CG_system
+                                      FD052H    00000H
+                  @@INIS   CG_system_user
+                                      FD052H    00000H
+                  @@INIS   APP_Main   FD052H    00000H
+                  @@INIS   @rom       FD052H    00000H
+         @@DATS                       FD052H    00000H  DSEG UNITP
+                  @@DATS   @cstart    FD052H    00000H
+                  @@DATS   APP_Btn    FD052H    00000H
+                  @@DATS   APP_LIN    FD052H    00000H
+                  @@DATS   INTF_LIN_CONFIG
+                                      FD052H    00000H
+                  @@DATS   HAL_ADC    FD052H    00000H
+                  @@DATS   HAL_Init   FD052H    00000H
+                  @@DATS   HAL_Interrupts
+                                      FD052H    00000H
+                  @@DATS   HAL_LIN    FD052H    00000H
+                  @@DATS   HAL_PortPin
+                                      FD052H    00000H
+                  @@DATS   HAL_SYSCLK
+                                      FD052H    00000H
+                  @@DATS   HAL_Timer
+                                      FD052H    00000H
+                  @@DATS   HAL_USART
+                                      FD052H    00000H
+                  @@DATS   HAL_WDT    FD052H    00000H
+                  @@DATS   MOS        FD052H    00000H
+                  @@DATS   CG_main    FD052H    00000H
+                  @@DATS   CG_systeminit
+                                      FD052H    00000H
+                  @@DATS   CG_system
+                                      FD052H    00000H
+                  @@DATS   CG_system_user
+                                      FD052H    00000H
+                  @@DATS   APP_Main   FD052H    00000H
+                  @@DATS   @rom       FD052H    00000H
+         @@INITL                      FD052H    00000H  DSEG UNIT64KP
+                  @@INITL  @cstart    FD052H    00000H
+                  @@INITL  APP_Btn    FD052H    00000H
+                  @@INITL  APP_LIN    FD052H    00000H
+                  @@INITL  INTF_LIN_CONFIG
+                                      FD052H    00000H
+                  @@INITL  HAL_ADC    FD052H    00000H
+                  @@INITL  HAL_Init   FD052H    00000H
+                  @@INITL  HAL_Interrupts
+                                      FD052H    00000H
+                  @@INITL  HAL_LIN    FD052H    00000H
+                  @@INITL  HAL_PortPin
+                                      FD052H    00000H
+                  @@INITL  HAL_SYSCLK
+                                      FD052H    00000H
+                  @@INITL  HAL_Timer
+                                      FD052H    00000H
+                  @@INITL  HAL_USART
+                                      FD052H    00000H
+                  @@INITL  HAL_WDT    FD052H    00000H
+                  @@INITL  MOS        FD052H    00000H
+                  @@INITL  CG_main    FD052H    00000H
+                  @@INITL  CG_systeminit
+                                      FD052H    00000H
+                  @@INITL  CG_system
+                                      FD052H    00000H
+                  @@INITL  CG_system_user
+                                      FD052H    00000H
+                  @@INITL  APP_Main   FD052H    00000H
+                  @@INITL  @rom       FD052H    00000H
+         @@DATAL                      FD052H    00000H  DSEG UNIT64KP
+                  @@DATAL  @cstart    FD052H    00000H
+                  @@DATAL  APP_Btn    FD052H    00000H
+                  @@DATAL  APP_LIN    FD052H    00000H
+                  @@DATAL  INTF_LIN_CONFIG
+                                      FD052H    00000H
+                  @@DATAL  HAL_ADC    FD052H    00000H
+                  @@DATAL  HAL_Init   FD052H    00000H
+                  @@DATAL  HAL_Interrupts
+                                      FD052H    00000H
+                  @@DATAL  HAL_LIN    FD052H    00000H
+                  @@DATAL  HAL_PortPin
+                                      FD052H    00000H
+                  @@DATAL  HAL_SYSCLK
+                                      FD052H    00000H
+                  @@DATAL  HAL_Timer
+                                      FD052H    00000H
+                  @@DATAL  HAL_USART
+                                      FD052H    00000H
+                  @@DATAL  HAL_WDT    FD052H    00000H
+                  @@DATAL  MOS        FD052H    00000H
+                  @@DATAL  CG_main    FD052H    00000H
+                  @@DATAL  CG_systeminit
+                                      FD052H    00000H
+                  @@DATAL  CG_system
+                                      FD052H    00000H
+                  @@DATAL  CG_system_user
+                                      FD052H    00000H
+                  @@DATAL  APP_Main   FD052H    00000H
+                  @@DATAL  @rom       FD052H    00000H
+         @@BITS                       FD052H    00000H  BSEG
+                  @@BITS   @cstart    FD052H.0  00000H.0
+                  @@BITS   APP_Btn    FD052H.0  00000H.0
+                  @@BITS   APP_LIN    FD052H.0  00000H.0
+                  @@BITS   INTF_LIN_CONFIG
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_ADC    FD052H.0  00000H.0
+                  @@BITS   HAL_Init   FD052H.0  00000H.0
+                  @@BITS   HAL_Interrupts
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_LIN    FD052H.0  00000H.0
+                  @@BITS   HAL_PortPin
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_SYSCLK
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_Timer
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_USART
+                                      FD052H.0  00000H.0
+                  @@BITS   HAL_WDT    FD052H.0  00000H.0
+                  @@BITS   MOS        FD052H.0  00000H.0
+                  @@BITS   CG_main    FD052H.0  00000H.0
+                  @@BITS   CG_systeminit
+                                      FD052H.0  00000H.0
+                  @@BITS   CG_system
+                                      FD052H.0  00000H.0
+                  @@BITS   CG_system_user
+                                      FD052H.0  00000H.0
+                  @@BITS   APP_Main   FD052H.0  00000H.0
+* gap *                               FD052H    02E82H
+         @@SEGREG                     FFED4H    00004H  DSEG AT
+                  @@SEGREG @SEGREG    FFED4H    00004H
+         @@RTARG0                     FFED8H    00008H  DSEG AT
+                  @@RTARG0 @RTARG0    FFED8H    00008H
+* gap *                               FFEE0H    00020H
+* gap (Not Free Area) *               FFF00H    00100H
+
+
+ Target chip : uPD78F1829_48
+ Device file : V1.01
+

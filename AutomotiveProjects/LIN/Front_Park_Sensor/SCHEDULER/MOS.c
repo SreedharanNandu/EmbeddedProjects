@@ -66,13 +66,6 @@ Revision No:
 #define MAX_TRIGGER_BIT_LOOPS 10
 
 #define MOS_SW_TIMER_COUNT   (MOS_SW_TIMER_BASE/MOS_SCHEDULER_TICK_RATE)
-/* 
-** Macros to initialize Stack Lower and Upper boundries
-*/
-#define MOS_STACK_BOUNDRY_VAL 0xAA
-
-#define MOS_STACK_START_ADDRESS (MOS_STACK_UPPER_BOUND + 1) 
-#define MOS_STACK_END_ADDRESS   (MOS_STACK_LOWER_BOUND - 1) 
 
 /******************************************************************************
 **               D A T A
@@ -169,7 +162,6 @@ static u8 fl_sw_timer_status_U8A[ MAX_SW_TIMER_ID ];
 static u8 fl_scheduler_max_trigger_bit_loops_U8;
 
 
-static vu32 fl_stack_address_vu32;
 
 /********************************************************************************** 
                Compiler or Micro specific data 
@@ -217,7 +209,7 @@ void MOS_main(void)
    /*
    ** Do Cold Initialization
    */
-   fl_scheduler_max_trigger_bit_loops_U8 = 0;
+   fl_scheduler_max_trigger_bit_loops_U8 = 0u;
    MOS_TraverseVoidFunctionLst(&MOS_ColdInit_List_A[0]);
 
    
@@ -243,9 +235,9 @@ void MOS_main(void)
 ******************************************************************************/
 static void MOS_TraverseVoidFunctionLst(void (*const (*p_top))(void))
 {
-   if (p_top != ((void *) 0))
+   if (p_top != ((void *) 0u))
    {
-      while(*p_top != ((void (*)(void)) 0) )  /* While not NULL entry.*/
+      while(*p_top != ((void (*)(void)) 0u) )  /* While not NULL entry.*/
       {
          (**p_top)();      /* Call function.*/
          p_top++;          /* increment pointer.*/
@@ -267,7 +259,7 @@ static void MOS_Start_Scheduler(void)
 {
   
     
-   fl_RR_index_U8 = 0;
+   fl_RR_index_U8 = 0u;
    /*
    ** Initialize fast and slow rate timed task counters.  It is necessary to 
    ** initialize fast rate counters, and the fast/slow tick counters within
@@ -280,18 +272,18 @@ static void MOS_Start_Scheduler(void)
    */    
 #if defined(MOS_TIMED_TASKS_CONFIGURED)
    MOS_Disable_Scheduler_Interrupt();
-   fl_timed_task_trigger_bits_U16 = 0;
+   fl_timed_task_trigger_bits_U16 = 0u;
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 0)
    MOS_Init_TimedTask_Counters(&fl_fast_rate_tt_list_A[0], &fl_fast_rate_tt_counters_U16A[0]);
-   #if (MOS_TT_FAST_TICK_RATE > 1)
-   fl_fast_rate_tt_tick_counter_U16 = 1;
+   #if (MOS_TT_FAST_TICK_RATE > 1u)
+   fl_fast_rate_tt_tick_counter_U16 = 1u;
    #endif
 #endif
 
 #if (MOS_NUM_SLOW_RATE_TASKS > 0)
-   fl_slow_rate_tt_tick_counter_U16 = 1; 
+   fl_slow_rate_tt_tick_counter_U16 = 1u; 
 #endif
 
 
@@ -356,7 +348,7 @@ static void MOS_Run_Scheduler(void)
          }
          else
          {
-            fl_RR_index_U8 = 0;
+            fl_RR_index_U8 = 0u;
          }    
 
          /*****************************************************************/
@@ -365,7 +357,7 @@ static void MOS_Run_Scheduler(void)
          /*********   AND IF AT END, DO END LOOP PROCESSING.      *********/
          /*****************************************************************/
          /*****************************************************************/
-        if (0 == fl_RR_index_U8)
+        if (0u == fl_RR_index_U8)
         {                
            #if (MOS_IS_WATCH_DOG_SERVICED_BY_OS == TRUE)
             MOS_Update_WatchDog_Timer();
@@ -586,9 +578,9 @@ static void MOS_Schedule_FastRate_TimedTask(u8 task_id)
     ** Clamp reload value to 1...a value of 0 is not allowed (would cause counter underflow
     ** due to decrement before test).
     */
-    if (l_reload_value_U16 == 0)
+    if (l_reload_value_U16 == 0u)
     {
-      l_reload_value_U16 = 1;
+      l_reload_value_U16 = 1u;
     }
     
     list_ptr->task_name();
@@ -684,7 +676,10 @@ void MOS_Scheduler_ISR(void)
 #if (MOS_NUM_SLOW_RATE_TASKS > 0) 
 
 #if (MOS_SLOW_TT_TICK_RATE > 1)
-   --fl_slow_rate_tt_tick_counter_U16;
+   if(fl_slow_rate_tt_tick_counter_U16)
+   {
+      --fl_slow_rate_tt_tick_counter_U16;
+   }
    if (fl_slow_rate_tt_tick_counter_U16 == 0)
 #endif
    {
@@ -705,71 +700,98 @@ void MOS_Scheduler_ISR(void)
 static void MOS_Service_Fast_Rate_Counters(void)
 {
 #if (MOS_TT_FAST_TICK_RATE > 1)
-   --fl_fast_rate_tt_tick_counter_U16;
-   if (fl_fast_rate_tt_tick_counter_U16 == 0)
+   if(fl_fast_rate_tt_tick_counter_U16)
+   {
+      --fl_fast_rate_tt_tick_counter_U16;
+   }
+   if (fl_fast_rate_tt_tick_counter_U16 == 0u)
    {
       fl_fast_rate_tt_tick_counter_U16 = MOS_TT_FAST_TICK_RATE;
 #endif
       
 #if (MOS_NUM_FAST_RATE_TASKS > 0)
-      --fl_fast_rate_tt_counters_U16A[0];
-      if (fl_fast_rate_tt_counters_U16A[0] == 0)
+      if(fl_fast_rate_tt_counters_U16A[0])
+      {
+         --fl_fast_rate_tt_counters_U16A[0];
+      }
+      if (fl_fast_rate_tt_counters_U16A[0] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_0);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 1)
-      --fl_fast_rate_tt_counters_U16A[1];
-      if (fl_fast_rate_tt_counters_U16A[1] == 0)
+      if(fl_fast_rate_tt_counters_U16A[1])
+      {
+         --fl_fast_rate_tt_counters_U16A[1];
+      }
+      if (fl_fast_rate_tt_counters_U16A[1] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_1);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 2)
-      --fl_fast_rate_tt_counters_U16A[2];
-      if (fl_fast_rate_tt_counters_U16A[2] == 0)
+      if(fl_fast_rate_tt_counters_U16A[2])
+      {
+         --fl_fast_rate_tt_counters_U16A[2];
+      }
+      if (fl_fast_rate_tt_counters_U16A[2] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_2);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 3)
-      --fl_fast_rate_tt_counters_U16A[3];
-      if (fl_fast_rate_tt_counters_U16A[3] == 0)
+      if(fl_fast_rate_tt_counters_U16A[3])
+      {
+         --fl_fast_rate_tt_counters_U16A[3];
+      }
+      if (fl_fast_rate_tt_counters_U16A[3] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_3);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 4)
-      --fl_fast_rate_tt_counters_U16A[4];
-      if (fl_fast_rate_tt_counters_U16A[4] == 0)
+      if(fl_fast_rate_tt_counters_U16A[4])
+      {
+         --fl_fast_rate_tt_counters_U16A[4];
+      }
+      if (fl_fast_rate_tt_counters_U16A[4] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_4);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 5)
-      --fl_fast_rate_tt_counters_U16A[5];
-      if (fl_fast_rate_tt_counters_U16A[5] == 0)
+      if(fl_fast_rate_tt_counters_U16A[5])
+      {
+         --fl_fast_rate_tt_counters_U16A[5];
+      }
+      if (fl_fast_rate_tt_counters_U16A[5] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_5);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 6)
-      --fl_fast_rate_tt_counters_U16A[6];
-      if (fl_fast_rate_tt_counters_U16A[6] == 0)
+      if(fl_fast_rate_tt_counters_U16A[6])
+      {
+         --fl_fast_rate_tt_counters_U16A[6];
+      }
+      if (fl_fast_rate_tt_counters_U16A[6] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_6);
       }
 #endif
 
 #if (MOS_NUM_FAST_RATE_TASKS > 7)
-      --fl_fast_rate_tt_counters_U16A[7];
-      if (fl_fast_rate_tt_counters_U16A[7] == 0)
+      if(fl_fast_rate_tt_counters_U16A[7])
+      {
+         --fl_fast_rate_tt_counters_U16A[7];
+      }
+      if (fl_fast_rate_tt_counters_U16A[7] == 0u)
       {
          SETBIT(fl_timed_task_trigger_bits_U16, FR_TIMED_TASK_7);
       }

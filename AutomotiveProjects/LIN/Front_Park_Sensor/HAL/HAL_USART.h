@@ -495,12 +495,7 @@ typedef struct
 **  Macro define
 *******************************************************************************
 */
-#define	_2600_IIC11_DIVISOR			0x2600U
-#define IIC11_WAITTIME				(10U)		/* change the waiting time according to the system */
-/* Selection of 16-bit counter output clock (UF1BRS7 - UF1BRS0) */
-#define	_01A1_UARTF1_K_VALUE			0x01A1U
 
-extern u8 usart_rx_data[MAX_BUF_SIZE];
 /******************************************************************************
 **                 G L O B A L   F U N C T I O N S
 ******************************************************************************/
@@ -508,7 +503,6 @@ extern u8 usart_rx_data[MAX_BUF_SIZE];
 void UARTF1_Init(void);
 void UARTF1_Start(void);
 void UARTF1_Stop(void);
-extern u8 Calculate_Checksum(u8 * const buffer, const u8 length);
 void UARTF0_Init(void);
 void UARTF0_Start(void);
 void UARTF0_Stop(void);

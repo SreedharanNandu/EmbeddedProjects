@@ -14,8 +14,7 @@ System Includes
 #include "HAL_ADC_API.h"
 #include "HAL_USART.h"
 #include "HAL_Timer_API.h"
-#include "App_Serial.h"
-#include "App_Serial.h"
+#include "App_Main.h"
 #include "string.h"
 #include <stdio.h>
 #include <math.h>
@@ -32,23 +31,18 @@ User Includes
 /**********************************************************************************
 Global variables
 ***********************************************************************************/
-
-
 /***********************************************************************************
      User Program Code
 ***********************************************************************************/
-
-
-
 /**********************************************************************************
 Function Name:  
 Description:    
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
-void App_Notify_Frame_Received(unsigned char id_index)
+void App_Notify_Frame_Received_USART1(unsigned char id_index)
 {
-   if(Lin_Rx_Msg[id_index].id == 0x14)
+   if(Lin_Rx_Msg[id_index].id == 0x14u)
    {
       Lin_Comm_Count = 0u;
       Set_Led1(1);
@@ -62,9 +56,9 @@ Description:
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
-void App_Notify_Frame_Transmitted(unsigned char id_index)
+void App_Notify_Frame_Transmitted_USART0(unsigned char id_index)
 {
-   if(Lin_Tx_Msg[id_index].id == 0x14)
+   if(Lin_Tx_Msg[id_index].id == 0x14u)
    {
       Lin_Comm_Count0 = 0u;
       Set_Led2(1);

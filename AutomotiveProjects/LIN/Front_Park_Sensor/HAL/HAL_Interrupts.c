@@ -49,27 +49,12 @@
 /******************************************************************************/
 
 
-/**-----------------------------------------------------------------------------
-**
-**  Abstract:
-**   This function is INTLR0 interrupt service routine.
-**
-**  Parameters:
-**   None
-**
-**  Returns:
-**   None
-**
-**-----------------------------------------------------------------------------
-
-**-----------------------------------------------------------------------------
-*/
 
 /*
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLR1 (ILIN) interrupt service routine.
+**   This function is LIN1 interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -84,14 +69,14 @@ __interrupt void MD_INTLR1(void)
    vu8 temp,status;
    status = (vu8)UF1STR;
    temp = UF1RXB;
-   UF1STC = (u16)0x7F1F;
+   UF1STC = (u16)0x7F1Fu;
    LIN_Task_USART1_Interrupt(temp);
 }
 /*
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLT0  (ILIN) interrupt service routine.
+**   This function is LIN1 Transmit interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -113,7 +98,7 @@ __interrupt void MD_INTLT1(void)
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLS1  ITLIN) interrupt service routine.
+**   This function is LIN1 status interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -132,7 +117,7 @@ __interrupt void MD_INTLS1(void)
    {
       LIN_Task_USART1_Interrupt(temp);
    }
-   UF1STC = (u16)0x7F1F;
+   UF1STC = (u16)0x7F1Fu;
 }
 
 
@@ -140,7 +125,7 @@ __interrupt void MD_INTLS1(void)
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLR0  (TLIN) interrupt service routine.
+**   This function is LIN0 receive interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -155,14 +140,14 @@ __interrupt void MD_INTLR0(void)
    vu8 temp,status;
    status = (vu8)UF0STR;
    temp = UF0RXB;
-   UF0STC = (u16)0x7F1F;
+   UF0STC = (u16)0x7F1Fu;
    LIN_Task_USART0_Interrupt(temp,RX_INT);
 }
 /*
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLT0  (TLIN) interrupt service routine.
+**   This function is LIN0 transmit interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -177,14 +162,14 @@ __interrupt void MD_INTLT0(void)
    vu8 temp,status;
    status = (vu8)UF0STR;
    temp = UF0RXB;
-   UF0STC = (u16)0x7F1F;
+   UF0STC = (u16)0x7F1Fu;
    LIN_Task_USART0_Interrupt(temp,TX_INT);  
 }
 /*
 **-----------------------------------------------------------------------------
 **
 **  Abstract:
-**   This function is INTLS0  (TLIN) interrupt service routine.
+**   This function is LIN0 status interrupt service routine.
 **
 **  Parameters:
 **   None
@@ -203,7 +188,7 @@ __interrupt void MD_INTLS0(void)
    {
       LIN_Task_USART0_Interrupt(temp,STATUS_INT);
    }
-   UF0STC = (u16)0x7F1F;
+   UF0STC = (u16)0x7F1Fu;
 }
 /*
 **-----------------------------------------------------------------------------

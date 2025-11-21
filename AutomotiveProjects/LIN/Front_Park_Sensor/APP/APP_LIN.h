@@ -11,8 +11,8 @@ Function Prototypes
 ***********************************************************************************/
 
 extern void App_Update_LIN_Data(void);
-extern void App_Notify_Frame_Received(unsigned char id_index);
-extern void App_Notify_Frame_Transmitted(unsigned char id_index);
+extern void App_Notify_Frame_Received_USART1(unsigned char id_index);
+extern void App_Notify_Frame_Transmitted_USART0(unsigned char id_index);
 
 
 

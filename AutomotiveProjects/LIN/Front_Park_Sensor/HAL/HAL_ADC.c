@@ -118,6 +118,10 @@ u8 HAL_ADC_Read_Counts(u16 *adcValptr)
       HAL_ADC_Select_Channel(ADCHANNEL0);
       returnVal = 1u;
    }
+   else
+   {
+      *adcValptr = 0xFFFFu;
+   }
    return returnVal;
 }
 /******************************************************************************

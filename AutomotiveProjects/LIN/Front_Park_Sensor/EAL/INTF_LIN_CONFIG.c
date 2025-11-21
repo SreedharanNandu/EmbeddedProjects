@@ -18,15 +18,15 @@ Global definition
 ***********************************************************************************/
 const Lin_Data_t Lin_Rx_Msg[2] = 
 {
-   {0x14 , 7 , Msg_14_Buffer },
-   {0x5E , 3 , Msg_5E_Buffer }
+   {0x14u , 7u , Msg_14_Buffer },
+   {0x5Eu , 3u , Msg_5E_Buffer }
 };
 
 //this is bypassing led data
 const Lin_Data_t Lin_Tx_Msg[2] = 
 {
-   {0x14, 7, Msg_14_Buffer0 },
-   {0x5E, 3, Msg_5E_Buffer0 }
+   {0x14, 7u, Msg_14_Buffer0 },
+   {0x5E, 3u, Msg_5E_Buffer0 }
 };
 
 

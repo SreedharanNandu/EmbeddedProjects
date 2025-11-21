@@ -33,16 +33,6 @@
 #define NO_OF_UART_TX_IDS         2u
 #define NO_OF_TX_ID               NO_OF_UART_TX_IDS
 
-
-// 200ms = 5ms * 40 periodic rate (spec is 150ms to 250ms)
-#define LIN_WAKEUP_TIMER_PERIODS_NORMAL     ((u16)50)
-// 1500ms = 5 * 300ms periodic rate
-#define LIN_WAKEUP_TIMER_PERIODS_WAIT       ((u16)300)
-
-#define LIN_WAKEUP_COUNT_START              ((u8)3)
-#define MAXIMUM_LIN_INTERBYTE_TIME          ((u8)8)
-#define LIN_SLEEP_TIMER_RESET               ((u16)100)
-
 typedef enum
 {
    NO_INT=0,

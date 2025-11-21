@@ -257,18 +257,18 @@ Revision No(of CFG file):
 /*                                                                         */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
-#define MOS_NUM_FAST_RATE_TASKS    2
+#define MOS_NUM_FAST_RATE_TASKS    3
 #define MOS_NUM_SLOW_RATE_TASKS    1
 
 #define MOS_FAST_TT_TICK_RATE      1 //5msec
 #define MOS_SLOW_TT_TICK_RATE      2 //10msec
 
 #define MOS_FAST_TT_TICK_RATE_LIST \
-             {APP_Task_5ms,1,1},\
-             {APP_Task_10ms,1,2},\
-
+             {APP_Main_Task_5ms,1,1},\
+             {APP_Main_Task_10ms,1,2},\
+             {App_Btn_Task_10ms,1,3},
 #define MOS_SLOW_TT_TICK_RATE_LIST \
-             {APP_Task_100ms,4,10},\
+             {APP_Main_Task_100ms,4,10},
                   
 
 
@@ -400,142 +400,6 @@ Revision No(of CFG file):
 
 
 
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_RAM_START_ADDRESS                                     */
-/*                                                                         */
-/* TYPE:         MACRO                                                    */
-/*                                                                         */
-/* DESCRIPTION:  MACRO for starting address of RAM                        */
-/*                                                                         */
-/* EXAMPLE      #define MOS_RAM_START_ADDRESS (u16)0x4000                */
-/*                                                                         */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_RAM_START_ADDRESS               0xFE700
-
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_RAM_END_ADDRESS                                       */
-/*                                                                         */
-/* TYPE:         MACRO                                                    */
-/*                                                                         */
-/* DESCRIPTION:  MACRO for ending address of RAM                        */
-/*                                                                         */
-/* EXAMPLE      #define MOS_RAM_END_ADDRESS (u16)0x6000                    */
-/*                                                                         */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_RAM_END_ADDRESS         0xFFEDF
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_RAM_Check_Failed_Error()                              */
-/*                                                                         */
-/* TYPE:         Function                                                */
-/*                                                                         */
-/* DESCRIPTION:  User shall assign a function that shall be called when    */
-/*               RAM check fails. This function shall contain              */
-/*               actions to be taken when RAM is corrupted.                */
-/*               Fo eg: Logging DTC or resetting Micro etc.                */
-/*                                                                         */
-/* EXAMPLE      #define MOS_RAM_Check_Failed_Error() function()            */
-/*                                                                         */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_RAM_Check_Failed_Error()          
-
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_STACK_LOWER_BOUND                                     */
-/*               MOS_STACK_UPPER_BOUND                                     */
-/*                                                         */
-/*                                                                         */
-/* TYPE:         MACRO                                                    */
-/*                                                                         */
-/* DESCRIPTION:  MOS_STACK_LOWER_BOUND: Address immediately below stack    */
-/*               MOS_STACK_UPPER_BOUND:   Address immediately above stack      */
-/*                                                         */
-/*                                                                         */
-/* EXAMPLE      #define MOS_STACK_LOWER_BOUND (u16)0x35FF                   */
-/*              #define MOS_STACK_UPPER_BOUND (u16)0x3800               */
-/*                                                         */
-/*            0x35FF -----------( Stack upper bound)                  */
-/*            0x3600 -----------( Stack starting address)                */
-/*                       |                                       */
-/*                    |                                       */
-/*                    |                                       */
-/*            0x37FF -----------( Stack Ending Address)               */
-/*            0x3800 -----------( Stack Lower Bound)                   */
-/*                                                         */
-/*                                                         */
-/*                                                                         */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_STACK_LOWER_BOUND             0xF0000
-
-#define MOS_STACK_UPPER_BOUND             0xF0001
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_Stack_Check_OnInit_Error()                            */
-/*                                                                         */
-/* TYPE:         Function                                                */
-/*                                                                         */
-/* DESCRIPTION:  User shall assign a function that shall be called when    */
-/*               Stack check fails on start up. This function shall contain*/
-/*               actions to be taken when stack is corrupted.              */
-/*               Fo eg: Logging DTC or resetting Micro etc.                */
-/*                                                                         */
-/* EXAMPLE      #define MOS_Stack_Check_OnInit_Error() function()          */
-/*                                                                         */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_Stack_Check_OnInit_Error()          
-
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_Stack_Underflow_Error()                               */
-/*                                                                         */
-/* TYPE:         Macro to a function                                       */
-/*                                                                         */
-/* DESCRIPTION:  This function shall perform error action when Stack       */
-/*               Underflow occur                                           */    
-/*                                                                        */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_Stack_Underflow_Error()         
-
-
-/*-------------------------------------------------------------------------*/
-/*                                                                         */
-/* NAME:         MOS_Stack_Overflow_Error()                                */
-/*                                                                         */
-/* TYPE:         Macro to a function                                       */
-/*                                                                         */
-/* DESCRIPTION:  This function shall perform error action when Stack       */
-/*               Overflow occur                                           */    
-/*                                                                        */
-/*                                                                         */
-/* REQUIRED:     YES                                                       */
-/*                                                                         */
-/*-------------------------------------------------------------------------*/
-#define MOS_Stack_Overflow_Error()             
 
 
 #endif  /*EOF*/

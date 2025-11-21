@@ -24,16 +24,14 @@ Global definisition
 /**********************************************************************************
 Global variables
 ***********************************************************************************/
-lin_rx_data_t lin_rx_data[NO_OF_RX_ID];
-
-volatile Lin_state_t Lin_State;
-/***********************************************************************************/
-lin_tx_data_t lin_tx_data[NO_OF_TX_ID];
-
-volatile Lin_state_t Lin_State0;
-
 u8 Lin_Next_Index0;
 u16 Lin_Periodic_Timer0;
+
+lin_rx_data_t lin_rx_data[NO_OF_RX_ID];
+lin_tx_data_t lin_tx_data[NO_OF_TX_ID];
+volatile Lin_state_t Lin_State;
+volatile Lin_state_t Lin_State0;
+
 
 
 
@@ -52,7 +50,7 @@ void LIN_Initialize(void)
    unsigned char id;
 
    Lin_State = SYNC_BREAK_WAIT;
-   for(id = 0;id<NO_OF_RX_ID;id++)
+   for(id = 0u;id<NO_OF_RX_ID;id++)
    {
       lin_rx_data[id].id_receive = Get_Receive_ID(id);
    }
@@ -60,19 +58,19 @@ void LIN_Initialize(void)
 
    Lin_State0 = SYNC_BREAK_WAIT;
 
-   for(id = 0;id<NO_OF_TX_ID;id++)
+   for(id = 0u;id<NO_OF_TX_ID;id++)
    {
       lin_tx_data[id].id_transmit = Get_Transmit_ID(id);
    }
    
-   Lin_Next_Transmit_Msg_Timer0 = 0;
-   Lin_Next_Index0 = 0;
+   Lin_Next_Transmit_Msg_Timer0 = 0u;
+   Lin_Next_Index0 = 0u;
    LIN_Send_Wakeup_Signal0();
 }
 
 /**********************************************************************************
-Function Name:  LIN_Task_Interrupt
-Description:    LIN Rx
+Function Name:  USART0 Interrupt
+Description:    Display data 
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
@@ -186,7 +184,7 @@ void LIN_Task_USART0_Interrupt(u8 data, Usart_Interrupt_t isr_type)
              {
                 Lin_State0 = SYNC_BREAK_WAIT;            
                 Lin_Next_Transmit_Msg_Timer0 = LIN_NEXT_MSG_PERIODIC_CNT;
-                App_Notify_Frame_Transmitted(id_index);
+                App_Notify_Frame_Transmitted_USART0(id_index);
              }
              else
              {
@@ -221,7 +219,7 @@ Return value:   none
 ***********************************************************************************/
 unsigned char LIN_Calc_Checksum(unsigned char *data,unsigned char length)
 {
-   unsigned int sum = 0;
+   unsigned int sum = 0u;
 
    // Unrolled loop for speed (optional for small fixed lengths)
    while(length--)
@@ -257,8 +255,8 @@ static void LIN_Response_Transmit_Delay_for_Renesas( void )
 
 
 /**********************************************************************************
-Function Name:  
-Description:    
+Function Name:  USART1 Interrupt
+Description:    LIN sensor data 
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
@@ -266,10 +264,12 @@ void LIN_Task_USART1_Interrupt(u8 data)
 { 
     static unsigned char dummy;
     static unsigned char id_receive;
-    static unsigned char cksum,temp_cksum=0u;
-    static unsigned char rx_data_cnt,
-                         id_index,id,
-                         byte;
+    static unsigned char cksum;
+    static unsigned char temp_cksum;
+    static unsigned char rx_data_cnt;
+    static unsigned char id_index;
+    static unsigned char id;
+    static unsigned char byte;
    
    switch(Lin_State)
    {
@@ -343,7 +343,7 @@ void LIN_Task_USART1_Interrupt(u8 data)
           {
              Lin_State = SYNC_BREAK_WAIT;
              memcpy(Lin_Rx_Msg[id_index].buf_ptr,(unsigned char*)&lin_rx_data[id_index].receive_data,8u);
-             App_Notify_Frame_Received(id_index);
+             App_Notify_Frame_Received_USART1(id_index);
           }
           else
           {
