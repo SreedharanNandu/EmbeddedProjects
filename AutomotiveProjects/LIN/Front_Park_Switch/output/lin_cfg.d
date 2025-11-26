@@ -1,0 +1,1 @@
+ lin_cfg.d  lin_cfg.p1:  D:/Nandu/Git_Workspace/EmbeddedProjects/AutomotiveProjects/LIN/Front_Park_Switch/lin_cfg.c D:/Nandu/Git_Workspace/EmbeddedProjects/AutomotiveProjects/LIN/Front_Park_Switch/hal_lin.h D:/Nandu/Git_Workspace/EmbeddedProjects/AutomotiveProjects/LIN/Front_Park_Switch/lin_cfg.h

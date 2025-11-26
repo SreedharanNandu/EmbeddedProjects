@@ -1,5 +1,6 @@
 #include "pic12f1822.h"
 #include "types.h"
+#include "hal_lin.h"
 #include "btn.h"
 
 #define DEBUG_LED               0u
@@ -7,30 +8,42 @@
 #define DELAY_9600              13u
 #define TIMER2_USED             
 
+/**********************************************************************************
+Global definition
+***********************************************************************************/
+
+/**********************************************************************************
+Global variables
+***********************************************************************************/
 volatile unsigned char timer_10ms_count;
 volatile unsigned char timer_100ms_count;
-volatile unsigned char rx_data;
+
+/***********************************************************************************
+Function Prototypes
+***********************************************************************************/
+
 
 static void InitializeSystem(void);
 static void Init_UART(void);
-void Send_Data(uint8_t data);
 
 
 #if defined(TIMER0_USED)
-static void Delay_Ms(uint32_t dlyMs);
+static void Delay_Ms(unsigned long dlyMs);
 #endif
 
-/*******************************************************************************
+/***********************************************************************************
+Function Prototypes
+***********************************************************************************
  Func Name    :
  Arguments    :
  Return       :
  Description  :   
-*******************************************************************************/
+***********************************************************************************/
 void main(void)
 {
 
    //power stabilization
-   volatile  uint16_t data = 9000u;
+   volatile  unsigned int data = 9000u;
    while(data--);
    
    InitializeSystem();
@@ -42,16 +55,11 @@ void main(void)
       if(timer_10ms_count == 9u)
       {
          App_Btn_Process();
-         Send_Data(0x33);
          timer_10ms_count = 0u;
       }
       if(timer_100ms_count == 99u)
       {
          timer_100ms_count = 0u;
-         if(key_pressed)
-         {
-            key_pressed = 0u;
-         }
       }
    }
 }
@@ -69,17 +77,19 @@ static void InitializeSystem(void)
    OSCCON = 0x78u;   //clock uses 16Mhz HFINTOSC
    OPTION_REG = 0x03u; //1:16 for TMR0 i.e 250Khz
    CM1CON0 = 7u;    //comparators off
-   ANSELA = 0u;     //all digital GPIO pins
-
+   ANSELA = 0x04u;  //RA2 analog,rest all digital GPIO pins
+   ADCON0 = 0x01u;  //ADC enabled
+   ADCON1 = 0xD0u;  //Right justified,fosc/16 = 1Mhz
+   
    //set port
    //VDD  pin1
    //1 - input , 0 - output
    TRISA5 = 1u;//gpio pin2 rx
    TRISA4 = 0u;//gpio pin3 tx
    TRISA3 = 1u;//mclr pin4
-   TRISA2 = 1u;//gpio pin5 sw
+   TRISA2 = 1u;//analog gpio pin5 sw
    TRISA1 = 0u;//gpio pin6 led
-   TRISA0 = 0u;//gpio pin7 
+   TRISA0 = 0u;//gpio pin7 slp_pin
    //VSS  pin8
 
 
@@ -105,7 +115,7 @@ static void InitializeSystem(void)
  Return       :
  Description  :   
 *******************************************************************************/
-static void Delay_Ms(uint32_t dlyMs)
+static void Delay_Ms(unsigned long dlyMs)
 {
    //1msec X a
    while(dlyMs)
@@ -132,7 +142,7 @@ static void Delay_Ms(uint32_t dlyMs)
 *******************************************************************************/
 static void interrupt isr(void)// Here be interrupt function - the name is unimportant.
 {
-   uint8_t data;
+   unsigned char data;
    #if defined(TIMER2_USED)
    //timer 2 interrupt
    if(TMR2IE &&  TMR2IF)
@@ -147,7 +157,7 @@ static void interrupt isr(void)// Here be interrupt function - the name is unimp
    {
       RCIF = 0;
       data = RCREG;
-      rx_data = data;
+      LIN_Task_USART_Interrupt(data);
    }
 }
 
@@ -180,9 +190,4 @@ static void Init_UART(void)
    RCSTAbits.SPEN = 1; // enable serial port 
 }
 
-void Send_Data(uint8_t data)
-{
-   while(!TRMT);
-   TXREG = data;
-}
 

@@ -1,0 +1,114 @@
+
+# 1 "D:\Nandu\Git_Workspace\EmbeddedProjects\AutomotiveProjects\LIN\Front_Park_Switch\lin_cfg.c"
+
+# 4 "C:\Program Files (x86)\Microchip\xc8\v1.30\include\string.h"
+typedef int ptrdiff_t;
+typedef unsigned size_t;
+typedef unsigned short wchar_t;
+
+
+extern int errno;
+
+# 22
+extern void * memcpy(void *, const void *, size_t);
+extern void * memmove(void *, const void *, size_t);
+extern void * memset(void *, int, size_t);
+
+# 35
+extern char * strcat(char *, const char *);
+extern char * strcpy(char *, const char *);
+extern char * strncat(char *, const char *, size_t);
+extern char * strncpy(char *, const char *, size_t);
+extern char * strdup(const char *);
+extern char * strtok(char *, const char *);
+
+
+extern int memcmp(const void *, const void *, size_t);
+extern int strcmp(const char *, const char *);
+extern int stricmp(const char *, const char *);
+extern int strncmp(const char *, const char *, size_t);
+extern int strnicmp(const char *, const char *, size_t);
+extern void * memchr(const void *, int, size_t);
+extern size_t strcspn(const char *, const char *);
+extern char * strpbrk(const char *, const char *);
+extern size_t strspn(const char *, const char *);
+extern char * strstr(const char *, const char *);
+extern char * stristr(const char *, const char *);
+extern char * strerror(int);
+extern size_t strlen(const char *);
+extern char * strchr(const char *, int);
+extern char * strichr(const char *, int);
+extern char * strrchr(const char *, int);
+extern char * strrichr(const char *, int);
+
+# 18 "D:\Nandu\Git_Workspace\EmbeddedProjects\AutomotiveProjects\LIN\Front_Park_Switch\hal_lin.h"
+typedef enum
+{
+NO_INT=0,
+RX_INT=1,
+TX_INT=2,
+STATUS_INT=3,
+}Usart_Interrupt_t;
+
+typedef enum
+{
+LIN_IDLE=0,
+SYNC_BREAK_WAIT,
+SYNC_WAIT,
+ID_WAIT,
+DATA_TRANSMIT,
+DATA_RECEIVE,
+CHKSUM_TRANSMIT,
+CHKSUM_RECEIVE
+}Lin_State_t;
+
+extern volatile Lin_State_t Lin_State;
+
+
+typedef struct
+{
+unsigned char id;
+unsigned char data[8u];
+unsigned char checksum;
+}Lin_Data_t;
+
+extern volatile Lin_Data_t Lin_Data[2u];
+
+# 53
+extern void LIN_Initialize( void );
+extern void LIN_Task_USART_Interrupt(unsigned char data);
+extern unsigned char LIN_Calc_Checksum(unsigned char *data,unsigned char length);
+
+# 6 "D:\Nandu\Git_Workspace\EmbeddedProjects\AutomotiveProjects\LIN\Front_Park_Switch\lin_cfg.h"
+typedef enum
+{
+NO_PAYLOAD=0,
+TRANSMIT_PAYLOAD,
+RECEIVE_PAYLOAD
+
+}lin_msg_type_t;
+
+
+typedef struct
+{
+unsigned char id;
+unsigned char len;
+lin_msg_type_t type;
+unsigned char *buf_ptr;
+}Lin_Msg_t;
+
+extern const Lin_Msg_t Lin_Msg[2u];
+extern unsigned char Msg_01_Buffer[8u];
+extern unsigned char Msg_02_Buffer[8u];
+
+# 16 "D:\Nandu\Git_Workspace\EmbeddedProjects\AutomotiveProjects\LIN\Front_Park_Switch\lin_cfg.c"
+const Lin_Msg_t Lin_Msg[2u] =
+{
+{0x01u , 8u , RECEIVE_PAYLOAD, Msg_01_Buffer },
+{0x02u , 8u , TRANSMIT_PAYLOAD, Msg_02_Buffer }
+};
+
+# 25
+unsigned char Msg_01_Buffer[8u];
+unsigned char Msg_02_Buffer[8u];
+

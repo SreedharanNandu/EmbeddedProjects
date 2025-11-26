@@ -1,0 +1,17 @@
+_Init_UART: CODE, 714 0 18
+__stringtab: STRING, 772 0 1
+_main: CODE, 680 0 34
+_Read_Adc: CODE, 761 0 11
+_App_Notify_Frame_Received_USART: CODE, 505 0 55
+_memcpy: CODE, 605 0 40
+__initialization: CODE, 40 0 6
+_LIN_Task_USART_Interrupt: CODE, 48 0 457
+_LIN_Calc_Checksum: CODE, 560 0 45
+_Init_Btn: CODE, 794 0 1
+_isr: CODE, 4 0 35
+_InitializeSystem: CODE, 645 0 35
+_App_Btn_Process: CODE, 749 0 12
+_Lin_Msg: STRING, 773 0 8
+_LIN_Send_Data: CODE, 781 0 7
+___bmul: CODE, 732 0 17
+Total: 782
