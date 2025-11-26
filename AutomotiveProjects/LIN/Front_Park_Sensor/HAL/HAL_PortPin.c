@@ -130,7 +130,7 @@ void HAL_Port_Init(void)
    P1.7 = 1; //slp_n 
 
    P3.0 = 0;//
-   P3.1 = 0;//
+   P3.1 = 1;//turn ON Led
    P3.2 = 0;// mode 1 of swcan trcv 
 
    P4.1 = 1;//slp_n is 1 for Normal operation

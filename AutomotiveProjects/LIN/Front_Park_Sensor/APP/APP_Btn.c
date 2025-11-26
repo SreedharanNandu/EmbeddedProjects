@@ -31,8 +31,8 @@
 #define STUCK_MS                300000U    // 300000ms = 5 minutes; change as needed
 
 /* ADC thresholds (values in ADC counts) - tune to your resistor divider and ADC range */
-#define ADC_PRESSED_THRESHOLD   3000U      // example: ADC value when switch is solidly pressed
-#define ADC_RELEASED_THRESHOLD  500U       // example: ADC when released (near zero)
+#define ADC_PRESSED_THRESHOLD   300U      // example: ADC value when switch is solidly pressed
+#define ADC_RELEASED_THRESHOLD   10U       // example: ADC when released (near zero)
 
 
 /*****************************************************************************
@@ -52,6 +52,7 @@ volatile BtnEvent_t  pending_event;
 /*Adc voltage*/
 volatile u16 SwV_in_mV;
 volatile u16 PinV_in_mV;
+volatile u16 AdcCounts;
 /**************************************************************************
  *       local prototypes
  *************************************************************************/
@@ -78,6 +79,7 @@ void App_Btn_Task_10ms(void)
    {
       if(adcVal != 0xFFFFu)
       {
+         AdcCounts = adcVal;
          PinV_in_mV = (u16)((u32)adcVal * 825u)/256u;
          SwV_in_mV = (u16)((u32)adcVal * 93u)/5u;
       }
@@ -93,7 +95,7 @@ void App_Btn_Task_10ms(void)
    }
    else
    {
-      rawVal = BTN_RAW_UNKNOWN; // in hysteresis band
+     //do nothing
    }
 
 

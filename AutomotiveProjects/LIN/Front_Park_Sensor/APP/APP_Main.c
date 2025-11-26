@@ -31,6 +31,8 @@
 #define _XS_CNT                   40u
 #define LIN_PERIODIC_MSG_CNT      4u //5ms x 4times x 5ms gap = 100ms
 #define MAX_BUZZ                  10u
+#define PWR_UP_TIMER              100u
+#define FAULT_LED_TIMER           100u
 
 /*****************************************************************************
 *                                 Type Declarations                          *
@@ -69,7 +71,7 @@ const buzzerZone_t buzzerZoneMap[BUZZER_ZONE_MAX][BUZZER_ZONE_MAX] =
 };
 
 
-volatile u8 buzzer_state;
+volatile u8 buzzer_level;
 volatile u8 Lin_Comm_Count;
 volatile u8 Lin_Comm_Count0;
 volatile u8 Distance_Received[7];
@@ -81,7 +83,8 @@ volatile u16 stop_count;
 volatile buzzerZone_t curr_zone[SENSOR_MAX];
 volatile buzzerZone_t final_zone;
 volatile buzzerZone_t prev_zone;
-
+volatile buzz_state_t buzz_state;
+volatile u16 fault_led_timer;
 #if 0
 volatile u8 dist_dbg[SENSOR_MAX];
 #endif
@@ -90,7 +93,7 @@ volatile u8 dist_dbg[SENSOR_MAX];
  *************************************************************************/
 static void Init_Buzz(void);
 static void App_Chime_Task(void);
-void bin_to_strhex(unsigned char *bin, unsigned int binsz, char **result);
+static void App_Manager_Task(void);
 
 
 /******************************************************************************
@@ -110,7 +113,7 @@ void Init_APP(void)
    curr_zone[SENSOR_R] = BUZZER_ZONE4;
    LIN_Initialize();
    Init_Buzz();
-   
+   fault_led_timer = 0u;
 }
 
 /******************************************************************************
@@ -123,6 +126,7 @@ void APP_Main_Task_10ms(void)
 {
    App_Dist_Task();
    App_Chime_Task();
+   App_Manager_Task();
 }
 
 
@@ -134,7 +138,38 @@ void APP_Main_Task_10ms(void)
 ******************************************************************************/
 void APP_Main_Task_5ms(void)
 {
-   
+   static u8 pwrup_timer;
+
+   if(pwrup_timer != PWR_UP_TIMER) 
+   {
+      pwrup_timer++;
+   }
+   else if(pwrup_timer >= PWR_UP_TIMER)
+   {
+      interByteTimer1++;
+      if(interByteTimer1 >= LIN_IDLE_TIMER)
+      {
+         interByteTimer1 = LIN_IDLE_TIMER;
+         if(Lin1_Active)
+         {
+            Lin1_Active = 0u;
+            Lin1_Fault = 1u;
+         }
+      }
+      else
+      {
+         if(!Lin1_Active)
+         {
+            Lin1_Active = 1u;
+            Lin1_Fault = 0u;
+         }
+      }
+   }
+   else
+   {
+      //do nothing
+   }
+
    if(Lin_Periodic_Timer0 < LIN_PERIODIC_MSG_CNT)
    {
       Lin_Periodic_Timer0++;
@@ -211,103 +246,89 @@ void App_Dist_Task(void)
    u8 temp = 0u;
    static u8 prev_dist[SENSOR_MAX];
    
-   if(Lin_Comm_Count >= LIN_DEFAULT_COUNT)
+   if(Lin1_Active)
    {
-      Distance_Received[5] = 0u;
-      Distance_Received[6] = 0u;
-      Set_Led1(1);
-   }
-   else
-   {
-      Lin_Comm_Count++;
-      Set_Led1(0);
-   }
-   
-   if(Lin_Comm_Count0 >= LIN_DEFAULT_COUNT)
-   {
-      Set_Led2(1);
-   }
-   else
-   {
-      Lin_Comm_Count0++;
-      Set_Led2(0);
-   }
+      if(Lin_Comm_Count >= LIN_DEFAULT_COUNT)
+      {
+         Distance_Received[5] = 0u;
+         Distance_Received[6] = 0u;
+         Set_Led1(1);
+      }
+      else
+      {
+         Lin_Comm_Count++;
+         Set_Led1(0);
+      }
+      
+      if(Lin_Comm_Count0 >= LIN_DEFAULT_COUNT)
+      {
+         Set_Led2(1);
+      }
+      else
+      {
+         Lin_Comm_Count0++;
+         Set_Led2(0);
+      }
 
-   for(j=0;j<3u;j++)
-   {
-      Lin_Tx_Msg[0].buf_ptr[j] = Distance_Received[j];
-      lin_tx_data[0].transmit_data[j] = Distance_Received[j] ;
-   }
-   
-   if(Distance_Received[3] != 0u)
-   {
-      lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = Distance_Received[5];
-   }
-   else
-   {
-      if(Distance_Received[3] == 0u)
+      for(j=0;j<3u;j++)
       {
-         lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = 0xFFu;
+         Lin_Tx_Msg[0].buf_ptr[j] = Distance_Received[j];
+         lin_tx_data[0].transmit_data[j] = Distance_Received[j] ;
       }
-   }
-   if(Distance_Received[4] != 0u)
-   {
-      lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = Distance_Received[5];
-   }
-   else
-   {
-      if(Distance_Received[4] == 0u)
+      
+      if(Distance_Received[3] != 0u)
       {
-         lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = 0xFFu;
+         lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = Distance_Received[5];
       }
-   }
-   if(Distance_Received[5] != 0u)
-   {
-      lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = Distance_Received[6];
-   }
-   else
-   {
-      if(Distance_Received[5] == 0u)
+      else
       {
-         lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = 0xFFu;
-      }
-   }
-   if(Distance_Received[6] != 0u)
-   {
-      lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = Distance_Received[6];
-   }
-   else
-   {
-      if(Distance_Received[6] == 0u)
-      {
-         lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = 0xFFu;
-      }
-   }
-
-   
-   
-   //estimate current zones of sensors
-   for(j=0;j<(u8)SENSOR_MAX;j++)
-   {
-      if(j == (u8)SENSOR_L)
-      {
-         if((Distance_Received[5] != 0u))
+         if(Distance_Received[3] == 0u)
          {
-            temp = Distance_Received[5];
-            distance_valid[j] = 1u;
-         }
-         else
-         {
-            distance_valid[j] = 0u;
+            lin_tx_data[0].transmit_data[3] = Lin_Tx_Msg[0].buf_ptr[3] = 0xFFu;
          }
       }
-      else 
+      if(Distance_Received[4] != 0u)
       {
-         if(j == (u8)SENSOR_R)
+         lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = Distance_Received[5];
+      }
+      else
+      {
+         if(Distance_Received[4] == 0u)
          {
-            if((Distance_Received[6] != 0u))
+            lin_tx_data[0].transmit_data[4] = Lin_Tx_Msg[0].buf_ptr[4] = 0xFFu;
+         }
+      }
+      if(Distance_Received[5] != 0u)
+      {
+         lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = Distance_Received[6];
+      }
+      else
+      {
+         if(Distance_Received[5] == 0u)
+         {
+            lin_tx_data[0].transmit_data[5] = Lin_Tx_Msg[0].buf_ptr[5] = 0xFFu;
+         }
+      }
+      if(Distance_Received[6] != 0u)
+      {
+         lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = Distance_Received[6];
+      }
+      else
+      {
+         if(Distance_Received[6] == 0u)
+         {
+            lin_tx_data[0].transmit_data[6] = Lin_Tx_Msg[0].buf_ptr[6] = 0xFFu;
+         }
+      }
+
+      //estimate current zones of sensors
+      for(j=0;j<(u8)SENSOR_MAX;j++)
+      {
+         if(j == (u8)SENSOR_L)
+         {
+            if((Distance_Received[5] != 0u))
             {
-               temp = Distance_Received[6];
+               temp = Distance_Received[5];
                distance_valid[j] = 1u;
             }
             else
@@ -315,157 +336,275 @@ void App_Dist_Task(void)
                distance_valid[j] = 0u;
             }
          }
-      }
-      if(distance_valid[j])
-      {
-         dist[j] = temp;
-         if(dist[j] != prev_dist[j])
+         else 
          {
-            for(i=0u;i<BUZZER_ZONE_MAX;++i) 
+            if(j == (u8)SENSOR_R)
             {
-               if((dist[j] >= Buzzer_Range_Map[i][0] )&& 
-                  (dist[j] <= Buzzer_Range_Map[i][1])) 
+               if((Distance_Received[6] != 0u))
                {
-                  curr_zone[j] = (buzzerZone_t)i;
-                  #if 0
-                  dist_dbg[j] = temp;
-                  #endif
-                  break;
+                  temp = Distance_Received[6];
+                  distance_valid[j] = 1u;
+               }
+               else
+               {
+                  distance_valid[j] = 0u;
                }
             }
-            prev_dist[j] = dist[j];
+         }
+         if(distance_valid[j])
+         {
+            dist[j] = temp;
+            if(dist[j] != prev_dist[j])
+            {
+               for(i=0u;i<BUZZER_ZONE_MAX;++i) 
+               {
+                  if((dist[j] >= Buzzer_Range_Map[i][0] )&& 
+                     (dist[j] <= Buzzer_Range_Map[i][1])) 
+                  {
+                     curr_zone[j] = (buzzerZone_t)i;
+                     #if 0
+                     dist_dbg[j] = temp;
+                     #endif
+                     break;
+                  }
+               }
+               prev_dist[j] = dist[j];
+            }
+         }
+      }
+
+      if(distance_valid[SENSOR_L] && distance_valid[SENSOR_R])
+      {
+         //calculate one final combined zone for buzz
+         final_zone = buzzerZoneMap[curr_zone[SENSOR_L]][curr_zone[SENSOR_R]];
+         //final zone changed
+         if(final_zone != prev_zone)
+         {
+            if(stop_count != 0u)
+            {
+               stop_count = 0u;
+            }
+            //final zone within range
+            if(final_zone < BUZZER_ZONE_MAX) 
+            {
+               buzzer_timer = 0u;
+               buzzer_level = 0u;
+            }
+            prev_zone = final_zone;
+         }
+         else//same final zone
+         {   
+            //count for like a variable threshold and then stop beeping 
+            if(stop_count >= STOP_BEEP_COUNT)
+            {
+               if(final_zone != BUZZER_ZONE4)
+               {
+                  final_zone = BUZZER_ZONE4;
+                  buzzer_timer = 0u;
+                  buzzer_level = 0u;
+               }
+            }
+            else
+            {
+               stop_count++; 
+            }
+         }
+      }
+      else
+      {
+         if(final_zone != BUZZER_ZONE4)
+         {
+            prev_zone = final_zone = BUZZER_ZONE4;
+            buzzer_timer = 0u;
+            buzzer_level = 0u;
          }
       }
    }
+}
 
-   if(distance_valid[SENSOR_L] && distance_valid[SENSOR_R])
+/****************************************************************************
+*. Name:App_Sound_Task
+*. Description:
+*. Warning: None
+*. Shared Variables: 
+*. Parameters: 
+*. Return Value: 
+******************************************************************************/
+static void App_Manager_Task(void)
+{
+   BtnState_t state;
+   static BtnState_t prev_state;
+   static u8 toggle_pin;
+
+   if(Lin1_Active)
    {
-      //calculate one final combined zone for buzz
-      final_zone = buzzerZoneMap[curr_zone[SENSOR_L]][curr_zone[SENSOR_R]];
-      //final zone changed
-      if(final_zone != prev_zone)
+      state = Get_Button_State();
+      if(prev_state != state)
       {
-         if(stop_count != 0u)
+         prev_state = state;
+         if(state == BTN_STATE_PRESSED)
          {
-            stop_count = 0u;
-         }
-         //final zone within range
-         if(final_zone < BUZZER_ZONE_MAX) 
-         {
+            prev_zone = final_zone = BUZZER_ZONE4;//no beep
             buzzer_timer = 0u;
-            buzzer_state = 0u;
-         }
-         prev_zone = final_zone;
-      }
-      else//same final zone
-      {   
-         //count for like a variable threshold and then stop beeping 
-         if(stop_count >= STOP_BEEP_COUNT)
-         {
-            if(final_zone != BUZZER_ZONE4)
+            buzzer_level = 0u;
+            if(buzz_state == BUZZ_ON)
             {
-               final_zone = BUZZER_ZONE4;
-               buzzer_timer = 0u;
-               buzzer_state = 0u;
+               Set_Led0(1);
+               buzz_state = BUZZ_OFF;
+            }
+            else
+            {
+               if(buzz_state == BUZZ_IDLE)
+               {
+                  buzz_state = BUZZ_ON;
+                  Set_Led0(0);
+               }
+               else
+               {
+                  //do nothing
+               }
             }
          }
-         else
+         else 
          {
-            stop_count++; 
+            if(state == BTN_STATE_RELEASED)
+            {
+               /*Do nothing */
+            }
          }
+      }//state change
+   }
+   if(Lin1_Fault)
+   {
+      /*
+      |----------fault-------------|
+       lin no comm,chip bad,stg,stb
+      */
+      if(fault_led_timer != FAULT_LED_TIMER)
+      {      
+         fault_led_timer++;
+      }
+      else
+      {
+         fault_led_timer = 0u;
+         toggle_pin = !toggle_pin;
+         Set_Led0(toggle_pin);
       }
    }
    else
    {
-      if(final_zone != BUZZER_ZONE4)
+      if(fault_led_timer > 0u)
       {
-         prev_zone = final_zone = BUZZER_ZONE4;
-         buzzer_timer = 0u;
-         buzzer_state = 0u;
+         fault_led_timer = 0u;
+         Set_Led0(0);
       }
    }
 }
 
 
-
 /****************************************************************************
 *. Name:App_Chime_Task
-*.
-*.   Description:
-*.
-*.   Warning: None
-*.
+*. Description:
+*. Warning: None
 *. Shared Variables: 
-*.
 *. Parameters: 
-*.
 *. Return Value: 
-*.
-*.
 ******************************************************************************/
 void App_Chime_Task(void)
 {
    static u8 temp_zone;
    buzzerPattern_t *ptr;
-   
-   
-   if((0u == buzzer_timer) && 
-      (0u == buzzer_state))
+   static u8 prev_Lin1_Fault;
+
+   if(Lin1_Active)
    {
-      temp_zone = (u8)final_zone;
-      // MUTE
+      if(buzz_state == BUZZ_ON)
+      {
+         if((0u == buzzer_timer) && 
+            (0u == buzzer_level))
+         {
+            temp_zone = (u8)final_zone;
+            // MUTE
+            Set_Buzz(0u);
+         }
+
+         ptr = &Buzzer[temp_zone];
+      
+         // Handle special cases
+         if((ptr->on_time_10ms == 0u) && 
+            (ptr->off_time_10ms == 0u))
+         {
+            // MUTE
+            Set_Buzz(0u);
+            buzzer_level = 0u;
+            buzzer_timer = 0u;
+            return;
+         }
+      
+         if(ptr->on_time_10ms == 0xFFFFu) 
+         {
+            // CONTINUOUS HIGH
+            Set_Buzz(1u);
+            buzzer_level = 1u;
+            buzzer_timer = 0u;
+            return;
+         }
+      
+         // Toggle logic
+         if(buzzer_level) 
+         {
+            if(buzzer_timer < ptr->on_time_10ms) 
+            {
+               buzzer_timer++;
+            }
+            else 
+            {
+               buzzer_level = 0u;
+               buzzer_timer = 0u;
+               Set_Buzz(0u);
+            }
+         }
+         else 
+         {
+             if(buzzer_timer < ptr->off_time_10ms) 
+             {
+                 buzzer_timer++;
+             }
+             else
+             {
+                 buzzer_level = 1u;
+                 buzzer_timer = 0u;
+                 Set_Buzz(1u);
+             }
+         }
+      }
+      else
+      {
+         if(buzz_state == BUZZ_OFF)
+         {
+            Set_Buzz(0u);
+            buzz_state = BUZZ_IDLE;
+         }
+      }
+   }
+   /*fault set/reset trigger*/
+   if(prev_Lin1_Fault != Lin1_Fault)
+   {
       Set_Buzz(0u);
-
+      buzzer_timer = 0u;
+      buzzer_level = 0u;
+      if(Lin1_Fault)
+      {
+         buzz_state = BUZZ_OFF;
+      }
+      else
+      {
+         buzz_state = BUZZ_ON;
+      }
+      prev_Lin1_Fault = Lin1_Fault;
    }
-   ptr = &Buzzer[temp_zone];
-
-   // Handle special cases
-   if((ptr->on_time_10ms == 0u) && 
-      (ptr->off_time_10ms == 0u))
-   {
-       // MUTE
-       Set_Buzz(0u);
-       buzzer_state = 0u;
-       buzzer_timer = 0u;
-       return;
-   }
-
-   if(ptr->on_time_10ms == 0xFFFFu) 
-   {
-       // CONTINUOUS HIGH
-       Set_Buzz(1u);
-       buzzer_state = 1u;
-       buzzer_timer = 0u;
-       return;
-   }
-
-   // Toggle logic
-   if(buzzer_state) 
-   {
-       if (buzzer_timer < ptr->on_time_10ms) 
-       {
-           buzzer_timer++;
-       }
-       else 
-       {
-           buzzer_state = 0u;
-           buzzer_timer = 0u;
-           Set_Buzz(0u);
-       }
-   }
-   else 
-   {
-       if (buzzer_timer < ptr->off_time_10ms) 
-       {
-           buzzer_timer++;
-       }
-       else
-       {
-           buzzer_state = 1u;
-           buzzer_timer = 0u;
-           Set_Buzz(1u);
-       }
-   }
+   
+   
 }
 
 /****************************************************************************
@@ -475,7 +614,6 @@ void App_Chime_Task(void)
 *. Shared Variables: 
 *. Parameters: 
 *. Return Value: 
-*.
 ******************************************************************************/
 static void Init_Buzz(void)
 {
@@ -487,6 +625,7 @@ static void Init_Buzz(void)
       while(delay_buzz--);
    }
    Set_Buzz(0);
+   buzz_state = BUZZ_ON;
 }
 /******************************************************************************
 **                  R E V I S I O N     H I S T O R Y

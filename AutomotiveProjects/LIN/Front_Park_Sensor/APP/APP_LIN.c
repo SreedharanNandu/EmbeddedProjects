@@ -35,8 +35,8 @@ Global variables
      User Program Code
 ***********************************************************************************/
 /**********************************************************************************
-Function Name:  
-Description:    
+Function Name:  ILIN Receive
+Description:    Sensor Data in
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
@@ -51,8 +51,8 @@ void App_Notify_Frame_Received_USART1(unsigned char id_index)
 }
 
 /**********************************************************************************
-Function Name:  
-Description:    
+Function Name:  TLIN transmit
+Description:    Display data out
 Parameters:     none
 Return value:   none
 ***********************************************************************************/

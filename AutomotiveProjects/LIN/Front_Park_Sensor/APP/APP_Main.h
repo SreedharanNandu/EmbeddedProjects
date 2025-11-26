@@ -20,8 +20,14 @@ System/Project Includes                            *
 /*****************************************************************************
 *                             Macro Definitions                             
 ******************************************************************************/
-
 // Buzzer features
+typedef enum
+{
+   BUZZ_IDLE=0,
+   BUZZ_OFF,
+   BUZZ_ON
+}buzz_state_t;
+
 typedef enum 
 {
     BUZZER_ZONE0=0,//continuous beep
@@ -47,6 +53,8 @@ typedef struct
     u16 off_time_10ms;  // in 10ms units
 
 } buzzerPattern_t;
+
+
 
 extern volatile u8 Distance_Received[7];
 extern volatile u8 Lin_Comm_Count;

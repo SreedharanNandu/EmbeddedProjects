@@ -32,7 +32,9 @@ lin_tx_data_t lin_tx_data[NO_OF_TX_ID];
 volatile Lin_state_t Lin_State;
 volatile Lin_state_t Lin_State0;
 
-
+volatile u8 Lin1_Active; 
+volatile u8 Lin1_Fault;
+volatile u32 interByteTimer1;
 
 
 static void LIN_Response_Transmit_Delay_for_Renesas( void );
@@ -66,10 +68,12 @@ void LIN_Initialize(void)
    Lin_Next_Transmit_Msg_Timer0 = 0u;
    Lin_Next_Index0 = 0u;
    LIN_Send_Wakeup_Signal0();
+   interByteTimer1 = 0u;
+   Lin1_Active = 1;
 }
 
 /**********************************************************************************
-Function Name:  USART0 Interrupt
+Function Name:  USART0 Interrupt(TLIN)
 Description:    Display data 
 Parameters:     none
 Return value:   none
@@ -255,22 +259,24 @@ static void LIN_Response_Transmit_Delay_for_Renesas( void )
 
 
 /**********************************************************************************
-Function Name:  USART1 Interrupt
+Function Name:  USART1 Interrupt(ILIN)
 Description:    LIN sensor data 
 Parameters:     none
 Return value:   none
 ***********************************************************************************/
 void LIN_Task_USART1_Interrupt(u8 data)
 { 
-    static unsigned char dummy;
-    static unsigned char id_receive;
-    static unsigned char cksum;
-    static unsigned char temp_cksum;
-    static unsigned char rx_data_cnt;
-    static unsigned char id_index;
-    static unsigned char id;
-    static unsigned char byte;
+   static unsigned char dummy;
+   static unsigned char id_receive;
+   static unsigned char cksum;
+   static unsigned char temp_cksum;
+   static unsigned char rx_data_cnt;
+   static unsigned char id_index;
+   static unsigned char id;
+   static unsigned char byte;
    
+   interByteTimer1 = 0u;
+
    switch(Lin_State)
    {
      case SYNC_BREAK_WAIT:

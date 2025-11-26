@@ -16,6 +16,8 @@
 #define LIN_DIAG_RESP_ID 0x7Du/*for 0x3D*/
 
 
+#define LIN_IDLE_TIMER  200u
+
 #define BIT(x,p)  ((x&(1<<p))?1u:0u)
 
 #define Get_Receive_ID(id)   (Lin_Rx_Msg[id].id)
@@ -57,7 +59,6 @@ typedef enum
 }Lin_state_t;
 
 extern volatile Lin_state_t Lin_State;
- 
 
 typedef struct
 {
@@ -85,6 +86,9 @@ extern lin_tx_data_t lin_tx_data[NO_OF_TX_ID];
 extern u8 Lin_Next_Index0;
 extern u16 Lin_Periodic_Timer0;
 
+extern volatile u32 interByteTimer1;
+extern volatile u8 Lin1_Active; 
+extern volatile u8 Lin1_Fault; 
 
 
 /***********************************************************************************
