@@ -49,7 +49,8 @@ void main(void)
    InitializeSystem();
    Init_UART();
    Init_Btn();
-   
+   LIN_Initialize();
+
    while(1)
    {
       if(timer_10ms_count == 9u)
@@ -78,9 +79,10 @@ static void InitializeSystem(void)
    OPTION_REG = 0x03u; //1:16 for TMR0 i.e 250Khz
    CM1CON0 = 7u;    //comparators off
    ANSELA = 0x04u;  //RA2 analog,rest all digital GPIO pins
-   ADCON0 = 0x01u;  //ADC enabled
+   ADCON0 = 0x09u;  //RA2 selected, ADC enabled
    ADCON1 = 0xD0u;  //Right justified,fosc/16 = 1Mhz
-   
+   WPUA = 0x3Bu;//for RA2 analog pin internal pull up must be disabled,rest enabled
+
    //set port
    //VDD  pin1
    //1 - input , 0 - output

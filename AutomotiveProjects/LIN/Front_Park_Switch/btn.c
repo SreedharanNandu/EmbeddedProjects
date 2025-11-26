@@ -13,8 +13,7 @@ Global definition
 /**********************************************************************************
 Global variables
 ***********************************************************************************/
-volatile unsigned int adcVal;
-
+volatile unsigned int SwReadmV;
 /***********************************************************************************
 Function Prototypes
 ***********************************************************************************/
@@ -61,7 +60,9 @@ static unsigned int Read_Adc(void)
 *****************************************************************************/
 void App_Btn_Process(void)
 {
-   adcVal = Read_Adc();
+   unsigned int tempRead;
+   tempRead = Read_Adc();
+   SwReadmV = (unsigned int)((tempRead * 28u)+ 70u);
 
 }
 
