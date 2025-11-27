@@ -6,7 +6,7 @@
 #define DEBUG_LED               0u
 #define BAUD_9600               1u
 #define DELAY_9600              13u
-#define TIMER2_USED             
+//#define TIMER2_USED_OS             
 
 /**********************************************************************************
 Global definition
@@ -95,12 +95,16 @@ static void InitializeSystem(void)
    //VSS  pin8
 
 
-   #if defined(TIMER2_USED)
+   #if defined(TIMER2_USED_OS)
    //timer2
    T2CON = 0x7Cu; //(fosc/4 input) 16Mhz/4 = 4Mhz/ 16(pre) = 0.25Mhz i.e 4us so that 256 * 4 gives 1024us which is 1ms
    TMR2 = 0u;//1ms timer 
    TMR2IF = 0u;
    TMR2IE = 1u;
+   #else
+   TMR0 = 0u;//1ms timer i.e 8 bit TMR with fosc/4  = 16mhz/4 = 4mhz with 1:16 prescalar = 250Khz clock,so MAX = 255 * 4us = 1020us
+   TMR0IF = 0u;
+   TMR0IE = 1u;
    #endif
    
    //enable interrupts
@@ -145,7 +149,7 @@ static void Delay_Ms(unsigned long dlyMs)
 static void interrupt isr(void)// Here be interrupt function - the name is unimportant.
 {
    unsigned char data;
-   #if defined(TIMER2_USED)
+   #if defined(TIMER2_USED_OS)
    //timer 2 interrupt
    if(TMR2IE &&  TMR2IF)
    {
@@ -153,6 +157,15 @@ static void interrupt isr(void)// Here be interrupt function - the name is unimp
       timer_10ms_count++;
       timer_100ms_count++;
    }
+   #else
+   //timer 0 interrupt
+   if(TMR0IE &&  TMR0IF)
+   {
+      TMR0IF = 0u;
+      timer_10ms_count++;
+      timer_100ms_count++;
+   }
+
    #endif
   
    if(PIR1bits.RCIF)
