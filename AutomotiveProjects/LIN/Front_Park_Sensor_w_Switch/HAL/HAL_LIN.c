@@ -196,9 +196,9 @@ void LIN_Task_USART0_Interrupt(u8 data, Usart_Interrupt_t isr_type)
           if( (isr_type == RX_INT) )
           {
              dummy = data;
-             if(rx_data_cnt < (Lin_Tx_Msg0[id_index].len-1))
+             if(rx_data_cnt < Lin_Tx_Msg0[id_index].len)
              {
-                lin_data0[id_index].data[tx_data_cnt] = dummy;
+                lin_data0[id_index].data[rx_data_cnt] = dummy;
                 rx_data_cnt++;
              }
              else

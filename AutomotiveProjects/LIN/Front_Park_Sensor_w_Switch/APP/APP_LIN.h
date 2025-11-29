@@ -3,7 +3,7 @@
 #ifndef APP_LIN_H
 #define APP_LIN_H
 
-#define LIN_NEXT_MSG_PERIODIC_CNT  2u  //i.e 10ms  for 5ms x 2times
+#define LIN_NEXT_MSG_PERIODIC_CNT  3u  //i.e 10ms  for 5ms x 3times
 
 
 /***********************************************************************************

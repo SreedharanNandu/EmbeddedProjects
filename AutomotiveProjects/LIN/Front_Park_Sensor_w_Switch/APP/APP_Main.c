@@ -29,7 +29,7 @@
 #define STOP_BEEP_COUNT           300u
 #define LIN_DEFAULT_COUNT         10u
 #define _XS_CNT                   40u
-#define LIN_PERIODIC_MSG_CNT      4u //5ms x 4times x 5ms gap = 100ms
+#define LIN_PERIODIC_MSG_CNT      2u 
 #define MAX_BUZZ                  10u
 #define PWR_UP_TIMER              100u
 #define FAULT_LED_TIMER           100u
@@ -203,7 +203,7 @@ void APP_Main_Task_5ms(void)
       {
          Lin_Next_Transmit_Msg_Timer0 = 0u;
          Lin_State0 = SYNC_BREAK_WAIT;//reset the sate for next slot transmission
-         if(Lin_Next_Slot0 >= NO_OF_ID0)//mean all frames for that period is over,wait for next schedule/period
+         if(Lin_Next_Slot0 >= 1u)//mean all frames for that period is over,wait for next schedule/period
          {
             Lin_Next_Slot0 = 0u;
          }

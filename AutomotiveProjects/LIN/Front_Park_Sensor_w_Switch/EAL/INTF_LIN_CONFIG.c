@@ -25,8 +25,8 @@ const Lin_Data_t Lin_Rx_Msg1[2] =
 //this is bypassing led data
 const Lin_Data_t Lin_Tx_Msg0[2] = 
 {
-   {0xC1u, 8u, LIN_HDR_ONLY,     Msg_01_Buffer },
-   {0x42u, 8u, LIN_HDR_AND_DATA, Msg_02_Buffer }
+   {0xC1u, 1u, LIN_HDR_ONLY,     Msg_01_Buffer },
+   {0x42u, 1u, LIN_HDR_AND_DATA, Msg_02_Buffer }
 };
 
 
