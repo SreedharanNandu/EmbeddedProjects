@@ -15,8 +15,8 @@ Global definition
 ***********************************************************************************/
 const Lin_Msg_t Lin_Msg[NO_OF_LIN_IDS] = 
 {
-   {0x01u , 8u , RECEIVE_PAYLOAD, Msg_01_Buffer },
-   {0x02u , 8u , TRANSMIT_PAYLOAD, Msg_02_Buffer }
+   {0xC1u , 1u ,  Msg_01_Buffer },
+   {0x42u , 1u ,  Msg_02_Buffer }
 };
 
 /**********************************************************************************

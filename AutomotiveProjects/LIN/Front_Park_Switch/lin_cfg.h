@@ -3,20 +3,11 @@
 
 #include "hal_lin.h"
                        
-typedef enum
-{
-   NO_PAYLOAD=0,
-   TRANSMIT_PAYLOAD,
-   RECEIVE_PAYLOAD    
-   
-}lin_msg_type_t;
-
 
 typedef struct
 {
    unsigned char  id;
    unsigned char  len;
-   lin_msg_type_t type;
    unsigned char  *buf_ptr;
 }Lin_Msg_t;
 

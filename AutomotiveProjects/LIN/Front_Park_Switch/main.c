@@ -2,10 +2,8 @@
 #include "types.h"
 #include "hal_lin.h"
 #include "btn.h"
+#include "led.h"
 
-#define DEBUG_LED               0u
-#define BAUD_9600               1u
-#define DELAY_9600              13u
 //#define TIMER2_USED_OS             
 
 /**********************************************************************************
@@ -16,17 +14,12 @@ Global definition
 Global variables
 ***********************************************************************************/
 volatile unsigned char timer_10ms_count;
-volatile unsigned char timer_100ms_count;
+volatile unsigned char timer_1ms_count;
 
 /***********************************************************************************
 Function Prototypes
 ***********************************************************************************/
-
-
-static void InitializeSystem(void);
-static void Init_UART(void);
-
-
+static void Init_HWIO(void);
 #if defined(TIMER0_USED)
 static void Delay_Ms(unsigned long dlyMs);
 #endif
@@ -41,26 +34,27 @@ Function Prototypes
 ***********************************************************************************/
 void main(void)
 {
-
    //power stabilization
    volatile  unsigned int data = 9000u;
    while(data--);
    
-   InitializeSystem();
-   Init_UART();
-   Init_Btn();
+   Init_HWIO();
    LIN_Initialize();
+   
+   //enable interrupts
+   GIE = 1u;
 
    while(1)
    {
+      if(timer_1ms_count == 1u)
+      {
+         timer_1ms_count = 0u;
+         App_Led_Process();
+      }
       if(timer_10ms_count == 9u)
       {
          App_Btn_Process();
          timer_10ms_count = 0u;
-      }
-      if(timer_100ms_count == 99u)
-      {
-         timer_100ms_count = 0u;
       }
    }
 }
@@ -71,7 +65,7 @@ void main(void)
  Return       :
  Description  :   
 *******************************************************************************/
-static void InitializeSystem(void) 
+static void Init_HWIO(void) 
 {
    //write main config 
    APFCON = 0x8Cu;
@@ -90,10 +84,30 @@ static void InitializeSystem(void)
    TRISA4 = 0u;//gpio pin3 tx
    TRISA3 = 1u;//mclr pin4
    TRISA2 = 1u;//analog gpio pin5 sw
-   TRISA1 = 0u;//gpio pin6 led
-   TRISA0 = 0u;//gpio pin7 slp_pin
+   TRISA1 = 0u;//gpio pin6 not used
+   TRISA0 = 0u;//gpio pin7 led
    //VSS  pin8
 
+   SPBRGH = 0u; // For 9600 Baud and with 16 Mhz Crystal
+   SPBRGL = 25u;
+   
+   TXSTAbits.TX9= 0; // 8-bit data mode
+   TXSTAbits.TXEN = 1; // enable transmitter
+   TXSTAbits.SYNC = 0; // enable asynchronous mode
+   TXSTAbits.SENDB = 0; // sync break transmission completed
+   TXSTAbits.BRGH = 0; // select low baud rate
+   
+   BAUDCONbits.SCKP = 0; // don't invert polarity
+   BAUDCONbits.BRG16 = 0; // 8-bit baudrate generator
+   BAUDCONbits.ABDEN = 0; // auto baud rate detect disable
+   
+   RCSTAbits.RX9 = 0; // enable 8-bit reception
+   RCSTAbits.CREN = 1; // enable receiver
+   RCSTAbits.FERR = 0;
+   RCSTAbits.OERR = 0;
+   RCSTAbits.SPEN = 1; // enable serial port 
+
+   RCIE = 1;//enable interrupt
 
    #if defined(TIMER2_USED_OS)
    //timer2
@@ -106,10 +120,8 @@ static void InitializeSystem(void)
    TMR0IF = 0u;
    TMR0IE = 1u;
    #endif
-   
-   //enable interrupts
-   PEIE = 1u;
-   GIE = 1u;
+
+   PEIE = 1u;//enable peripheral interrupt
 
 }
 
@@ -148,61 +160,41 @@ static void Delay_Ms(unsigned long dlyMs)
 *******************************************************************************/
 static void interrupt isr(void)// Here be interrupt function - the name is unimportant.
 {
-   unsigned char data;
+   volatile unsigned char data;
+   if(RCIF)
+   {
+      RCIF = 0;
+      data = RCREG;
+      LIN_Task_USART_Interrupt(data);
+   }
+   if(RCSTAbits.OERR)
+   {
+      RCSTAbits.CREN = 0;
+      RCSTAbits.CREN = 1;
+      Lin_State = SYNC_BREAK_WAIT;
+   }
+
    #if defined(TIMER2_USED_OS)
    //timer 2 interrupt
    if(TMR2IE &&  TMR2IF)
    {
       TMR2IF = 0u;
+      timer_1ms_count++;
       timer_10ms_count++;
-      timer_100ms_count++;
    }
    #else
    //timer 0 interrupt
    if(TMR0IE &&  TMR0IF)
    {
       TMR0IF = 0u;
+      timer_1ms_count++;
       timer_10ms_count++;
-      timer_100ms_count++;
    }
 
    #endif
   
-   if(PIR1bits.RCIF)
-   {
-      RCIF = 0;
-      data = RCREG;
-      LIN_Task_USART_Interrupt(data);
-   }
 }
 
 
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-static void Init_UART(void)
-{
-   SPBRGH = 0u; // For 9600 Baud and with 16 Mhz Crystal
-   SPBRGL = 25u;
-   
-   TXSTAbits.TX9= 0; // 8-bit data mode
-   TXSTAbits.TXEN = 1; // enable transmitter
-   TXSTAbits.SYNC = 0; // enable asynchronous mode
-   TXSTAbits.SENDB = 0; // sync break transmission completed
-   TXSTAbits.BRGH = 0; // select low baud rate
-   
-   BAUDCONbits.SCKP = 0; // don't invert polarity
-   BAUDCONbits.BRG16 = 0; // 8-bit baudrate generator
-   BAUDCONbits.ABDEN = 0; // auto baud rate detect disable
-   
-   RCSTAbits.RX9 = 0; // enable 8-bit reception
-   RCSTAbits.CREN = 1; // enable receiver
-   RCSTAbits.FERR = 0;
-   RCSTAbits.OERR = 0;
-   RCSTAbits.SPEN = 1; // enable serial port 
-}
 
 

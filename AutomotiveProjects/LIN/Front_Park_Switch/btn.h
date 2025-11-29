@@ -14,14 +14,27 @@ Global definition
 #define PIN_MAKE_LONG_THR     30u
 #define PIN_MAKE_STUCK_THR    100u
 
-typedef enum
-{
-   NO_PRESS_TYPE,
-   SHORT_PRESS_TYPE,
-   LONG_PRESS_TYPE,
-   STUCK_TYPE        
-}btn_press_type_t;
 
+/* ---------- Types ---------- */
+typedef enum {
+    BTN_RAW_UNKNOWN = 0,
+    BTN_RAW_RELEASED,
+    BTN_RAW_PRESSED
+} BtnRaw_t;
+
+typedef enum {
+    BTN_STATE_UKNOWN = 0,
+    BTN_STATE_RELEASED,
+    BTN_STATE_PRESSED
+} BtnState_t;
+
+typedef enum {
+    BTN_EVENT_NONE = 0,
+    BTN_EVENT_OFF_TO_ON,
+    BTN_EVENT_ON_TO_OFF,
+    BTN_EVENT_STUCK_PRESSED,
+    BTN_EVENT_STUCK_RELEASED
+} BtnEvent_t;
 /**********************************************************************************
 Global variables
 ***********************************************************************************/
@@ -30,7 +43,6 @@ Global variables
 Function Prototypes
 ***********************************************************************************/
 extern void App_Btn_Process(void);
-extern void Init_Btn(void);
 
 
 

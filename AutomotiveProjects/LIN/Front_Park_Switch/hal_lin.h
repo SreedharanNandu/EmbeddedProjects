@@ -8,20 +8,9 @@
 #define NO_OF_LIN_IDS               2u
 
 
-#define Get_Lin_Msg_ID(id)        (Lin_Msg[id].id)
-#define Get_Lin_Msg_Length(id)    (Lin_Msg[id].len)
-#define Get_Lin_Msg_Type(id)      (Lin_Msg[id].type)
-#define BIT(x,p)                  ((x&(1<<p))?1u:0u)
+#define Get_Lin_Msg_ID(idx)        (Lin_Msg[idx].id)
+#define Get_Lin_Msg_Length(idx)    (Lin_Msg[idx].len)
 
-
-
-typedef enum
-{
-   NO_INT=0,
-   RX_INT=1,
-   TX_INT=2,
-   STATUS_INT=3,
-}Usart_Interrupt_t;
 
 typedef enum
 {
@@ -53,4 +42,7 @@ Function Prototypes
 extern void LIN_Initialize( void );
 extern void LIN_Task_USART_Interrupt(unsigned char data);
 extern unsigned char LIN_Calc_Checksum(unsigned char *data,unsigned char length);
+extern void LIN_Send_Data(unsigned char data);
+
+
 #endif 
