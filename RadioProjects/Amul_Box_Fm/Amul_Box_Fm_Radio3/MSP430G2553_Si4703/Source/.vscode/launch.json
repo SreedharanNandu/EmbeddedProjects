@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FM Debug",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "FM",
+                "resourceId": "/FM"
+            },
+            "buildBeforeLaunch": "enabled",
+            "debuggerSettings": {
+                "targetConfigs/MSP430G2553.ccxml": {
+                    "TI MSP430 USB1/MSP430": {
+                        "data": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n<PropertyValues>\n\n  <property id=\"GeneralClockControl1\">\n    <curValue>1</curValue>\n  </property>\n\n  <property id=\"GeneralClockControl2\">\n    <curValue>1</curValue>\n  </property>\n\n  <property id=\"GeneralClockControl5\">\n    <curValue>1</curValue>\n  </property>\n\n  <property id=\"MSP430EraseStartAddress\">\n    <curValue>c000</curValue>\n  </property>\n\n  <property id=\"MSP430EraseEndAddress\">\n    <curValue>ffff</curValue>\n  </property>\n\n  <property id=\"FlashFiles\">\n    <curValue></curValue>\n  </property>\n\n</PropertyValues>\n"
+                    }
+                }
+            }
+        }
+    ]
+}
