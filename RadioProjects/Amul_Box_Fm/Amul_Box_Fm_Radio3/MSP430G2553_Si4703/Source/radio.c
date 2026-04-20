@@ -21,10 +21,10 @@
 #define RADIO_START_SEC_VAR
 #include "memmap_radio.h"
 
-#define Amp_Enable()    \
+#define Mute_Disable()    \
                      P2OUT |= BIT3;
 
-#define Amp_Disable()    \
+#define Mute_Enable()    \
                      P2OUT &= (~BIT3);
 
 /*****************************************************************************
@@ -42,13 +42,18 @@ unsigned short int fm_freq,prev_fm_freq;
 unsigned char preset_index;
 unsigned char si_vol;
 unsigned char fm_stereo;
-unsigned short int K_Radio_Data_Read[MAX_CH+1u];
-unsigned short int K_Radio_Data_Write[MAX_CH+1u];
+unsigned short int K_Radio_Data_Read[MAX_CH];
+unsigned short int K_Radio_Data_Write[MAX_CH];
+unsigned short int K_Radio_Index_Read[1u];
+unsigned short int K_Radio_Index_Write[1u];
+unsigned short int K_Radio_Vol_Read[1u];
+unsigned short int K_Radio_Vol_Write[1u];
 unsigned short int reset_Vol_Timer;
-unsigned char disp_timer;
+unsigned short int reset_Index_Timer;
 unsigned char prev_fm_stereo;
 unsigned char Scan_Cnt;
 unsigned char first_time_power_up;
+unsigned char amp_mute_press_timer;
 
 static void Validate_FM_Data(void);
 
@@ -124,6 +129,31 @@ void Init_Si(void)
 
 }
 
+/******************************************************************************
+* Function Name     : 
+* Input Params      : None
+* Output Params     : None
+* Description       : 
+******************************************************************************/
+void PreInit_Radio(void)
+{
+   unsigned char i;
+
+   for(i=0;i<MAX_CH;i++)
+   {
+      K_Radio_Data_Read[i] = K_Fm_Min_Freq;
+      K_Radio_Data_Write[i] = K_Fm_Min_Freq;
+   }
+   K_Radio_Vol_Read[MAX_CH] = 0u;
+   K_Radio_Vol_Write[MAX_CH] = 0u;
+
+   K_Radio_Index_Read[0] = 0u;
+   K_Radio_Index_Write[0] = 0u;
+
+   K_Radio_Vol_Read[0] = K_Default_Si_Vol_Level;
+   K_Radio_Vol_Write[0] = K_Default_Si_Vol_Level;
+   
+}
 
 
 /******************************************************************************
@@ -134,18 +164,7 @@ void Init_Si(void)
 ******************************************************************************/
 void Init_Radio(void)
 {
-   unsigned char i;
-
-   for(i=0;i<MAX_CH;i++)
-   {
-      K_Radio_Data_Read[i] = K_Fm_Min_Freq;
-      K_Radio_Data_Write[i] = K_Fm_Min_Freq;
-   }
-   K_Radio_Data_Read[MAX_CH] = 0u;
-   K_Radio_Data_Write[MAX_CH] = 0u;
-   
    radio_state = RADIO_INIT;
-   disp_timer = DISP_RELOAD;
    Init_Si();
 }
 /******************************************************************************
@@ -365,6 +384,7 @@ void Radio_Enc1_Operation(unsigned char dir)
                   Is_Manual_Tune = 1;
                   Log_Printf(SEND_CH);
                   Log_Printf(SEND_FREQ);
+                  reset_Index_Timer = RESET_INDEX_TIMER_TH;
                }
             }
          }
@@ -393,6 +413,7 @@ void Radio_Enc1_Operation(unsigned char dir)
                   Is_Manual_Tune = 1;
                   Log_Printf(SEND_CH);
                   Log_Printf(SEND_FREQ);
+                  reset_Index_Timer = RESET_INDEX_TIMER_TH;
                }
             }
          }
@@ -428,11 +449,16 @@ void Radio_Enc2_Operation(unsigned char dir)
          Led(K_blink_RotChange);
          if(si_vol < K_Max_Si_Vol_Level)
          {
+           if(si_vol == 0u)
+           {
+              Amp_Mute(OFF);
+              Delay_Ms(100u);
+           }
            si_vol++;
            Log_Printf(SEND_VOL);
+           reset_Vol_Timer = RESET_VOL_TIMER_TH;
          }             
          Is_Vol_Changed = 1;
-         reset_Vol_Timer = RESET_VOL_TIMER_TH;
       }
       else if(dir == LEFT_TURN)/*left*/
       {
@@ -441,9 +467,14 @@ void Radio_Enc2_Operation(unsigned char dir)
          {
            si_vol--;
            Log_Printf(SEND_VOL);
+           reset_Vol_Timer = RESET_VOL_TIMER_TH;
          }             
+         if(0u == si_vol)
+         {
+            Amp_Mute(ON);
+            Delay_Ms(100u);
+         }
          Is_Vol_Changed = 1;
-         reset_Vol_Timer = RESET_VOL_TIMER_TH;
       }
       else
       {
@@ -463,6 +494,7 @@ void Radio_Enc1_Button(unsigned char duration)
    {
       if(duration == SHORT_PRESS)
       {
+         amp_mute_press_timer = K_Amp_Mute_Timer;
          preset_mode = !preset_mode;
          if(preset_mode)
          {
@@ -481,8 +513,11 @@ void Radio_Enc1_Button(unsigned char duration)
       }
       else if(duration == LONG_PRESS)
       {
+         amp_mute_press_timer = K_Amp_Mute_Timer;
          K_Radio_Data_Write[preset_index] = fm_freq;
          K_Radio_Data_Read[preset_index] = K_Radio_Data_Write[preset_index];
+         K_Radio_Index_Write[0] = (unsigned short int)preset_index;
+         K_Radio_Index_Read[0] = (unsigned short int)preset_index;
          ee_state = UPDATE_EE;
          preset_mode = 1u;
          Log_Printf(SEND_SAVED);
@@ -578,16 +613,28 @@ static void Validate_FM_Data(void)
          K_Radio_Data_Write[i] = K_Radio_Data_Read[i];
       }
    }    
-   if(K_Radio_Data_Read[MAX_CH] > (MAX_CH-1u))
+   if(K_Radio_Index_Read[0] > (MAX_CH-1u))
    {
-      K_Radio_Data_Read[MAX_CH] = 0u;
-      K_Radio_Data_Write[MAX_CH] = 0u;
+      K_Radio_Index_Write[0] = 0u;
+      K_Radio_Index_Read[0] = 0u;
       preset_index = 0u;
    }
    else
    {
-      preset_index = (unsigned char)K_Radio_Data_Read[MAX_CH];
-      K_Radio_Data_Write[MAX_CH] = (unsigned short int)preset_index;
+      preset_index = (unsigned char)K_Radio_Index_Read[0];
+      K_Radio_Index_Write[0] = (unsigned short int)preset_index;
+   }
+   
+   if(K_Radio_Vol_Read[0] > (unsigned short int)K_Max_Si_Vol_Level)
+   {
+      K_Radio_Vol_Write[0] = K_Default_Si_Vol_Level;
+      K_Radio_Vol_Read[0] = K_Default_Si_Vol_Level;
+      si_vol = K_Default_Si_Vol_Level;
+
+   }
+   else
+   {
+      si_vol = K_Radio_Vol_Write[0] = K_Radio_Vol_Read[0];
    }
 }
 
@@ -605,8 +652,10 @@ void Process_App_Si(void)
       case RADIO_RUNNING:
            if(power_state == OFF_STATE)
            {
+              Amp_Mute(ON);
+              Delay_Ms(300u);
               radio_state = RADIO_OFF;
-              Set_Vol(K_Min_Si_Vol_Level);
+              Set_Vol(si_vol);
               Set_GPIO2(FALSE);//Blue Led Power OFF
               Log_Printf(SEND_PWR_OFF);
               monitor_mode = 1;
@@ -614,13 +663,39 @@ void Process_App_Si(void)
            }
            else if(power_state == ON_STATE)
            {
+              if(amp_mute_press_timer > 0u)
+              {
+                 if(K_Amp_Mute_Timer == amp_mute_press_timer)
+                 {
+                    Amp_Mute(ON);
+                 }
+                 amp_mute_press_timer--;
+                 if(0u == amp_mute_press_timer)
+                 {
+                    Amp_Mute(OFF);
+                 }
+              }
+              
               if(reset_Vol_Timer > 0u)
               {
                  reset_Vol_Timer--;
+                 if(reset_Vol_Timer == 0u)
+                 {
+                    K_Radio_Vol_Read[0] = K_Radio_Vol_Write[0] = (unsigned short int)si_vol;
+                    ee_state = UPDATE_EE;
+                 }
+              }
+              if(reset_Index_Timer > 0u)
+              {
+                 reset_Index_Timer--;
+                 if(reset_Index_Timer == 0u)
+                 {
+                    K_Radio_Index_Read[0] = K_Radio_Index_Write[0] = (unsigned short int)preset_index;
+                    ee_state = UPDATE_EE;
+                 }
               }
               if(Is_Vol_Changed)
               {
-                 disp_timer = DISP_RELOAD;
                  if(si_vol <= K_Max_Si_Vol_Level)
                  {
                     Set_Vol(si_vol);
@@ -630,7 +705,6 @@ void Process_App_Si(void)
               
               if(Is_Manual_Tune)
               {
-                 disp_timer = DISP_RELOAD;
                  Set_Fm_Tune_Freq(fm_freq);
                  Is_Manual_Tune = 0;
                  fm_stereo = 0;
@@ -663,10 +737,6 @@ void Process_App_Si(void)
                     }
                  }
               }
-              if(disp_timer != 0u)
-              {
-                 disp_timer--;
-              }
 
               if(prev_fm_freq != fm_freq)
               {
@@ -682,7 +752,6 @@ void Process_App_Si(void)
                  App_Si_EE_Check_Pending = 0u;
                  Validate_FM_Data();
               }
-              si_vol = K_Default_Si_Vol_Level;
               if(!first_time_power_up)
               {
                  first_time_power_up = 1u;
@@ -695,29 +764,27 @@ void Process_App_Si(void)
               Is_Vol_Changed = 1u;
               monitor_mode = 1u;
               Set_GPIO2(TRUE);//Blue Led Power ON
-              Amp_Power(OFF);
-              Amp_Mute(OFF); 
+              Set_Vol(si_vol);
+              Amp_Power(ON);
+              Delay_Ms(100u);
               Log_Printf(SEND_PWR_ON);
               Log_Printf(SEND_FREQ);
-              disp_timer = DISP_RELOAD;
+              if(si_vol > 0u)
+              {
+                 Amp_Mute(OFF); 
+              }
            }
            break;   
       case RADIO_RESET:
+           PreInit_Radio();
            Init_Radio();
            radio_state = RADIO_INIT;
            break;
       case RADIO_OFF:
-           if(power_state == ON_STATE)
-           {
-              radio_state = RADIO_INIT;
-              Log_Printf(SEND_PWR_ON);
-              disp_timer = DISP_RELOAD;
-              monitor_mode = 0u;
-              Power_Radio(1);
-           }
-           else
+           if (power_state == OFF_STATE)
            {
               Amp_Mute(ON); 
+              Delay_Ms(100u);
               Amp_Power(OFF);
               //si in reset state
               si4703_Rsen(0u);
@@ -744,8 +811,6 @@ void Process_App_Si(void)
               {
                   __no_operation();
               }
-              ee_state = INIT_EE;
-              App_Si_EE_Check_Pending = 1u;
               first_time_power_up = 0u;
               Service_Watchdog();
               Init_Radio();
@@ -1051,7 +1116,7 @@ unsigned char Read_Si_I2C(unsigned char *dataPtr,unsigned char size)
  Return       :
  Description  :   
 *******************************************************************************/
-void Amp_Mute(unsigned char state) 
+void Amp_Power(unsigned char state) 
 {
    // Set the corresponding GPIO pin to HIGH (on)
    if(state)
@@ -1070,16 +1135,16 @@ void Amp_Mute(unsigned char state)
  Return       :
  Description  :   
 *******************************************************************************/
-void Amp_Power(unsigned char state) 
+void Amp_Mute(unsigned char state) 
 {
-   // Set the corresponding GPIO pin to HIGH (on)
+   // Set the corresponding GPIO pin to HIGH(unmute)
    if(state)
    {
-      Amp_Enable();
+      Mute_Enable();
    }
    else
    {
-      Amp_Disable();
+      Mute_Disable();
    }
 }
 

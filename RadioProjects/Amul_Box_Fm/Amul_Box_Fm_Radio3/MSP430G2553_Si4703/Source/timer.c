@@ -24,6 +24,8 @@ unsigned char exitLoop(unsigned char id)
    static unsigned char cnt = 0u;
    static unsigned char prev_id = 0u;
    
+   Service_Watchdog();
+
    if(id != prev_id)
    {
       cnt = 0u;

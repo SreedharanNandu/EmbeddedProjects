@@ -66,11 +66,11 @@ void Validate_EE_Read_Data(void)
 {
    unsigned char i=0;
    //[0.....19],[20,21],[22.23]
-   calcCrc1 = CRC16_CCITT((unsigned char*)&tempRead1[0],(MAX_CH_SIZE+2u));
+   calcCrc1 = CRC16_CCITT((unsigned char*)&tempRead1[0],(MAX_EE_SIZE-2u));
    storedCrc1 = (tempRead1[MAX_EE_SIZE-1u]<<8) | tempRead1[MAX_EE_SIZE-2u];
    
    //[24.....43],[44,45],[46.47]
-   calcCrc2 = CRC16_CCITT((unsigned char*)&tempRead2[0],(MAX_CH_SIZE+2u));
+   calcCrc2 = CRC16_CCITT((unsigned char*)&tempRead2[0],(MAX_EE_SIZE-2u));
    storedCrc2 = (tempRead2[MAX_EE_SIZE-1u]<<8) | tempRead2[MAX_EE_SIZE-2u];
 
    if(calcCrc1 == storedCrc1)
@@ -85,17 +85,23 @@ void Validate_EE_Read_Data(void)
    if((crc1Good == TRUE) && 
       (crc2Good == TRUE))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
    else if((crc1Good == TRUE) && 
            (crc2Good != TRUE))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
    else if((crc1Good != TRUE) && 
            (crc2Good == TRUE))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead2[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead2[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead2[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead2[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
    else if((crc1Good != TRUE) && 
            (crc2Good != TRUE))
@@ -104,6 +110,9 @@ void Validate_EE_Read_Data(void)
       {
          K_Radio_Data_Read[i] = K_Fm_Min_Freq;
       }
+      K_Radio_Index_Read[0] = 0u;
+      K_Radio_Vol_Read[0u] = (unsigned int)K_Default_Si_Vol_Level;
+      
    }
    else
    {
@@ -119,8 +128,10 @@ void Validate_EE_Read_Data(void)
 *****************************************************************************/
 void Validate_EE_Write_Data(void)
 {
-   memcpy((unsigned char*)&tempWrite[0],(unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE+2u);
-   calcCrc = CRC16_CCITT((unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE+2u);
+   memcpy((unsigned char*)&tempWrite[0],(unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE);
+   memcpy((unsigned char*)&tempWrite[MAX_CH_SIZE],(unsigned char*)&K_Radio_Index_Write[0],MAX_INDEX_SIZE);
+   memcpy((unsigned char*)&tempWrite[MAX_CH_SIZE+MAX_VOL_SIZE],(unsigned char*)&K_Radio_Vol_Write[0],MAX_VOL_SIZE);
+   calcCrc = CRC16_CCITT((unsigned char*)&tempWrite[0],(MAX_EE_SIZE-2u));
    tempWrite[MAX_EE_SIZE-2u] = (unsigned char)calcCrc;
    tempWrite[MAX_EE_SIZE-1u] = (unsigned char)(calcCrc>>8);
 }
@@ -167,7 +178,7 @@ unsigned int CRC16_CCITT(unsigned char *data, unsigned int length)
 ******************************************************************************/
 void ReadEE(void)
 {
-   unsigned char status = 0;
+   unsigned char status = 0u;
    InitI2C(EE_I2C_ADDRESS);
    status = EESeqRead(PAGE_EE(0u),(unsigned char*)&tempRead1[0],MAX_EE_SIZE);
    Fault(FLT_EE_PAGE1_INIT,status);
@@ -184,13 +195,14 @@ void ReadEE(void)
 ******************************************************************************/
 void WriteEE(void)
 {
-   unsigned char status = 0;
+   unsigned char status = 0u;
    InitI2C(EE_I2C_ADDRESS);
    status = EESeqWrite(PAGE_EE(0u),(unsigned char*)&tempWrite[0],MAX_EE_SIZE);
    Fault(FLT_EE_PAGE1_INIT,status);
+   Delay_Ms(100u);
    InitI2C(EE_I2C_ADDRESS);
    status = EESeqWrite(PAGE_EE(1u),(unsigned char*)&tempWrite[0],MAX_EE_SIZE);
-   Fault(FLT_EE_PAGE1_INIT,status);
+   Fault(FLT_EE_PAGE2_INIT,status);
    Delay_Ms(100u);
 }
 

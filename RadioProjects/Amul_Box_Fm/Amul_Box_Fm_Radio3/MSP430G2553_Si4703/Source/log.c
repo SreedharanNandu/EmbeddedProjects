@@ -28,7 +28,7 @@ void Log_Printf(Send_Uart_Type_T id)
       case SEND_VOL:
            Send_Uart("\r\n",2u);
            #if defined(LOG_OPTION)
-           Send_Uart((unsigned char*)&K_Vol_Text[si_vol][7],7u);
+           Send_Uart((unsigned char*)&K_Vol_Text[si_vol][0],7u);
            #else
            Send_Uart((unsigned char*)Get_Vol_Text(si_vol),7u);
            #endif
@@ -36,7 +36,7 @@ void Log_Printf(Send_Uart_Type_T id)
       case SEND_CH:
            Send_Uart("\r\n",2u);
            #if defined(LOG_OPTION)
-           Send_Uart((unsigned char*)&K_Ch_Text[preset_index][5],5u);
+           Send_Uart((unsigned char*)&K_Ch_Text[preset_index][0],5u);
            #else
            Send_Uart((unsigned char*)Get_Ch_Text(preset_index), 5u);
            #endif
@@ -56,7 +56,7 @@ void Log_Printf(Send_Uart_Type_T id)
       case SEND_FREQ:
            Send_Uart("\r\n",2u);
            #if defined(LOG_OPTION)
-           Send_Uart((unsigned char*)&K_Freq_Text[(fm_freq-K_Fm_Min_Freq)/10u][8],8u);
+           Send_Uart((unsigned char*)&K_Freq_Text[(fm_freq-K_Fm_Min_Freq)/10u][0],8u);
            #else
            Send_Uart((unsigned char*)Get_Freq_Text(fm_freq), 8u);
            #endif

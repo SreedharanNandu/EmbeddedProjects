@@ -20,7 +20,7 @@
 
 #define MAX_EXIT_LOOP_TH   512u
 
-#define DISP_RELOAD 80u
+#define VOL_TIMER_RELOAD 80u
 
 #define IDLE_EE   0u
 #define INIT_EE   1u
@@ -33,9 +33,9 @@
 
 #define UART_BUFSIZE      3u
 
-#define MAX_EE_SIZE ((MAX_CH_SIZE) + 2u + 2u) /* 10 channels (2byte each)  + 2byte index + 2byte CRC */
+#define MAX_EE_SIZE (MAX_CH_SIZE + MAX_INDEX_SIZE + MAX_VOL_SIZE +  MAX_CRC_SIZE) /* 10 channels (2byte each) + 2byte vol + 2byte index + 2byte CRC */
 
-#define PAGE_EE(x)   (x*128u) /* page is 128 bytes */
+#define PAGE_EE(x)   ((x)<<7u) /* page is 128 bytes */
 
 #define RADIO_ROT_ENC_INACTIVE_RESP_TIME_MS    (100u)
 #define RADIO_ENC_IDLE_ENCODER_STATE  0        ///* Idle encoder state*/
@@ -86,7 +86,7 @@
 
 #define SAMPLE_PER             10u
 
-#define FIFO_SIZE              10u
+#define FIFO_SIZE              2u
 
 
 #define Led(x)                  EnQ(&BlinkQ,x)
@@ -102,7 +102,8 @@
 
 
 
-#define RESET_VOL_TIMER_TH    100u
+#define RESET_VOL_TIMER_TH    50u
+#define RESET_INDEX_TIMER_TH  50u
 
 
 #define SHORT_PRESS      1u
@@ -118,19 +119,23 @@
 #define SEEK_DWN           0u
 
 
-#define MAX_CH         10u
-#define MAX_CH_SIZE    20u
+#define MAX_CH             10u
+#define MAX_CH_SIZE        20u
+#define MAX_VOL_SIZE       2u
+#define MAX_CRC_SIZE       2u
+#define MAX_INDEX_SIZE     2u
 
-#define PRINTBUFSIZE   100u
 
-#define NUM_ENCODERS   2u
-#define NUM_BUTTONS    2u
+#define PRINTBUFSIZE       100u
 
-#define ENC1           0u
-#define ENC2           1u
+#define NUM_ENCODERS       2u
+#define NUM_BUTTONS        2u
 
-#define ROT_BTN1       0u
-#define ROT_BTN2       1u
+#define ENC1               0u
+#define ENC2               1u
+
+#define ROT_BTN1           0u
+#define ROT_BTN2           1u
 
 
 
@@ -328,9 +333,14 @@ extern unsigned char fm_stereo;
 extern unsigned short int fm_freq,prev_fm_freq;
 extern volatile unsigned char Is_Manual_Tune;
 extern unsigned char App_Si_EE_Check_Pending;
-extern unsigned short int K_Radio_Data_Read[MAX_CH+1u];
-extern unsigned short int K_Radio_Data_Write[MAX_CH+1u];
+extern unsigned short int K_Radio_Data_Read[MAX_CH];
+extern unsigned short int K_Radio_Data_Write[MAX_CH];
+extern unsigned short int K_Radio_Index_Read[1u];
+extern unsigned short int K_Radio_Index_Write[1u];
+extern unsigned short int K_Radio_Vol_Read[1u];
+extern unsigned short int K_Radio_Vol_Write[1u];
 extern unsigned short int reset_Vol_Timer;
+extern unsigned short int reset_Index_Timer;
 extern unsigned char power_state;
 extern unsigned char monitor_mode;
 extern unsigned char preset_index;
@@ -387,13 +397,14 @@ extern const unsigned int K_Fm_Min_Freq;
 extern const unsigned char K_Default_Si_Vol_Level;
 extern const unsigned char K_Min_Si_Vol_Level;
 extern const unsigned char K_Max_Si_Vol_Level;
+extern const unsigned char K_Amp_Mute_Timer;
 
 extern unsigned char ee_state;
 
 #if defined(LOG_OPTION)
 extern const char K_Ch_Text[11][5]; 
 extern const char K_Vol_Text[17][7]; 
-extern const char K_Freq_Text[208][8];
+extern const char K_Freq_Text[206][8];
 #endif
 extern const char K_Welcome_Text[23];
 extern const char K_Saved_Text[5];
@@ -466,6 +477,7 @@ extern void Set_GPIO2(unsigned char state);
 extern void Enter_Sleep(void);
 extern void Init_Si(void);
 extern void Init_Radio(void);
+extern void PreInit_Radio(void);
 extern unsigned char Write_Si_I2C(unsigned char *dataPtr,unsigned char size);
 extern unsigned char Read_Si_I2C(unsigned char *dataPtr,unsigned char size);
 
@@ -480,7 +492,6 @@ extern void Led_Process(FIFOQueue_T* q);
 extern void Led_Init(void); 
 
 extern void Scan_Buttons(void);
-extern void Scan_Rotary_Button(void);
 extern void Init_Encoder(void);
 extern void Fast_Periodic_Encoder(void);
 extern void Slow_Periodic_Encoder(void);

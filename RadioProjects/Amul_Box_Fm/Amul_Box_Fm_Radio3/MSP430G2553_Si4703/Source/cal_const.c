@@ -72,9 +72,8 @@ const char K_Ch_Text[11][5] =
 };
 
 
-const char K_Freq_Text[208][8] = 
+const char K_Freq_Text[206][8] = 
 {
-  {"87.40Mhz"}, 
   {"87.50Mhz"}, 
   {"87.60Mhz"},
   {"87.70Mhz"},
@@ -280,8 +279,7 @@ const char K_Freq_Text[208][8] =
   {"107.7Mhz"},
   {"107.8Mhz"},
   {"107.9Mhz"},
-  {"108.0Mhz"},
-  {"108.1Mhz"}
+  {"108.0Mhz"}
 };
 #endif
 
@@ -307,11 +305,11 @@ const unsigned int K_Uart_Baud = 9600u;
 const unsigned int K_Fm_Max_Freq = 10800u;
 const unsigned int K_Fm_Min_Freq = 8750u;
 
-const unsigned char K_Default_Si_Vol_Level = 5u;
+const unsigned char K_Default_Si_Vol_Level = 1u;
 const unsigned char K_Min_Si_Vol_Level = 0u;
 const unsigned char K_Max_Si_Vol_Level = 15u;
 
-
+const unsigned char K_Amp_Mute_Timer = 7u;
 
 #define RADIO_STOP_SEC_CAL_CONST
 #include "memmap_radio.h"

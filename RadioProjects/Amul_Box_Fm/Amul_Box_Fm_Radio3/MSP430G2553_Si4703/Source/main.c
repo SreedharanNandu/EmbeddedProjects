@@ -48,8 +48,9 @@ void main(void)
      __no_operation();
    }
    InitGPIO();
-   Amp_Power(OFF);
+   Amp_Mute(ON);
    PowerUp_Check();
+   PreInit_Radio();
    Init_Radio();
    Init_Encoder();
    InitTimerA1();

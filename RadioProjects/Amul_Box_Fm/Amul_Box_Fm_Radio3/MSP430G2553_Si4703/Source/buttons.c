@@ -17,16 +17,6 @@ static volatile unsigned long  break_timer[NUM_BUTTONS];
 *******************************************************************************/
 void Scan_Buttons(void)
 {
-  Scan_Rotary_Button();
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Scan_Rotary_Button(void)
-{
    unsigned char btn;
    for(btn=0;btn<NUM_BUTTONS;btn++)
    {
