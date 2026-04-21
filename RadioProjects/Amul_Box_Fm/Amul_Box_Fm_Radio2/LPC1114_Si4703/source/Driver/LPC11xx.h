@@ -111,7 +111,7 @@ extern void SystemInit (void);
 /*                Device Specific Peripheral registers structures             */
 /******************************************************************************/
 
-#pragma anon_unions
+//#pragma anon_unions
 
 /*------------- System Control (SYSCON) --------------------------------------*/
 typedef struct
@@ -473,7 +473,7 @@ typedef struct
   __O  uint32_t DevFIQSel;
 } USB_TypeDef;
 
-#pragma no_anon_unions
+//#pragma no_anon_unions
 
 /******************************************************************************/
 /*                         Peripheral memory map                              */

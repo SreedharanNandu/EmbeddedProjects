@@ -23,33 +23,33 @@
 unsigned char Write_Si_I2C(unsigned char *wptr,
                            unsigned char wlen)
 {
-   unsigned long lock=0;
+   unsigned long lock=0u;
    unsigned char chip_address = SI_SLAVE_ADDRESS;
 
    __disable_irq();
    Start_I2C();
    //-- Set ADDRESS
-   Send_I2C(chip_address & 0xFE);
-   if(LPC_I2C->STAT != 0x18)//ack check
+   Send_I2C(chip_address & 0xFEu);
+   if(LPC_I2C->STAT != 0x18u)//ack check
    {
       Stop_I2C();
-      return 0;
+      return 0u;
    }
    while(wlen)
    {
       Send_I2C(*wptr);
       lock=0;
-      while(LPC_I2C->STAT != 0x28)
+      while(LPC_I2C->STAT != 0x28u)
       {
          if(lock == I2C_WHILE_TIMEOUT)
          {
-            lock = 0;
+            lock = 0u;
             Stop_I2C();
-            return 0;
+            return 0u;
          }
          lock++;
       };
-      if(wlen > 0)
+      if(wlen > 0u)
       {
          wlen--;
       }
@@ -74,11 +74,11 @@ unsigned char Read_Si_I2C(unsigned char *rptr,
 
    __disable_irq();
    Start_I2C();
-   Send_I2C(chip_address | 0x01);
-   if(LPC_I2C->STAT != 0x40)
+   Send_I2C(chip_address | 0x01u);
+   if(LPC_I2C->STAT != 0x40u)
    {
       Stop_I2C();
-      return 0;
+      return 0u;
    }
    if(rlen > 1u)
    {
@@ -105,7 +105,7 @@ unsigned char Read_Si_I2C(unsigned char *rptr,
          }
       }
    }
-   if(rlen == 1)
+   if(rlen == 1u)
    {
       LPC_I2C->CONCLR = I2C_FLAG_AA | I2C_FLAG_SI;  //-- After next will NO ASK
       while(!(LPC_I2C->CONSET & I2C_FLAG_SI));  //-- End Data from slave;
@@ -113,7 +113,7 @@ unsigned char Read_Si_I2C(unsigned char *rptr,
    }
    Stop_I2C();
    __enable_irq();
-   return 1;
+   return 1u;
 }
 
 

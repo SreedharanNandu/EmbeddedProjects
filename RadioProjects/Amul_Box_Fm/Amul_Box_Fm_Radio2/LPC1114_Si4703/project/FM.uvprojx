@@ -413,6 +413,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\App\APP_Si.c</FilePath>
             </File>
+            <File>
+              <FileName>Cal_Const.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\App\Cal_Const.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

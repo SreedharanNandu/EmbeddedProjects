@@ -3,20 +3,17 @@
 #include <stdlib.h>
 #include "APP_Led.h"
 #include "gpio.h"
-#include "timer16.h"
 #include "App_Si.h"
+#include "Cal_Const.h"
 
 
-#define SAMPLE_PER             TMR16_THR_10MS
 
 
 FIFOQueue_T BlinkQ;
+BlinkRequest_T Led_Req;
+unsigned char FifoBusy;
+uint16_t Repeat_Blink,LedOnCnt,LedOffCnt; 
 
-// Create some test blink requests (num_blinks, on_time, off_time)
-BlinkRequest_T blink_ModeChange = {1u,   100u/SAMPLE_PER,  250u/SAMPLE_PER}; // blinks, on and off
-BlinkRequest_T blink_Store =      {1u,  2000u/SAMPLE_PER,  100u/SAMPLE_PER}; // blinks, on and off
-BlinkRequest_T blink_PwnOnOff =   {5u,   250u/SAMPLE_PER,  250u/SAMPLE_PER}; // blinks, on and off
-BlinkRequest_T blink_RotChange =  {1u,   20u/SAMPLE_PER,   20u/SAMPLE_PER}; // blinks, on and off
 
 // Initialize the FIFO queue
 /*******************************************************************************
@@ -27,9 +24,9 @@ BlinkRequest_T blink_RotChange =  {1u,   20u/SAMPLE_PER,   20u/SAMPLE_PER}; // b
 *******************************************************************************/
 void Init_Fifo(FIFOQueue_T* q) 
 {
-    q->front = 0;
-    q->rear = 0;
-    q->size = 0;
+    q->front = 0u;
+    q->rear = 0u;
+    q->size = 0u;
 }
 
 // Check if the FIFO queue is empty
@@ -41,7 +38,7 @@ void Init_Fifo(FIFOQueue_T* q)
 *******************************************************************************/
 int Fifo_Empty(FIFOQueue_T* q) 
 {
-    return q->size == 0;
+    return q->size == 0u;
 }
 
 // Check if the FIFO queue is full
@@ -63,7 +60,7 @@ int Fifo_Full(FIFOQueue_T* q)
  Return       :
  Description  :   
 *******************************************************************************/
-void EnQ(FIFOQueue_T* q, BlinkRequest_T req) 
+void EnQ(FIFOQueue_T* q, BlinkRequest_T temp_req) 
 {
     if (Fifo_Full(q)) 
     {
@@ -71,8 +68,8 @@ void EnQ(FIFOQueue_T* q, BlinkRequest_T req)
     }
     else
     {
-       q->queue[q->rear] = req;
-       q->rear = (q->rear + 1) % FIFO_SIZE;
+       q->queue[q->rear] = temp_req;
+       q->rear = (q->rear + 1u) % FIFO_SIZE;
        q->size++;
     }
 }
@@ -86,21 +83,33 @@ void EnQ(FIFOQueue_T* q, BlinkRequest_T req)
 *******************************************************************************/
 BlinkRequest_T DeQ(FIFOQueue_T* q) 
 {
-    BlinkRequest_T req;
+    BlinkRequest_T temp_req;
     BlinkRequest_T empty;
 
     if (Fifo_Empty(q)) 
     {
         // Return a default empty request (handle error case)
-        empty.num_blinks = 0; empty.off_time=0; empty.on_time = 0;
+        empty.num_blinks = 0u; empty.off_time=0u; empty.on_time = 0u;
         return empty;
     }
-    req = q->queue[q->front];
-    q->front = (q->front + 1) % FIFO_SIZE;
+    temp_req = q->queue[q->front];
+    q->front = (q->front + 1u) % FIFO_SIZE;
     q->size--;
-    return req;
+    return temp_req;
 }
 
+/*******************************************************************************
+ Func Name    :
+ Arguments    :
+ Return       :
+ Description  :   
+*******************************************************************************/
+void LED_Toggle(void) 
+{
+  static unsigned char toggle=0u;
+  toggle = !toggle;
+  GPIOSetValue(1u,8u,toggle);
+}
 
 // Function to turn the LED on (GPIO operation)
 /*******************************************************************************
@@ -112,8 +121,8 @@ BlinkRequest_T DeQ(FIFOQueue_T* q)
 void LED_On(void) 
 {
   // Set the corresponding GPIO pin to HIGH (on)
-  GPIOSetValue(0,9,0);
-  GPIOSetValue(1,8,0);
+  GPIOSetValue(0u,9u,0u);
+  GPIOSetValue(1u,8u,0u);
 }
 
 // Function to turn the LED off (GPIO operation)
@@ -126,8 +135,8 @@ void LED_On(void)
 void LED_Off(void) 
 {
   // Set the corresponding GPIO pin to LOW (off)
-  GPIOSetValue(0,9,1);
-  GPIOSetValue(1,8,1);
+  GPIOSetValue(0u,9u,1u);
+  GPIOSetValue(1u,8u,1u);
 }
 
 // Function to process the FIFO queue and blink the LED
@@ -139,46 +148,43 @@ void LED_Off(void)
 *******************************************************************************/
 void Led_Process(FIFOQueue_T* q) 
 {
-   static BlinkRequest_T req;
-   static unsigned char fifoBusy;
-   static uint16_t repeat,ledOnCnt,ledOffCnt; 
 
-   if(fifoBusy == 0)
+   if(FifoBusy == 0u)
    {
       if(!Fifo_Empty(q)) 
       {
-         req = DeQ(q);
-         fifoBusy = 1;
-         repeat = 0;
-         ledOnCnt = ledOffCnt = 0;
+         Led_Req = DeQ(q);
+         FifoBusy = 1u;
+         Repeat_Blink = 0u;
+         LedOnCnt = LedOffCnt = 0u;
       }
    }
    else//fifo busy
    {
       // Process the blink request
-      if(repeat < req.num_blinks) 
+      if(Repeat_Blink < Led_Req.num_blinks) 
       {
-         if(ledOnCnt < req.on_time)
+         if(LedOnCnt < Led_Req.on_time)
          {
             LED_On();
-            ledOnCnt++;
+            LedOnCnt++;
          }
-         if((ledOnCnt >= req.on_time) && 
-            (ledOffCnt < req.off_time))
+         if((LedOnCnt >= Led_Req.on_time) && 
+            (LedOffCnt < Led_Req.off_time))
          {
             LED_Off();
-            ledOffCnt++;
+            LedOffCnt++;
          }
-         if((ledOffCnt >= req.off_time) & (ledOnCnt >= req.on_time))
+         if((LedOffCnt >= Led_Req.off_time) & (LedOnCnt >= Led_Req.on_time))
          {
-            repeat++;
-            ledOnCnt=0;
-            ledOffCnt=0;
+            Repeat_Blink++;
+            LedOnCnt=0u;
+            LedOffCnt=0u;
          }
       }
-      else if(repeat >= req.num_blinks) //max blink sequence reached
+      else if(Repeat_Blink >= Led_Req.num_blinks) //max blink sequence reached
       {
-         fifoBusy = 0;//next in Q
+         FifoBusy = 0u;//next in Q
       }
    }
 }
@@ -206,3 +212,20 @@ void Led_Init(void)
    Led(blink_PwnOnOff);
 }
 
+/*******************************************************************************
+ Func Name    :
+ Arguments    :
+ Return       :
+ Description  :   
+*******************************************************************************/
+void PowerUpInit_LED(void)
+{
+   unsigned char i;
+   for(i=0u;i<5u;i++)
+   {
+       LED_On();
+       Delay_Ms(100u);
+       LED_Off();
+       Delay_Ms(100u);
+   }
+}

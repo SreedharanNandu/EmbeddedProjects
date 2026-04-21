@@ -1,6 +1,6 @@
 #ifndef GPIO_H 
 #define GPIO_H
-
+/*filename:-gpio.h*/
 #include "type_sys.h"
 
 #define PORT0      0
@@ -19,5 +19,7 @@ void GPIOIntDisable( uint32_t portNum, uint32_t bitPosi );
 uint32_t GPIOIntStatus( uint32_t portNum, uint32_t bitPosi );
 void GPIOIntClear( uint32_t portNum, uint32_t bitPosi );
 unsigned char GPIOGetValue( uint32_t portNum, uint32_t bitPosi);
+void Configure_WakeUp_GPIO(void);
+
 
 #endif /* end __GPIO_H */

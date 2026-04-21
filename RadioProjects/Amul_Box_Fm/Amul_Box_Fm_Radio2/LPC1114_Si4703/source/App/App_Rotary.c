@@ -5,49 +5,23 @@
 #include "App_Led.h"
 
 
-
-#define RADIO_ROT_ENC_INACTIVE_RESP_TIME_MS    (100u)
-#define RADIO_ENC_IDLE_ENCODER_STATE  0        ///* Idle encoder state*/
-#define RADIO_ENC_MAXIMUM_ENCODER_STATE  (4 )       ///* Maximum 2 edge per detent encoder state*/
-#define RADIO_ENC_MINIMUM_ENCODER_STATE  (-4 )      ///* Minimum 2 edge per detent encoder state*/
-#define RADIO_ENC_ZERO_ENCODER_COUNT     (0x00)    ///* Zero*/ 
-#define RADIO_ENC_MAXIMUM_ENCODER_COUNT  (0x0E)    
-#define RADIO_ENC_MINIMUM_ENCODER_COUNT  (0x01)    ///* Minimum encoder value is the same for Radio*/ 
-#define RADIO_ENC_ZERO_SAMPLES   (0u)
-#define RADIO_ENC_TIMER_EXPIRED  (0u)
-#define RADIO_ENC_DEBOUNCE_PERIOD_NORMAL  (1u)
-#define RADIO_ENC_DEBOUNCE_PERIOD_SHORT  (1u)
-#define RADIO_ENC_EDGE_DELAY         (20u)
-#define RADIO_ENC_EDGE_FASTER        (20u)  /* 2 seconds / period (100ms)  = 20 */
-#define RADIO_ENC_EDGE_DELAY_EXPIRED (0u)
-#define RADIO_ENC_USE_ENCODER_B_TO_COUNT (0)/* Use only encoder Gray code phase A to count the detents*/
-
-typedef enum
-{
-   NO_RADIO_TURN=0,
-   LEFT_RADIO_TURN,
-   RIGHT_RADIO_TURN
-
-}Radio_Dir_T;
-
-static volatile unsigned char Edge_Timer ;
-static volatile unsigned char Encoder_Count;
-static volatile unsigned char Current_Encoder_A ;
-static volatile unsigned char Current_Encoder_B ;
-static volatile unsigned char Prior_Encoder_A ;
-static volatile unsigned char Prior_Encoder_B ;
-static volatile unsigned char Encoder_Missed_Edge ;
-static volatile unsigned char Edge_Faster ;
-static signed char Encoder_State;
-static volatile unsigned char Debounced_Signal_A_Changed ;
-static volatile unsigned char Debounced_Signal_B_Changed ;
-static signed char Prior_Encoder_State ;
-static volatile unsigned char Encoder_Debounce_Timer_A ;
-static volatile unsigned char Encoder_Debounce_Timer_B ;
+static volatile unsigned char Edge_Timer[MAX_ENCODERS] ;
+static volatile unsigned char Encoder_Count[MAX_ENCODERS];
+static volatile unsigned char Current_Encoder_A[MAX_ENCODERS] ;
+static volatile unsigned char Current_Encoder_B[MAX_ENCODERS] ;
+static volatile unsigned char Prior_Encoder_A[MAX_ENCODERS] ;
+static volatile unsigned char Prior_Encoder_B[MAX_ENCODERS] ;
+static volatile unsigned char Encoder_Missed_Edge[MAX_ENCODERS] ;
+static volatile unsigned char Edge_Faster[MAX_ENCODERS] ;
+static signed char Encoder_State[MAX_ENCODERS];
+static volatile unsigned char Debounced_Signal_A_Changed[MAX_ENCODERS] ;
+static volatile unsigned char Debounced_Signal_B_Changed[MAX_ENCODERS] ;
+static signed char Prior_Encoder_State[MAX_ENCODERS] ;
+static volatile unsigned char Encoder_Debounce_Timer_A[MAX_ENCODERS] ;
+static volatile unsigned char Encoder_Debounce_Timer_B[MAX_ENCODERS] ;
 
 
-void Decode_Encoder( void );
-void Clear_Encoder_Counts(void);
+void Decode_Encoder( unsigned char i );
 void Clear_Encoder_Direction(void);
 
 /*******************************************************************************
@@ -58,26 +32,39 @@ void Clear_Encoder_Direction(void);
 *******************************************************************************/
 void Init_Encoder(void) 
 {  
-   unsigned char Signal_A ;
-   unsigned char Signal_B ;
+   volatile unsigned char i;
+	 volatile unsigned char Signal_A[MAX_ENCODERS] ;
+   volatile unsigned char Signal_B[MAX_ENCODERS] ;
 
    /*-----------------------------------------------------------------
                 Initialize Radio Encoder Rotary signals
     -----------------------------------------------------------------*/
-   Signal_A = GPIOGetValue(1,4);
-   Signal_B = GPIOGetValue(1,5);
-   Current_Encoder_A = Signal_A ;
-   Prior_Encoder_A = Signal_A ;
-   Current_Encoder_B = Signal_B ;
-   Prior_Encoder_B = Signal_B;
-   Edge_Faster = 0 ;
-   Edge_Timer = RADIO_ENC_EDGE_DELAY ;
-   Prior_Encoder_State = RADIO_ENC_IDLE_ENCODER_STATE ;
-   Encoder_State = RADIO_ENC_IDLE_ENCODER_STATE ;
-   Encoder_Debounce_Timer_A = RADIO_ENC_ZERO_SAMPLES ;
-   Encoder_Debounce_Timer_B = RADIO_ENC_ZERO_SAMPLES ;
-   Encoder_Missed_Edge = 0 ;
-   Clear_Encoder_Counts();
+   for(i=0u;i<MAX_ENCODERS;i++)
+   {
+      if(i == ENC1)
+      {
+         Signal_A[i] = GPIOGetValue(1u,4u);
+         Signal_B[i] = GPIOGetValue(1u,5u);
+      }
+      else if(i == ENC2)
+      {
+         Signal_A[i] = GPIOGetValue(1u,0u);
+         Signal_B[i] = GPIOGetValue(1u,1u);
+      }
+            
+      Current_Encoder_A[i] = Signal_A[i] ;
+      Prior_Encoder_A[i] = Signal_A[i] ;
+      Current_Encoder_B[i] = Signal_B[i] ;
+      Prior_Encoder_B[i] = Signal_B[i];
+      Edge_Faster[i] = 0u ;
+      Edge_Timer[i] = RADIO_ENC_EDGE_DELAY ;
+      Prior_Encoder_State[i] = RADIO_ENC_IDLE_ENCODER_STATE ;
+      Encoder_State[i] = RADIO_ENC_IDLE_ENCODER_STATE ;
+      Encoder_Debounce_Timer_A[i] = RADIO_ENC_ZERO_SAMPLES ;
+      Encoder_Debounce_Timer_B[i] = RADIO_ENC_ZERO_SAMPLES ;
+      Encoder_Missed_Edge[i] = 0u;
+      Encoder_Count[i] = RADIO_ENC_ZERO_ENCODER_COUNT ;
+   }
 }
 
 /*******************************************************************************
@@ -88,73 +75,92 @@ void Init_Encoder(void)
 *******************************************************************************/
 void Fast_Periodic_Encoder( void )
 {
-   unsigned char Signal_A ;
-   unsigned char Signal_B ;
+   volatile unsigned char i;
+	 volatile unsigned char Signal_A[MAX_ENCODERS] ;
+   volatile unsigned char Signal_B[MAX_ENCODERS] ;
     
-   Debounced_Signal_A_Changed = 0 ;
-   Debounced_Signal_B_Changed = 0 ;
-   /*-------------------------------------------------------------------------
-                          Encoder Signal A Debouncing
-   -------------------------------------------------------------------------*/
-   Signal_A = GPIOGetValue(1,4);
-   if ( Current_Encoder_A != Signal_A )
+   for(i=0u;i<MAX_ENCODERS;i++)
    {
-       Current_Encoder_A = Signal_A ;
-       Encoder_Debounce_Timer_A = RADIO_ENC_DEBOUNCE_PERIOD_NORMAL ;
-   }
-   else if ( Encoder_Debounce_Timer_A > 0u )
-   {
-       Encoder_Debounce_Timer_A-- ;
-       if ( Encoder_Debounce_Timer_A == 0u )
-       {
-           if ( Prior_Encoder_A != Current_Encoder_A )
-           {
-               Debounced_Signal_A_Changed = 1 ;
-           }
-       }
-   }
-
-   /*-------------------------------------------------------------------------
-                     Encoder Signal B Debouncing
-    ------------------------------------------------------------------------*/
-
-   Signal_B = GPIOGetValue(1,5);
-   if ( Current_Encoder_B != Signal_B )
-   {
-       Current_Encoder_B = Signal_B ;
-       Encoder_Debounce_Timer_B = RADIO_ENC_DEBOUNCE_PERIOD_NORMAL ;
-   }
-   else if ( Encoder_Debounce_Timer_B > 0u )
-   {
-       Encoder_Debounce_Timer_B-- ;
-       if ( Encoder_Debounce_Timer_B == 0u )
-       {
-           if ( Prior_Encoder_B != Current_Encoder_B )
-           {
-               Debounced_Signal_B_Changed = 1 ;
-           }
-       }
-   }
+      
+      Debounced_Signal_A_Changed[i] = 0u ;
+      Debounced_Signal_B_Changed[i] = 0u ;
+      /*-------------------------------------------------------------------------
+                             Encoder Signal A Debouncing
+      -------------------------------------------------------------------------*/
+      if(i == ENC1)
+      {
+         Signal_A[i] = GPIOGetValue(1u,4u);
+      }
+      else if(i == ENC2)
+      {
+         Signal_A[i] = GPIOGetValue(1u,0u);
+      }
+      if ( Current_Encoder_A[i] != Signal_A[i] )
+      {
+          Current_Encoder_A[i] = Signal_A[i] ;
+          Encoder_Debounce_Timer_A [i]= RADIO_ENC_DEBOUNCE_PERIOD_NORMAL ;
+      }
+      else if ( Encoder_Debounce_Timer_A[i] > 0u )
+      {
+          Encoder_Debounce_Timer_A[i]-- ;
+          if ( Encoder_Debounce_Timer_A[i] == 0u )
+          {
+              if ( Prior_Encoder_A[i] != Current_Encoder_A[i] )
+              {
+                  Debounced_Signal_A_Changed[i] = 1u ;
+              }
+          }
+      }
 
       /*-------------------------------------------------------------------------
-                                   Encoder Decoding
+                        Encoder Signal B Debouncing
        ------------------------------------------------------------------------*/
-   /*if ICP is normal communication and wake up recvd*/
 
-   if ( Debounced_Signal_A_Changed || Debounced_Signal_B_Changed )
-   {
-       /* Start or re-start edge timer at any edge*/
-       Edge_Timer = RADIO_ENC_EDGE_DELAY ;
-       Decode_Encoder() ;
-       /* Save the current signal states as the next prior signal states*/
-       if ( Debounced_Signal_A_Changed )
-       {
-           Prior_Encoder_A = Current_Encoder_A ;
-       }
-       if ( Debounced_Signal_B_Changed )
-       {
-           Prior_Encoder_B = Current_Encoder_B ;
-       }
+      if(i == ENC1)
+      {
+         Signal_B[i] = GPIOGetValue(1u,5u);
+      }
+      else if(i == ENC2)
+      {
+         Signal_B[i] = GPIOGetValue(1u,1u);
+      }
+      if ( Current_Encoder_B[i] != Signal_B[i] )
+      {
+          Current_Encoder_B[i] = Signal_B[i] ;
+          Encoder_Debounce_Timer_B[i] = RADIO_ENC_DEBOUNCE_PERIOD_NORMAL ;
+      }
+      else if ( Encoder_Debounce_Timer_B[i] > 0u )
+      {
+          Encoder_Debounce_Timer_B[i]-- ;
+          if ( Encoder_Debounce_Timer_B[i] == 0u )
+          {
+              if ( Prior_Encoder_B[i] != Current_Encoder_B[i] )
+              {
+                  Debounced_Signal_B_Changed[i] = 1u ;
+              }
+          }
+      }
+
+         /*-------------------------------------------------------------------------
+                                      Encoder Decoding
+          ------------------------------------------------------------------------*/
+      /*if ICP is normal communication and wake up recvd*/
+
+      if ( Debounced_Signal_A_Changed[i] || Debounced_Signal_B_Changed[i] )
+      {
+          /* Start or re-start edge timer at any edge*/
+          Edge_Timer[i] = RADIO_ENC_EDGE_DELAY ;
+          Decode_Encoder(i) ;
+          /* Save the current signal states as the next prior signal states*/
+          if ( Debounced_Signal_A_Changed[i] )
+          {
+              Prior_Encoder_A[i] = Current_Encoder_A[i] ;
+          }
+          if ( Debounced_Signal_B_Changed[i] )
+          {
+              Prior_Encoder_B[i] = Current_Encoder_B[i] ;
+          }
+      }
    }
 }
 
@@ -164,12 +170,12 @@ void Fast_Periodic_Encoder( void )
  Return       :
  Description  :   
 *******************************************************************************/
-void Decode_Encoder( void )
+void Decode_Encoder( unsigned char i )
 {
    /* Perform binary-tree logic decoding of the signal changes*/
-   if(Prior_Encoder_A)
+   if(Prior_Encoder_A[i])
    {
-      if(Current_Encoder_A)
+      if(Current_Encoder_A[i])
       {
          /*-----------------------------------------------------------------
            3 > 3       11 > 11     No change                      15   1111
@@ -177,24 +183,24 @@ void Decode_Encoder( void )
            2 > 3       10 > 11     Clockwise one increment        13   1101
            2 > 2       10 > 10     No change                      12   1100
           -----------------------------------------------------------------*/
-         if(Prior_Encoder_B)
+         if(Prior_Encoder_B[i])
          {
-            if(Current_Encoder_B)
+            if(Current_Encoder_B[i])
             {
                /* 1111     15  No change*/
             }
             else
             {
                /* 1110     14  A remained high, B High > Low, Counterclockwise*/
-               Encoder_State-- ;
+               Encoder_State[i]-- ;
             }
          }
          else
          {
-            if(Current_Encoder_B)
+            if(Current_Encoder_B[i])
             {
                /* 1101     13  A remained high, B Low > High, Clockwise*/
-               Encoder_State++ ;
+               Encoder_State[i]++ ;
             }
             else
             {
@@ -210,37 +216,37 @@ void Decode_Encoder( void )
           2 > 1       10 > 01     Invalid (missed edge)           9   1001
           2 > 0       10 > 00     Counterclockwise one increment  8   1000
          -----------------------------------------------------------------*/
-         if ( Prior_Encoder_B )
+         if ( Prior_Encoder_B[i] )
          {
-            if ( Current_Encoder_B )
+            if ( Current_Encoder_B[i] )
             {
                /* 1011     11  A High > Low, B remained high, Clockwise*/
-               Encoder_State++ ;
+               Encoder_State[i]++ ;
             }
             else
             {
                /* 1010     10  A High > Low, B High > Low, Invalid (missed edge)*/
-               Encoder_Missed_Edge = 1 ;
+               Encoder_Missed_Edge[i] = 1u ;
             }
          }
          else
          {
-            if( Current_Encoder_B )
+            if( Current_Encoder_B[i] )
             {
                /* 1001     9   A High > Low, B Low > High, Invalid (missed edge)*/
-               Encoder_Missed_Edge = 1 ;
+               Encoder_Missed_Edge[i] = 1u ;
             }
             else
             {
                /* 1000     8   A High > Low, B remained low, Counterclockwise*/
-               Encoder_State-- ;
+               Encoder_State[i]-- ;
             }
          }
       }
    }
    else
    {
-      if( Current_Encoder_A )
+      if( Current_Encoder_A[i] )
       {
          /*-----------------------------------------------------------------
            1 > 3       01 > 11     Counterclockwise one increment  7   0111
@@ -248,30 +254,30 @@ void Decode_Encoder( void )
            0 > 3       00 > 11     Invalid (missed edge)           5   0101
            0 > 2       00 > 10     Clockwise one increment         4   0100
           -----------------------------------------------------------------*/
-         if ( Prior_Encoder_B )
+         if ( Prior_Encoder_B[i] )
          {
-            if ( Current_Encoder_B )
+            if ( Current_Encoder_B[i] )
             {
                /* 0111     7   A Low > High, B remained high, Counterclockwise*/
-               Encoder_State-- ;
+               Encoder_State[i]-- ;
             }
             else
             {
                /* 0110     6   A Low > High, B High > Low, Invalid (missed edge)*/
-               Encoder_Missed_Edge = 1 ;
+               Encoder_Missed_Edge[i] = 1u ;
             }
          }
          else
          {
-            if ( Current_Encoder_B )
+            if ( Current_Encoder_B[i] )
             {
                /* 0101     5   A Low > High, B Low > High, Invalid (missed edge)*/
-               Encoder_Missed_Edge = 1 ;
+               Encoder_Missed_Edge[i] = 1u ;
             }
             else
             {
                /* 0100     4   A Low > High, B remained low, Clockwise*/
-               Encoder_State++ ;
+               Encoder_State[i]++ ;
             }
          }
       }
@@ -283,24 +289,24 @@ void Decode_Encoder( void )
            0 > 1       00 > 01     Counterclockwise one increment  1   0001
            0 > 0       00 > 00     No change                       0   0000
           -----------------------------------------------------------------*/
-         if ( Prior_Encoder_B )
+         if ( Prior_Encoder_B[i] )
          {
-            if ( Current_Encoder_B )
+            if ( Current_Encoder_B[i] )
             {
                /* 0011     3   No change*/
             }
             else
             {
                /* 0010     2   A remained low, B High > Low, Clockwise*/
-               Encoder_State++ ;
+               Encoder_State[i]++ ;
             }
          }
          else
          {
-            if ( Current_Encoder_B )
+            if ( Current_Encoder_B[i] )
             {
                /* 0001     1   A remained low, B Low > High, Counterclockwise*/
-               Encoder_State-- ;
+               Encoder_State[i]-- ;
             }
             else
             {
@@ -313,19 +319,19 @@ void Decode_Encoder( void )
     On a missed edge, assume that the encoder is still moving in the same
     direction and continue adjusting the encoder state in the same direction
     -------------------------------------------------------------------------*/
-   if ( Encoder_Missed_Edge )
+   if ( Encoder_Missed_Edge[i] )
    {
-      Encoder_Missed_Edge = 0 ;
+      Encoder_Missed_Edge[i] = 0 ;
       /* Make edge timeout quicker after a missed edge*/
-      Edge_Faster = 1 ;
+      Edge_Faster[i] = 1u ;
       /* Check prior encoder state*/
-      if ( Prior_Encoder_State > 0 )
+      if ( Prior_Encoder_State[i] > 0 )
       {
-          Encoder_State++ ;
+          Encoder_State[i]++ ;
       }
-      else if ( Prior_Encoder_State < 0 )
+      else if ( Prior_Encoder_State[i] < 0 )
       {
-          Encoder_State-- ;
+          Encoder_State[i]-- ;
       }
       else
       {
@@ -333,33 +339,47 @@ void Decode_Encoder( void )
       }
    }
    /* Remember prior encoder state*/
-   Prior_Encoder_State = Encoder_State ;
+   Prior_Encoder_State[i] = Encoder_State[i] ;
    /*-------------------------------------------------------------------------
           Check encoder state and increment or decrement encoder count
    -------------------------------------------------------------------------*/
-   if ( Encoder_State == RADIO_ENC_MINIMUM_ENCODER_STATE )
+   if ( Encoder_State[i] == RADIO_ENC_MINIMUM_ENCODER_STATE )
    {
-      Encoder_State = RADIO_ENC_IDLE_ENCODER_STATE ;
-      Encoder_Count++ ;
+      Encoder_State[i] = RADIO_ENC_IDLE_ENCODER_STATE ;
+      Encoder_Count[i]++ ;
       //RIGHT_RADIO_TURN;
-      Radio_Enc_Operation(RIGHT_TURN);
+      if(i == ENC1)
+      {
+         Radio_Enc_Tune_Operation(RIGHT_TURN);
+      }
+      else if(i == ENC2)
+      {
+         Radio_Enc_Volume_Operation(RIGHT_TURN);
+      }
    }
-   else if ( Encoder_State == RADIO_ENC_MAXIMUM_ENCODER_STATE )
+   else if ( Encoder_State[i] == RADIO_ENC_MAXIMUM_ENCODER_STATE )
    {
-      Encoder_State = RADIO_ENC_IDLE_ENCODER_STATE ;
-      Encoder_Count--;
+      Encoder_State[i] = RADIO_ENC_IDLE_ENCODER_STATE ;
+      Encoder_Count[i]--;
       //LEFT_RADIO_TURN;
-      Radio_Enc_Operation(LEFT_TURN);
+      if(i == ENC1)
+      {
+         Radio_Enc_Tune_Operation(LEFT_TURN);
+      }
+      else if(i == ENC2)
+      {
+         Radio_Enc_Volume_Operation(LEFT_TURN);
+      }
    }
-   else if( Encoder_State == RADIO_ENC_IDLE_ENCODER_STATE )
+   else if( Encoder_State[i] == RADIO_ENC_IDLE_ENCODER_STATE )
    {
       //NO_RADIO_TURN;
    }
-   else if( Encoder_State == -1 )
+   else if( Encoder_State[i] == -1 )
    {
       //NO_RADIO_TURN;
    }
-   else if( Encoder_State == 1 )
+   else if( Encoder_State[i] == 1 )
    {
       //NO_RADIO_TURN;
    }
@@ -373,54 +393,35 @@ void Decode_Encoder( void )
  Func Name    :
  Arguments    :
  Return       :
- Description  :   
-*******************************************************************************/
-void Clear_Encoder_Counts(void)
-{
-   Encoder_Count = RADIO_ENC_ZERO_ENCODER_COUNT ;
-}
-
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Clear_Encoder_Direction(void)
-{
-    //NO_RADIO_TURN ;
-}
-
-
-
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
  Description  :100ms   
 *******************************************************************************/
 void Slow_Periodic_Encoder( void )
 {
-   unsigned char l_faster_time ;
-   if ( Edge_Timer )
+   volatile unsigned char i;
+	 volatile unsigned char l_faster_time[MAX_ENCODERS] ;
+   
+   for(i=0u;i<MAX_ENCODERS;i++)
    {
-       Edge_Timer-- ;
-       if ( Edge_Faster )
-       {
-           l_faster_time = RADIO_ENC_EDGE_FASTER ;
-           while ( l_faster_time-- )
-           {
-               if ( Edge_Timer )
+      if(Edge_Timer[i])
+      {
+         Edge_Timer[i]-- ;
+         if(Edge_Faster[i])
+         {
+            l_faster_time[i] = RADIO_ENC_EDGE_FASTER ;
+            while(l_faster_time[i]--)
+            {
+               if(Edge_Timer[i])
                {
-                   Edge_Timer-- ;
+                  Edge_Timer[i]-- ;
                }
-           }
-       }
-       if ( Edge_Timer == RADIO_ENC_EDGE_DELAY_EXPIRED )
-       {
-           Edge_Faster = 0 ;
-           Encoder_State = RADIO_ENC_IDLE_ENCODER_STATE ;
-       }
+            }
+         }
+         if(Edge_Timer[i] == RADIO_ENC_EDGE_DELAY_EXPIRED)
+         {
+            Edge_Faster[i] = 0 ;
+            Encoder_State[i] = RADIO_ENC_IDLE_ENCODER_STATE;
+         }
+      }
    }
 }
 

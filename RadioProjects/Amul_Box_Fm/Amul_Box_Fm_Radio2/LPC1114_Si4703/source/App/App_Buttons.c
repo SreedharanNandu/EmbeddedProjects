@@ -3,9 +3,36 @@
 #include "APP_Si.h"
 #include "gpio.h"
 #include "App_Led.h"
+#include "Cal_Const.h"
 
-void Scan_Rotary_Button(void);
-void Scan_Touch_Button(void);
+volatile unsigned char btn_pin[MAX_BTNS],prev_btn_pin[MAX_BTNS];
+volatile unsigned long btn_break_timer[MAX_BTNS];
+volatile unsigned char btn_state[MAX_BTNS];
+
+
+/*******************************************************************************
+ Func Name    :
+ Arguments    :
+ Return       :
+ Description  :   
+*******************************************************************************/
+void Init_Buttons(void)
+{
+   unsigned char i;
+   for(i=0u;i<(unsigned char)MAX_BTNS;i++)
+   {
+      if(i == TUNE_BTN)
+      {
+         prev_btn_pin[i] = btn_pin[i] = GPIOGetValue(0u,8u);
+      }
+      else if(i == PWR_BTN)
+      {
+         prev_btn_pin[i] = btn_pin[i] = GPIOGetValue(0u,9u);
+      }
+   }
+   btn_break_timer[i] = 0u;
+   btn_state[i] = 0u;
+}
 
 
 /*******************************************************************************
@@ -16,109 +43,67 @@ void Scan_Touch_Button(void);
 *******************************************************************************/
 void Scan_Buttons(void)
 {
-  Scan_Rotary_Button();
-  Scan_Touch_Button();
+   unsigned char i;
 
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Scan_Rotary_Button(void)
-{
-   static volatile unsigned char pin,prev_pin;
-   static volatile unsigned long break_timer=0;
-   static volatile unsigned char btn_state;
-
-   pin = GPIOGetValue(0,8);
-
-   if(!pin && prev_pin)
+   for(i=0u;i<(unsigned char)MAX_BTNS;i++)
    {
-      //button pressed
-      break_timer=0;
-      btn_state = 1;
-   }
-   else if(!pin && !prev_pin)
-   {
-     //button pressed low
-      if(btn_state == 1)
+      if(i == TUNE_BTN)
       {
-        break_timer++; 
+         btn_pin[i] = GPIOGetValue(0u,8u);
       }
-   }
-   else if(pin && !prev_pin)
-   {
-     //button release
-     btn_state = 4;
-   }
-   else if(pin && prev_pin)
-   {
-     //released & normal run
-     if((btn_state == 4) && (break_timer > 0u) && (break_timer <= BREAK_TIMEOUT))//short press
-     {
-        break_timer = 0;
-        btn_state = 0;
-        Radio_Enc_Button(SHORT_PRESS);
-     }
-     else if((btn_state == 4) && (break_timer > BREAK_TIMEOUT))//long press
-     {
-        break_timer = 0;
-        btn_state = 0;
-        Radio_Enc_Button(LONG_PRESS);
-     }
-   }
-   prev_pin = pin;
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Scan_Touch_Button(void)
-{
-   static volatile unsigned char pin1,prev_pin1;
-   static volatile unsigned long break_timer1=0;
-   static volatile unsigned char btn_state1;
-
-   pin1 = !(GPIOGetValue(0,9));
-
-   if(!pin1 && prev_pin1)
-   {
-      //button pressed
-      break_timer1=0;
-      btn_state1 = 1;
-   }
-   else if(!pin1 && !prev_pin1)
-   {
-     //button pressed low
-      if(btn_state1 == 1)
+      else if(i == PWR_BTN)
       {
-        break_timer1++; 
+         btn_pin[i] = GPIOGetValue(0u,9u);
       }
+      if(!btn_pin[i] && prev_btn_pin[i])//H to L
+      {
+         //button pressed
+         btn_break_timer[i]=0u;
+         btn_state[i] = 1u;
+      }
+      else if(!btn_pin[i] && !prev_btn_pin[i])// Low level
+      {
+        //button pressed low
+         if(btn_state[i] == 1u)
+         {
+           btn_break_timer[i]++; 
+         }
+      }
+      else if(btn_pin[i] && !prev_btn_pin[i])//L to H
+      {
+        //button release
+        btn_state[i] = 4u;
+      }
+      else if(btn_pin[i] && prev_btn_pin[i])//High Level
+      {
+        //released & normal run
+        if((btn_state[i] == 4u) && (btn_break_timer[i] > 0u) && (btn_break_timer[i] <= K_Break_Timeout))//short press
+        {
+           btn_break_timer[i] = 0u;
+           btn_state[i] = 0u;
+           if(i == TUNE_BTN)
+           {
+              Radio_Enc_Tune_Button(SHORT_PRESS);
+           }
+           else if(i == PWR_BTN)
+           {
+              Radio_Enc_Pwr_Button(SHORT_PRESS);
+           }
+        }
+        else if((btn_state[i] == 4u) && (btn_break_timer[i] > K_Break_Timeout))//long press
+        {
+           btn_break_timer[i] = 0u;
+           btn_state[i] = 0u;
+           if(i == TUNE_BTN)
+           {
+              Radio_Enc_Tune_Button(LONG_PRESS);
+           }
+           else if(i == PWR_BTN)
+           {
+              Radio_Enc_Pwr_Button(LONG_PRESS);
+           }
+        }
+      }
+      prev_btn_pin[i] = btn_pin[i];
    }
-   else if(pin1 && !prev_pin1)
-   {
-     //button release
-     btn_state1 = 4;
-   }
-   else if(pin1 && prev_pin1)
-   {
-     //released & normal run
-     if((btn_state1 == 4) && (break_timer1 > 0u) && (break_timer1 <= BREAK_TIMEOUT1))//short press
-     {
-        break_timer1 = 0;
-        btn_state1 = 0;
-        Radio_Touch_Button(SHORT_PRESS);
-     }
-     else if((btn_state1 == 4) && (break_timer1 > BREAK_TIMEOUT1))//long press
-     {
-        break_timer1 = 0;
-        btn_state1 = 0;
-        Radio_Touch_Button(LONG_PRESS);
-     }
-   }
-   prev_pin1 = pin1;
 }

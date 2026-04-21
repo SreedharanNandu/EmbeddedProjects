@@ -73,8 +73,10 @@ void Init_HWIO(void)
 *****************************************************************************/
 void Init_App(void)
 {
+   PreInit_Radio();
    Change_Mode_EE(INIT_EE);
    Process_Eeprom();//copy NVM--->shadowRAM
+   Init_Buttons();
    Init_Encoder();
    Led_Init();
    Init_Radio();
@@ -91,6 +93,8 @@ int main(void)
 {
    SystemInit();
    Init_HWIO();
+   Amp_Mute(ON);
+   PowerUpInit_LED();
    Init_App();
    Enable_Timer16(0);
    Enable_Timer16(1);
@@ -121,9 +125,11 @@ int main(void)
       if(timer16_1s_flag)
       {
          timer16_1s_flag = 0;
+         LED_Toggle();
       }
    }
 
    return 0;
 }
+
 

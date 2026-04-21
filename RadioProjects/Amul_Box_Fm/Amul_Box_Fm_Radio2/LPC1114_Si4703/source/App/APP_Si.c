@@ -22,6 +22,7 @@
 #include "App_Eeprom.h"
 #include "App_Led.h"
 #include "uart.h"
+#include "Cal_Const.h"
 
 /*****************************************************************************
 *                                 Macro Definitions                          *
@@ -39,7 +40,6 @@ unsigned char App_Si_EE_Check_Pending;
 unsigned char power_state;
 rds_data_T rds_data;
 unsigned char rds_mode;
-unsigned char volume_mode;
 volatile si4703_read_reg_T si4703_read_reg;
 volatile radio_T radio_state;
 volatile unsigned char Is_Manual_Tune;
@@ -47,14 +47,20 @@ static volatile unsigned char Is_Vol_Changed;
 volatile unsigned char preset_mode;
 unsigned short int fm_freq,prev_fm_freq;
 unsigned char preset_index;
-unsigned char si_vol = DEF_SI_VOL;
+unsigned char si_vol;
 unsigned char fm_stereo;
 unsigned char rdsText[65];
 unsigned char rdsName[9];
-unsigned short int K_Radio_Data_Read[MAX_CH+1u] = {FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,0u};
-unsigned short int K_Radio_Data_Write[MAX_CH+1u] = {FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,FM_MIN_FREQ,0u};
+unsigned short int K_Radio_Data_Read[MAX_CH];
+unsigned short int K_Radio_Data_Write[MAX_CH];
+unsigned short int K_Radio_Index_Read[1];
+unsigned short int K_Radio_Index_Write[1];
+unsigned short int K_Radio_Vol_Read[1];
+unsigned short int K_Radio_Vol_Write[1];
 unsigned short int reset_Vol_Timer;
+unsigned short int reset_Index_Timer;
 char printBuffer[PRINTBUFSIZE];
+unsigned char first_time_power_up;
 
 /*****************************************************************************
 *                            Function declarations                          *
@@ -101,26 +107,44 @@ void Init_Si(void)
    To  select  2-wire  operation,  the  SEN  pin  must  be
    sampled high by the device on the rising edge of RST.   */
    
-   LPC_IOCON->PIO0_5 = 0;
-   GPIOSetValue(PORT0,5 ,0); //SDI (SDA) must be LOW as per data sheet 
+   LPC_IOCON->PIO0_5 = 0u;
+   GPIOSetValue(PORT0,5u ,0u); //SDI (SDA) must be LOW as per data sheet 
    Delay_Ms(200u);
    //si in reset state
-   si4703_Rst(0);
+   si4703_Rst(0u);
    //make RSEN High
-   si4703_Rsen(1);
+   si4703_Rsen(1u);
    Delay_Ms(100u);
    //out of reset    
-   si4703_Rst(1);
+   si4703_Rst(1u);
    Delay_Ms(100u);
-   LPC_IOCON->PIO0_5 = 1;//Reconfigure to I2C SDA pin
+   LPC_IOCON->PIO0_5 = 1u;//Reconfigure to I2C SDA pin
    Init_I2C();
    Delay_Ms(300u);//Reconfigure delay for I2C
    Power_Radio();
-   Is_Manual_Tune = 0;
+   Is_Manual_Tune = 0u;
    power_state = ON_STATE;
 }
 
-
+/******************************************************************************
+* Function Name     : 
+* Input Params      : None
+* Output Params     : None
+* Description       : 
+******************************************************************************/
+void PreInit_Radio(void)
+{
+   unsigned char i;
+   for(i=0u;i<MAX_CH;i++)
+   {
+      K_Radio_Data_Read[i] = FM_MIN_FREQ;
+      K_Radio_Data_Write[i] = FM_MIN_FREQ;
+   }
+   K_Radio_Index_Read[0] = 0u;
+   K_Radio_Index_Write[0] = 0u;
+   K_Radio_Vol_Read[0] = 0u;
+   K_Radio_Vol_Write[0] = 0u;
+}
 
 /******************************************************************************
 * Function Name     : 
@@ -143,17 +167,17 @@ static void Write_si4703(void)
 {
    unsigned char data_wr[12];
   
-   data_wr[0] = si4703_read_reg.powercfg>>8;
+   data_wr[0] = si4703_read_reg.powercfg>>8u;
    data_wr[1] = (unsigned char)si4703_read_reg.powercfg;
-   data_wr[2] = si4703_read_reg.channel>>8;
+   data_wr[2] = si4703_read_reg.channel>>8u;
    data_wr[3] = (unsigned char)si4703_read_reg.channel;
-   data_wr[4] = si4703_read_reg.sysconfig1>>8;
+   data_wr[4] = si4703_read_reg.sysconfig1>>8u;
    data_wr[5] = (unsigned char)si4703_read_reg.sysconfig1;
-   data_wr[6] = si4703_read_reg.sysconfig2>>8;
+   data_wr[6] = si4703_read_reg.sysconfig2>>8u;
    data_wr[7] = (unsigned char)si4703_read_reg.sysconfig2;
-   data_wr[8] = si4703_read_reg.sysconfig3>>8;
+   data_wr[8] = si4703_read_reg.sysconfig3>>8u;
    data_wr[9] = (unsigned char)si4703_read_reg.sysconfig3;
-   data_wr[10] = si4703_read_reg.test1>>8;
+   data_wr[10] = si4703_read_reg.test1>>8u;
    data_wr[11] = (unsigned char)si4703_read_reg.test1;
    Write_Si_I2C((unsigned char*)&data_wr[0],12u);
    
@@ -170,22 +194,22 @@ void Read_si4703(void)
     volatile unsigned char data_rd[32];
 
     Read_Si_I2C((unsigned char*)&data_rd[0],32u);
-    si4703_read_reg.statusrssi     = (data_rd[0]<<8)|data_rd[1]; 
-    si4703_read_reg.readchan       = (data_rd[2]<<8)|data_rd[3]; 
-    si4703_read_reg.rdsa           = (data_rd[4]<<8)|data_rd[5]; 
-    si4703_read_reg.rdsb           = (data_rd[6]<<8)|data_rd[7]; 
-    si4703_read_reg.rdsc           = (data_rd[8]<<8)|data_rd[9]; 
-    si4703_read_reg.rdsd           = (data_rd[10]<<8)|data_rd[11]; 
-    si4703_read_reg.device_id      = (data_rd[12]<<8)|data_rd[13]; 
-    si4703_read_reg.chipid         = (data_rd[14]<<8)|data_rd[15];
-    si4703_read_reg.powercfg       = (data_rd[16]<<8)|data_rd[17];
-    si4703_read_reg.channel        = (data_rd[18]<<8)|data_rd[19];
-    si4703_read_reg.sysconfig1     = (data_rd[20]<<8)|data_rd[21];
-    si4703_read_reg.sysconfig2     = (data_rd[22]<<8)|data_rd[23];
-    si4703_read_reg.sysconfig3     = (data_rd[24]<<8)|data_rd[25];
-    si4703_read_reg.test1          = (data_rd[26]<<8)|data_rd[27];
-    si4703_read_reg.test2          = (data_rd[28]<<8)|data_rd[29];
-    si4703_read_reg.bootconfig     = (data_rd[30]<<8)|data_rd[31];
+    si4703_read_reg.statusrssi     = (data_rd[0]<<8u)|data_rd[1]; 
+    si4703_read_reg.readchan       = (data_rd[2]<<8u)|data_rd[3]; 
+    si4703_read_reg.rdsa           = (data_rd[4]<<8u)|data_rd[5]; 
+    si4703_read_reg.rdsb           = (data_rd[6]<<8u)|data_rd[7]; 
+    si4703_read_reg.rdsc           = (data_rd[8]<<8u)|data_rd[9]; 
+    si4703_read_reg.rdsd           = (data_rd[10]<<8u)|data_rd[11]; 
+    si4703_read_reg.device_id      = (data_rd[12]<<8u)|data_rd[13]; 
+    si4703_read_reg.chipid         = (data_rd[14]<<8u)|data_rd[15];
+    si4703_read_reg.powercfg       = (data_rd[16]<<8u)|data_rd[17];
+    si4703_read_reg.channel        = (data_rd[18]<<8u)|data_rd[19];
+    si4703_read_reg.sysconfig1     = (data_rd[20]<<8u)|data_rd[21];
+    si4703_read_reg.sysconfig2     = (data_rd[22]<<8u)|data_rd[23];
+    si4703_read_reg.sysconfig3     = (data_rd[24]<<8u)|data_rd[25];
+    si4703_read_reg.test1          = (data_rd[26]<<8u)|data_rd[27];
+    si4703_read_reg.test2          = (data_rd[28]<<8u)|data_rd[29];
+    si4703_read_reg.bootconfig     = (data_rd[30]<<8u)|data_rd[31];
 }
 
 
@@ -206,7 +230,7 @@ void Power_Radio(void)
    Write_si4703();
    si4703_read_reg.sysconfig1 = 0x1080u; 
    Write_si4703();
-   si4703_read_reg.sysconfig2 &= ~(3<<4) ; 
+   si4703_read_reg.sysconfig2 &= ~(3u<<4u) ; 
    si4703_read_reg.sysconfig2 &= 0xFFF0u ; 
    si4703_read_reg.sysconfig2 |= 0x0010u ; //make very volume MUTE
    Write_si4703();
@@ -235,16 +259,16 @@ void Set_Vol(unsigned char vol_level)
 void Seek_Fm_Start(unsigned char seek)
 {
    Read_si4703();
-   si4703_read_reg.powercfg &= ~(1<<10);
+   si4703_read_reg.powercfg &= ~(1u<<10u);
    if(seek == SEEK_DWN) 
    {
-      si4703_read_reg.powercfg &= ~(1<<9);
+      si4703_read_reg.powercfg &= ~(1u<<9u);
    }
    else
    { 
-      si4703_read_reg.powercfg |= 1<<9; //Set the bit to seek up
+      si4703_read_reg.powercfg |= 1u<<9u; //Set the bit to seek up
    }
-   si4703_read_reg.powercfg |= (1<<8); //Start seek
+   si4703_read_reg.powercfg |= (1u<<8u); //Start seek
    Write_si4703(); //Seeking will now start
 }
 
@@ -272,20 +296,20 @@ void Set_Fm_Tune_Freq(unsigned short int freq)
    {
      cnt -- ;
      Read_si4703();      
-     if((si4703_read_reg.statusrssi & (1<<14)) != 0u)//Tune complete
+     if((si4703_read_reg.statusrssi & (1u<<14u)) != 0u)//Tune complete
      {
         break;
      }
    }
    Read_si4703();
-   si4703_read_reg.channel  &= ~(1<<15); 
+   si4703_read_reg.channel  &= ~(1u<<15u); 
    Write_si4703();      
    cnt  = SET_FM_TUNE_RSSI_THRESHOLD;
    while(cnt)
    {
      cnt--;
      Read_si4703();      
-     if((si4703_read_reg.statusrssi & (1<<14)) == 0u)
+     if((si4703_read_reg.statusrssi & (1u<<14u)) == 0u)
      {
         break;
      }
@@ -310,87 +334,61 @@ unsigned short int Get_Fm_Tune_Status(void)
 * Output Params     : None
 * Description       : 
 ******************************************************************************/
-void Radio_Enc_Operation(unsigned char dir)
+void Radio_Enc_Tune_Operation(unsigned char dir)
 {
    if((ON_STATE == power_state ))
    {
       if(dir == RIGHT_TURN)/*right turn*/
       { 
-         Led(blink_RotChange);
-         if(volume_mode)
+         if(preset_mode)
          {
-            if(si_vol < SI_VOL_MAX)
+            if(preset_index < (MAX_CH-1U))
             {
-              si_vol++;
-            }             
-            Is_Vol_Changed = 1;
-            reset_Vol_Timer = RESET_VOL_TIMER_TH;
-            UART_Sprintf("\nVol:-%d", si_vol);
+               preset_index++;
+               if(K_Radio_Data_Read[preset_index] < FM_MAX_FREQ)
+               {
+                  fm_freq = K_Radio_Data_Read[preset_index];
+                  Is_Manual_Tune = 1u;
+                  UART_Sprintf("\n\rChannel No:-%d", preset_index);
+                  UART_Sprintf("\n\rFrequency:-%d", fm_freq);
+                  reset_Index_Timer = RESET_INDEX_TIMER_TH;
+               }
+            }
          }
          else
          {
-            if(preset_mode)
+            if(fm_freq < FM_MAX_FREQ)
             {
-               if(preset_index < (MAX_CH-1U))
-               {
-                  preset_index++;
-                  if(K_Radio_Data_Read[preset_index] < FM_MAX_FREQ)
-                  {
-                     fm_freq = K_Radio_Data_Read[preset_index];
-                     Is_Manual_Tune = 1;
-                     UART_Sprintf("\n\rChannel No:-%d", preset_index);
-                     UART_Sprintf("\n\rFrequency:-%d", fm_freq);
-                  }
-               }
-            }
-            else
-            {
-               if(fm_freq < FM_MAX_FREQ)
-               {
-                  fm_freq = fm_freq + 10;
-                  Is_Manual_Tune = 1;
-                  UART_Sprintf("\n\rFrequency:-%d", fm_freq);
-               }
+               fm_freq = fm_freq + 10u;
+               Is_Manual_Tune = 1u;
+               UART_Sprintf("\n\rFrequency:-%d", fm_freq);
             }
          }
       }
       else if(dir == LEFT_TURN)/*left*/
       {
-         Led(blink_RotChange);
-         if(volume_mode)
+         if(preset_mode)
          {
-            if(si_vol > SI_VOL_MUTE)
+            if(preset_index > 0u)
             {
-              si_vol--;
-            }             
-            Is_Vol_Changed = 1;
-            reset_Vol_Timer = RESET_VOL_TIMER_TH;
-            UART_Sprintf("\nVol:-%d", si_vol);
+               preset_index--;
+               if(K_Radio_Data_Read[preset_index] > FM_MIN_FREQ)
+               {
+                  fm_freq = K_Radio_Data_Read[preset_index];
+                  Is_Manual_Tune = 1u;
+                  UART_Sprintf("\n\rChannel No:-%d", preset_index);
+                  UART_Sprintf("\n\rFrequency:-%d", fm_freq);
+                  reset_Index_Timer = RESET_INDEX_TIMER_TH;
+               }
+            }
          }
          else
          {
-            if(preset_mode)
+            if(fm_freq > FM_MIN_FREQ)
             {
-               if(preset_index > 0u)
-               {
-                  preset_index--;
-                  if(K_Radio_Data_Read[preset_index] > FM_MIN_FREQ)
-                  {
-                     fm_freq = K_Radio_Data_Read[preset_index];
-                     Is_Manual_Tune = 1;
-                     UART_Sprintf("\n\rChannel No:-%d", preset_index);
-                     UART_Sprintf("\n\rFrequency:-%d", fm_freq);
-                  }
-               }
-            }
-            else
-            {
-               if(fm_freq > FM_MIN_FREQ)
-               {
-                  fm_freq = fm_freq - 10;
-                  Is_Manual_Tune = 1;
-                  UART_Sprintf("\n\rFrequency:-%d", fm_freq);
-               }
+               fm_freq = fm_freq - 10u;
+               Is_Manual_Tune = 1u;
+               UART_Sprintf("\n\rFrequency:-%d", fm_freq);
             }
          }
       }
@@ -407,7 +405,53 @@ void Radio_Enc_Operation(unsigned char dir)
 * Output Params     : None
 * Description       : 
 ******************************************************************************/
-void Radio_Enc_Button(unsigned char duration)
+void Radio_Enc_Volume_Operation(unsigned char dir)
+{
+   if((ON_STATE == power_state ))
+   {
+      if(dir == RIGHT_TURN)/*right turn*/
+      { 
+         if(si_vol < SI_VOL_MAX)
+         {
+           if(si_vol == SI_VOL_MUTE)
+           {
+              Amp_Mute(OFF);
+           }
+           si_vol++;
+         }             
+         Is_Vol_Changed = 1u;
+         reset_Vol_Timer = RESET_VOL_TIMER_TH;
+         UART_Sprintf("\nVol:-%d", si_vol);
+      }
+      else if(dir == LEFT_TURN)/*left*/
+      {
+         if(si_vol > SI_VOL_MUTE)
+         {
+           si_vol--;
+           if(si_vol == SI_VOL_MUTE)
+           {
+              Amp_Mute(ON);
+           }
+         }             
+         Is_Vol_Changed = 1u;
+         reset_Vol_Timer = RESET_VOL_TIMER_TH;
+         UART_Sprintf("\nVol:-%d", si_vol);
+      }
+      else
+      {
+         /*do nothing*/
+      }
+   }
+}
+
+
+/******************************************************************************
+* Function Name     : 
+* Input Params      : None
+* Output Params     : None
+* Description       : 
+******************************************************************************/
+void Radio_Enc_Tune_Button(unsigned char duration)
 {
    if(power_state == ON_STATE)
    {
@@ -425,14 +469,16 @@ void Radio_Enc_Button(unsigned char duration)
             UART_Printf("\n\rManual Mode");
          }
          UART_Sprintf("\n\rFrequency:-%d", fm_freq);
-         Is_Manual_Tune = 1;
+         Is_Manual_Tune = 1u;
          Led(blink_ModeChange);
       }
       else if(duration == LONG_PRESS)
       {
          K_Radio_Data_Write[preset_index] = fm_freq;
          K_Radio_Data_Read[preset_index] = K_Radio_Data_Write[preset_index];
-         ee_state = UPDATE_EE;
+         K_Radio_Index_Read[0] = preset_index;
+         K_Radio_Index_Write[0] = preset_index;
+         Change_Mode_EE(UPDATE_EE);
          preset_mode = 1u;
          UART_Sprintf("\n\rFrequency:-%d", fm_freq);
          UART_Sprintf("\n\rChannel %d Saved", preset_index);
@@ -444,35 +490,20 @@ void Radio_Enc_Button(unsigned char duration)
       }
    }
 }
+
+
+
+
 /******************************************************************************
 * Function Name     : 
 * Input Params      : None
 * Output Params     : None
 * Description       : 
 ******************************************************************************/
-void Radio_Touch_Button(unsigned char duration)
+void Radio_Enc_Pwr_Button(unsigned char duration)
 {
    if(duration == SHORT_PRESS)
    {
-      if(power_state == ON_STATE)
-      {
-         volume_mode = !volume_mode;
-         if(volume_mode)
-         {
-            reset_Vol_Timer = RESET_VOL_TIMER_TH;
-            UART_Printf("\n\rVol Sel ON ");
-         }
-         else
-         {
-            UART_Printf("\n\rVol Sel OFF");
-         }
-         Led(blink_ModeChange);
-      }
-   }
-   else if(duration == LONG_PRESS)
-   {
-      volume_mode = 0;
-      preset_mode = 0;
       if(power_state == ON_STATE)
       {
          power_state = OFF_STATE;
@@ -485,8 +516,19 @@ void Radio_Touch_Button(unsigned char duration)
       {
       }
    }
-   else
+   else if(duration == LONG_PRESS)
    {
+      if(power_state == ON_STATE)
+      {
+         power_state = OFF_STATE;
+      }
+      else if(power_state == OFF_STATE)
+      {
+         power_state = ON_STATE;
+      }
+      else
+      {
+      }
    
    }
 }
@@ -499,7 +541,7 @@ void Radio_Touch_Button(unsigned char duration)
 ******************************************************************************/
 void Get_RDS_Info(void)
 {
-   if(si4703_read_reg.statusrssi & (1u<<15))
+   if(si4703_read_reg.statusrssi & (1u<<15u))
    {
       if(RDS_Process((unsigned char*)rdsName,(unsigned char*)rdsText)>0u)
       {
@@ -534,8 +576,8 @@ unsigned char RDS_Process(unsigned char* psPtr, unsigned char*ptPtr)
    volatile unsigned short int c;
    volatile unsigned short int d;      
 
-   temp_rdsdata[8] = 0;//only 8 characters allowed
-   temp_rdstext[64] = 0;//only 64 charaters allowed
+   temp_rdsdata[8] = 0u;//only 8 characters allowed
+   temp_rdstext[64] = 0u;//only 64 charaters allowed
 
    b = si4703_read_reg.rdsb;
    c = si4703_read_reg.rdsc;
@@ -552,7 +594,7 @@ unsigned char RDS_Process(unsigned char* psPtr, unsigned char*ptPtr)
    {
       case RDS_PS: 
                   index_ps = (b & 0x3u)*2u;//i.e 0,2,4,6 totall b=[3,2,1,0] i.e 4 * 2 i.e Dh and Dl so total 8 characters
-                  Dh = (d & 0xFF00) >> 8u;
+                  Dh = (d & 0xFF00u) >> 8u;
                   Dl = d;
                   temp_rdsdata[index_ps] = Dh;
                   temp_rdsdata[index_ps+1u] = Dl;
@@ -561,16 +603,16 @@ unsigned char RDS_Process(unsigned char* psPtr, unsigned char*ptPtr)
                   break;
       case RDS_RT: 
                   index_pt = (b & 0xFu)*4u;//per address code has 4 charaters ,so totally 16*4 = 64 charater
-                  Ch = (c & 0xFF00) >> 8u;
+                  Ch = (c & 0xFF00u) >> 8u;
                   Cl = c;
-                  Dh = (d & 0xFF00) >> 8u;
+                  Dh = (d & 0xFF00u) >> 8u;
                   Dl = d;
                   temp_rdstext[index_pt] = Ch;
                   temp_rdstext[index_pt+1u] = Cl;
                   temp_rdstext[index_pt+2u] = Dh;
                   temp_rdstext[index_pt+3u] = Dl;
                   memcpy((char*)ptPtr, (char*)&temp_rdstext[0],65u);
-                  ret_state  = 2;
+                  ret_state  = 2u;
                   break;
           default:
                   break;
@@ -613,8 +655,8 @@ void Set_GPIO2(unsigned char state)
 *****************************************************************************/
 void Validate_FM_Data(void)
 {
-   unsigned char i = 0;
-   for(i=0;i<MAX_CH;i++)
+   unsigned char i = 0u;
+   for(i=0u;i<MAX_CH;i++)
    {
       if((K_Radio_Data_Read[i] > FM_MAX_FREQ) || (K_Radio_Data_Read[i] < FM_MIN_FREQ))
       {
@@ -626,16 +668,26 @@ void Validate_FM_Data(void)
          K_Radio_Data_Write[i] = K_Radio_Data_Read[i];
       }
    }    
-   if(K_Radio_Data_Read[MAX_CH] > (MAX_CH-1u))
+   if(K_Radio_Index_Read[0] > (MAX_CH-1u))
    {
-      K_Radio_Data_Read[MAX_CH] = 0u;
-      K_Radio_Data_Write[MAX_CH] = 0u;
+      K_Radio_Index_Read[0] = (unsigned short int)0u;
+      K_Radio_Index_Write[0] = (unsigned short int)0u;
       preset_index = 0u;
    }
    else
    {
-      preset_index = (unsigned char)K_Radio_Data_Read[MAX_CH];
-      K_Radio_Data_Write[MAX_CH] = (unsigned short int)preset_index;
+      preset_index = (unsigned char)K_Radio_Index_Read[0];
+      K_Radio_Index_Write[0] = (unsigned short int)preset_index;
+   }
+
+   if(K_Radio_Vol_Read[0] > SI_VOL_MAX)
+   {
+      K_Radio_Vol_Read[0] = (unsigned short int)0u;
+      K_Radio_Vol_Write[0] = (unsigned short int)0u;
+   }
+   else
+   {
+      K_Radio_Vol_Write[0] = K_Radio_Vol_Read[0];
    }
 }
 
@@ -652,7 +704,6 @@ void Process_App_Si(void)
    static unsigned char prev_fm_stereo;
    static unsigned char Scan_Cnt;
    static unsigned char stc_wait_to_clear;
-   static unsigned char first_time_power_up;
    
    switch(radio_state)
    {
@@ -663,20 +714,30 @@ void Process_App_Si(void)
               Set_Vol(SI_VOL_MUTE);
               Set_GPIO2(FALSE);//Blue Led Power OFF
               UART_Printf("\n\rPower OFF");
+              Amp_Mute(ON);
            }
            else if(power_state == ON_STATE)
            {
-              if(volume_mode)
+              if(reset_Vol_Timer > 0u)
               {
-                 if(reset_Vol_Timer > 0u)
+                 reset_Vol_Timer--;
+                 if(reset_Vol_Timer == 0u)
                  {
-                    reset_Vol_Timer--;
+                    K_Radio_Vol_Read[0] = si_vol;
+                    K_Radio_Vol_Write[0] = si_vol;
+                    Change_Mode_EE(UPDATE_EE);
                  }
-                 if(!reset_Vol_Timer)
+              }
+              if(reset_Index_Timer > 0u)
+              {
+                 reset_Index_Timer--;
+                 if(reset_Index_Timer == 0u)
                  {
-                    volume_mode = 0u;
+                    K_Radio_Index_Read[0] = preset_index;
+                    K_Radio_Index_Write[0] = preset_index;
+                    Change_Mode_EE(UPDATE_EE);
                  }
-              }    
+              }
               if(Is_Vol_Changed)
               {
                  if((si_vol >= SI_VOL_MUTE) && 
@@ -690,8 +751,8 @@ void Process_App_Si(void)
               if(Is_Manual_Tune)
               {
                  Set_Fm_Tune_Freq(fm_freq);
-                 Is_Manual_Tune = 0;
-                 fm_stereo = 0;
+                 Is_Manual_Tune = 0u;
+                 fm_stereo = 0u;
               }
               else
               {
@@ -705,15 +766,15 @@ void Process_App_Si(void)
                        Get_RDS_Info();
                        if(Get_Fm_Tune_Status() & 0x0100U)
                        {
-                         fm_stereo = 1;
+                         fm_stereo = 1u;
                        }
                        else
                        {
-                         fm_stereo = 0;
+                         fm_stereo = 0u;
                        }
                        if(prev_fm_stereo != fm_stereo)
                        {
-                          disp_st_timer = 4;
+                          disp_st_timer = 4u;
                           prev_fm_stereo = fm_stereo;
                        }
                        if(disp_st_timer != 0u)
@@ -737,20 +798,29 @@ void Process_App_Si(void)
                  App_Si_EE_Check_Pending = 0u;
                  Validate_FM_Data();
               }
-              si_vol = SI_VOL_SET;
               if(!first_time_power_up)
               {
-                 first_time_power_up = 1;
+                 first_time_power_up = 1u;
                  fm_freq = K_Radio_Data_Read[preset_index];
+                 si_vol = K_Radio_Vol_Read[0];
               }
               Set_Fm_Tune_Freq(fm_freq);
               preset_mode = 0u;               
               radio_state = RADIO_RUNNING;
-              Is_Vol_Changed = 1;
-              rds_mode = 0;
+              Is_Vol_Changed = 1u;
+              rds_mode = 0u;
               Set_GPIO2(TRUE);//Blue Led Power ON
               UART_Printf("\n\rRadio Initialized");
               UART_Sprintf("\n\rFrequency:-%d", fm_freq);
+              Set_Vol(si_vol);
+              if(si_vol == 0u)
+              { 
+                 Amp_Mute(ON);
+              }
+              else
+              {
+                 Amp_Mute(OFF);
+              }
            }
            break;   
       default:
@@ -760,6 +830,11 @@ void Process_App_Si(void)
               radio_state = RADIO_INIT;
               UART_Printf("\n\rPower ON");
            }
+           else
+           {
+              Enter_Sleep();
+           }
+           
            break;   
    }
    prev_power_state = power_state;
@@ -773,10 +848,10 @@ void Process_App_Si(void)
 *******************************************************************************/
 void Process_Commands(void)
 {
-   unsigned char val=0;
-   if(UARTFlag == 1)
+   unsigned char val=0u;
+   if(UARTFlag == 1u)
    {
-      UARTFlag = 0;
+      UARTFlag = 0u;
       NVIC_DisableIRQ(UART_IRQn);
       if((UARTData[0] == 0x55u) && (UARTData[2] == 0xAAu))
       {
@@ -809,57 +884,49 @@ void Execute_Commands(unsigned char val)
       case ']'://power OFF
               if(power_state == ON_STATE)
               {
-                 volume_mode = 0u;
                  power_state = OFF_STATE;
               }
               break;
       case '[':	//power ON
               if(power_state == OFF_STATE)
               {
-                 volume_mode = 0u;
                  power_state = ON_STATE;
               }
               break;
       case '<'://volume down
               if(power_state == ON_STATE)
               {
-                 volume_mode = 1u;
-                 Radio_Enc_Operation(LEFT_TURN);
+                 Radio_Enc_Volume_Operation(LEFT_TURN);
               }
               break;
       case '>'://volume up
               if(power_state == ON_STATE)
               {
-                 volume_mode = 1u;
-                 Radio_Enc_Operation(RIGHT_TURN);
+                 Radio_Enc_Volume_Operation(RIGHT_TURN);
               }
               break;
       case '+':	//right rotate in radio mode
               if(power_state == ON_STATE)
               {
-                 volume_mode = 0u;
-                 Radio_Enc_Operation(RIGHT_TURN);
+                 Radio_Enc_Tune_Operation(RIGHT_TURN);
               }
               break;
       case '-'://left rotate in radio mode
               if(power_state == ON_STATE)
               {
-                 volume_mode = 0u;
-                 Radio_Enc_Operation(LEFT_TURN);
+                 Radio_Enc_Tune_Operation(LEFT_TURN);
               }
               break;
       case 'S'://store preset
               if(power_state == ON_STATE)
               {
-                 volume_mode = 0u;
-                 Radio_Enc_Button(LONG_PRESS);
+                 Radio_Enc_Tune_Button(LONG_PRESS);
               }
               break;
       case 'M'://mode change
               if(power_state == ON_STATE)
               {
-                 volume_mode = 0u;
-                 Radio_Enc_Button(SHORT_PRESS);
+                 Radio_Enc_Tune_Button(SHORT_PRESS);
               }
               break;
       case 'R'://rds 
@@ -891,7 +958,89 @@ void UART_Printf(char *ptr)
    UARTSend((uint8_t *)ptr, strlen(ptr));
 }
 
+/*******************************************************************************
+ Func Name    :
+ Arguments    :
+ Return       :
+ Description  :   
+*******************************************************************************/
+void Amp_Mute(unsigned char state)
+{
+   if(TRUE == state)
+   {
+      GPIOSetValue(PORT1,2 ,0);
+   }
+   else
+   {
+      GPIOSetValue(PORT1,2 ,1);
+   }
+}
 
+/*****************************************************************************
+** Function name  : 
+** Descriptions   : 
+** parameters     : 
+** Returned value : 
+*****************************************************************************/
+void Enter_Sleep(void)
+{
+    /* Mute and save state */
+    Amp_Mute(ON);
+    Set_Vol(SI_VOL_MUTE);
+    Change_Mode_EE(UPDATE_EE);   /* flush shadow RAM ? EEPROM */
+    Process_Eeprom();
+
+    /* Power down Si4703 - pull RST low */
+    si4703_Rst(0);              /* macro in APP_Si.h: GPIOSetValue(PORT0,2,0) */
+
+    /* 3. Stop Timer16_0 (the 1ms heartbeat) */
+    NVIC_DisableIRQ(TIMER_16_0_IRQn);
+    Disable_Timer16(0);
+
+    /* Configure wake-up GPIO interrupt */
+    Configure_WakeUp_GPIO();
+
+    /* Enter Sleep mode — NOT Deep Sleep.
+       SLEEPDEEP bit must be CLEAR for Sleep mode.
+       UART IRQ will also wake the CPU.              */
+    SCB->SCR &= ~(1u << 2u);   /* clear SLEEPDEEP — Sleep mode */
+    __WFI();
+
+
+    /* ---- CPU resumes here after button press ---- */
+    /* Wake-up: re-init peripherals */
+    System_WakeUp();
+}
+
+/*****************************************************************************
+** Function name  : 
+** Descriptions   : 
+** parameters     : 
+** Returned value : 
+*****************************************************************************/
+void System_WakeUp(void)
+{
+    /* Disable wake-up interrupts now that we're awake */
+    GPIOIntDisable(PORT0, 8);
+    GPIOIntDisable(PORT0, 9);
+    NVIC_DisableIRQ(EINT0_IRQn);
+
+    /* Disable UART start logic */
+    LPC_SYSCON->STARTERP1 &= ~(1u << 6u);
+    
+    Init_Buttons();
+
+    /* Restart 1ms timer */
+    NVIC_EnableIRQ(TIMER_16_0_IRQn);
+    Enable_Timer16(0);
+
+    Amp_Mute(ON);
+
+    
+    /* Power up Si4703 and restore last station/volume */
+    Init_Radio();               /* your existing function in APP_Si.c */
+
+}
 
 
 

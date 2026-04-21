@@ -42,7 +42,8 @@
  #define SI_VOL_SET     0x05u
 #endif
 
-#define RESET_VOL_TIMER_TH    100u
+#define RESET_VOL_TIMER_TH    500u
+#define RESET_INDEX_TIMER_TH  500u
 
 
 #define SI_IC_ADDRESS (0x10u)
@@ -58,11 +59,13 @@
 #define FM_MIN_FREQ    8750u
 #define FM_DEF_FREQ    9350u
 
-#define DEF_SI_VOL     1u
 #define SI_MIN_VOL     0u
 #define SI_MAX_VOL     15u
 #define MAX_CH         10u
 #define MAX_CH_SIZE    20u
+#define MAX_INDEX_SIZE 2u
+#define MAX_VOL_SIZE   2u
+#define MAX_CRC_SIZE   2u
 
 #define PRINTBUFSIZE   100u
 
@@ -258,11 +261,15 @@ extern rds_data_T rds_data;
 extern unsigned char fm_stereo;
 extern unsigned short int fm_freq,prev_fm_freq;
 extern volatile unsigned char Is_Manual_Tune;
-extern unsigned char volume_mode;
 extern unsigned char App_Si_EE_Check_Pending;
-extern unsigned short int K_Radio_Data_Read[MAX_CH+1u];
-extern unsigned short int K_Radio_Data_Write[MAX_CH+1u];
+extern unsigned short int K_Radio_Data_Read[MAX_CH];
+extern unsigned short int K_Radio_Data_Write[MAX_CH];
+extern unsigned short int K_Radio_Index_Read[1];
+extern unsigned short int K_Radio_Index_Write[1];
+extern unsigned short int K_Radio_Vol_Read[1];
+extern unsigned short int K_Radio_Vol_Write[1];
 extern unsigned short int reset_Vol_Timer;
+extern unsigned short int reset_Index_Timer;
 extern unsigned char power_state;
 extern char printBuffer[PRINTBUFSIZE];
 extern unsigned char rds_mode;
@@ -270,6 +277,7 @@ extern unsigned char rds_mode;
 /*****************************************************************************
 *                             Macro Definitions                             
 ******************************************************************************/
+extern void PreInit_Radio(void);
 extern void Init_Radio(void);
 extern void Init_Si(void);
 extern void Process_App_Si(void);
@@ -279,14 +287,18 @@ extern void Seek_Fm_Start(unsigned char seek);
 extern void Set_GPIO1(unsigned char state);
 extern void Set_GPIO2(unsigned char state);
 extern void Read_si4703(void);
-extern void Radio_Enc_Operation(unsigned char dir);
+extern void Radio_Enc_Tune_Operation(unsigned char dir);
+extern void Radio_Enc_Volume_Operation(unsigned char dir);
 extern void Validate_FM_Data(void);
-extern void Radio_Enc_Button(unsigned char duration);
-extern void Radio_Touch_Button(unsigned char duration);
+extern void Radio_Enc_Tune_Button(unsigned char duration);
+extern void Radio_Enc_Pwr_Button(unsigned char duration);
 extern void Process_Commands(void);
 extern void Execute_Commands(unsigned char val);
 extern void UART_Printf(char *ptr);
 extern void Get_RDS_Info(void);
+extern void Amp_Mute(unsigned char state);
+extern void Enter_Sleep(void);
+extern void System_WakeUp(void);
 
 
 

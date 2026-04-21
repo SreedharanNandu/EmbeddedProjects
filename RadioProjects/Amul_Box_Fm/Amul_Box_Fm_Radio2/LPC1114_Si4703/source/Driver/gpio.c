@@ -17,6 +17,21 @@
 *****************************************************************************/
 void PIOINT0_IRQHandler(void)
 {
+    uint32_t regVal;
+
+    /* Check PIO0_8 (TUNE_BTN) */
+    regVal = GPIOIntStatus(PORT0, 8u);
+    if (regVal)
+    {
+        GPIOIntClear(PORT0, 8u);
+    }
+
+    /* Check PIO0_9 (PWR_BTN) */
+    regVal = GPIOIntStatus(PORT0, 9u);
+    if (regVal)
+    {
+        GPIOIntClear(PORT0, 9u);
+    }
    return;
 }
 
@@ -132,12 +147,12 @@ void GPIOInit( void )
    GPIOSetDir( PORT0, 5, 1);//sda
    GPIOSetDir( PORT0, 6, 0);//
    GPIOSetDir( PORT0, 7, 0);//
-   GPIOSetDir( PORT0, 8, 0);//enc sw 
-   GPIOSetDir( PORT0, 9, 0);//touch sw 
+   GPIOSetDir( PORT0, 8, 0);//enc sw1 
+   GPIOSetDir( PORT0, 9, 0);//enc sw2 
    GPIOSetDir( PORT0,11, 1);//
    GPIOSetDir( PORT1, 0, 0 );//
    GPIOSetDir( PORT1, 1, 0 );//
-   GPIOSetDir( PORT1, 2, 0 );//
+   GPIOSetDir( PORT1, 2, 1 );//mute
    GPIOSetDir( PORT1, 3, 0 );//
    GPIOSetDir( PORT1, 4, 0 );//enc A
    GPIOSetDir( PORT1, 5, 0 );//enc B
@@ -608,3 +623,40 @@ void GPIOIntClear( uint32_t portNum, uint32_t bitPosi )
    return;
 }
 
+
+/* Call this just before entering sleep */
+/*****************************************************************************
+** Function name:      
+**
+** Descriptions:      
+**
+** parameters:         
+** Returned value:      
+** 
+*****************************************************************************/
+void Configure_WakeUp_GPIO(void)
+{
+   /* --- Layer 1: GPIO interrupt config (NVIC level) --- */
+   /* PIO0_8 and PIO0_9: falling edge, single edge, active low */
+   GPIOSetInterrupt(PORT0, 8u, 0u, 0u, 0u);
+   GPIOSetInterrupt(PORT0, 9u, 0u, 0u, 0u);
+
+   /* Clear any pending interrupt flags before enabling */
+   GPIOIntClear(PORT0, 8u);
+   GPIOIntClear(PORT0, 9u);
+
+   GPIOIntEnable(PORT0, 8u);
+   GPIOIntEnable(PORT0, 9u);
+
+   NVIC_EnableIRQ(EINT0_IRQn);
+
+   /* Step 1: falling edge polarity for PIO1_6 */
+   LPC_SYSCON->STARTAPRP1 &= ~(1u << 6u);
+
+   /* Step 2: clear the start logic latch for PIO1_6 */
+   LPC_SYSCON->STARTRSRP1CLR = (1u << 6u);
+
+   /* Step 3: enable start logic for PIO1_6 */
+   LPC_SYSCON->STARTERP1 |= (1u << 6u);
+
+}

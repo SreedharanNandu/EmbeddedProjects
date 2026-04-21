@@ -10,9 +10,9 @@
 #define INIT_EE   1u
 #define UPDATE_EE 2u
 
-#define MAX_EE_SIZE ((MAX_CH_SIZE) + 2u + 2u) /* 10 channels (2byte each)  + 2byte index + 2byte CRC */
+#define MAX_EE_SIZE (MAX_CH_SIZE + MAX_INDEX_SIZE + MAX_VOL_SIZE + MAX_CRC_SIZE) /* 10 channels (2byte each)  + 2byte index + 2byte CRC */
 
-#define PAGE_EE(x)   (x*128u) /* page is 128 bytes */
+#define PAGE_EE(x)   (x<<7u) /* page is 128 bytes */
 
 
 extern uint8_t ee_state;

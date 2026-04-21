@@ -2,10 +2,12 @@
 #define __APP_LED_H__
 
 #include <stdio.h>
+#include "timer16.h"
 
 // Define FIFO queue size (Can be adjusted based on your requirements)
 #define FIFO_SIZE 10
 
+#define SAMPLE_PER             TMR16_THR_10MS
 
 #define Led(x)                  EnQ(&BlinkQ,x)
 
@@ -27,21 +29,20 @@ typedef struct
     uint8_t size;
 } FIFOQueue_T;
 
-extern BlinkRequest_T blink_ModeChange;
-extern BlinkRequest_T blink_PwnOnOff;
-extern BlinkRequest_T blink_Store;
-extern BlinkRequest_T blink_RotChange;
 
 extern FIFOQueue_T BlinkQ;
 
 
 
-void Led_Task(void);
-
-void Init_Fifo(FIFOQueue_T* q) ;
-void EnQ(FIFOQueue_T* q, BlinkRequest_T req); 
-BlinkRequest_T DeQ(FIFOQueue_T* q); 
-void Led_Process(FIFOQueue_T* q);
-void Led_Init(void); 
+extern void Led_Task(void);
+extern void LED_On(void);
+extern void LED_Off(void);
+extern void PowerUpInit_LED(void);
+extern void Init_Fifo(FIFOQueue_T* q) ;
+extern void EnQ(FIFOQueue_T* q, BlinkRequest_T req); 
+extern BlinkRequest_T DeQ(FIFOQueue_T* q); 
+extern void Led_Process(FIFOQueue_T* q);
+extern void Led_Init(void); 
+extern void LED_Toggle(void) ;
 
 #endif  /* __APP_LED_H__ */

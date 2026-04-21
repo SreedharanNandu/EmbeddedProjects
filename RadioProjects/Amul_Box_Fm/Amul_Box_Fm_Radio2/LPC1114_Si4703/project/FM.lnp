@@ -5,6 +5,7 @@
 ".\app_rotary.o"
 ".\app_eeprom.o"
 ".\app_si.o"
+".\cal_const.o"
 ".\retarget.o"
 ".\main.o"
 ".\startup_lpc11xx.o"
