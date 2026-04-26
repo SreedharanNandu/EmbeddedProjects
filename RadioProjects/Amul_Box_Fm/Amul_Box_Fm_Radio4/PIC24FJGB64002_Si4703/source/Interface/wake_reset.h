@@ -7,7 +7,6 @@
 #include "reset.h"
 
 void Get_Reset_Type(void);
-void Get_Wakeup_Methode(void);
 
 #endif
 

@@ -4,7 +4,7 @@
 #include "types.h"
 
 
-#define MAX_EXIT_LOOP_TH     250u
+#define MAX_EXIT_LOOP_TH     65530u
 
 #define MastergetcI2C1   MasterReadI2C1
 
@@ -35,7 +35,6 @@ void StartI2C1(void) __attribute__ ((section (".libperi")));
 void StopI2C1(void) __attribute__ ((section (".libperi")));
 unsigned char SendI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char num_of_bytes);
 unsigned char ReadI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char num_of_bytes);
-unsigned char exitLoop(unsigned char id);
 void Init_I2C(void);
 void DeInit_I2C(void);
 

@@ -3,6 +3,8 @@
 *****************************************************************************/
 #include "i2c.h"
 
+#define EXIT_LOOP_I2C   
+
 
 /*****************************************************************************
 * Function   : 
@@ -30,7 +32,7 @@ void Init_I2C(void)
 *****************************************************************************/
 void DeInit_I2C(void)
 {
-   I2C2CONbits.I2CEN =0u;
+   I2C1CONbits.I2CEN = 0u;
 }
 
 /*****************************************************************************
@@ -44,8 +46,20 @@ void DeInit_I2C(void)
 *****************************************************************************/
 void StartI2C1(void)
 {
-   I2C1CONbits.SEN = 1;                /* initiate Start on SDA and SCL pins */
-   while(I2C1CONbits.SEN);
+   volatile unsigned long exit_cnt=0u;
+ 
+   I2C1CONbits.SEN = 1u;                /* initiate Start on SDA and SCL pins */
+   while(I2C1CONbits.SEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
 }
 
 /*****************************************************************************
@@ -74,10 +88,21 @@ void OpenI2C1(unsigned int config1,unsigned int config2)
 *****************************************************************************/
 void NotAckI2C1(void)
 {
-   I2C1CONbits.ACKDT = 1;
-   I2C1CONbits.ACKEN = 1;
-   while(I2C1CONbits.ACKEN);
-   I2C1CONbits.ACKDT=0;
+   volatile unsigned long exit_cnt=0u;
+   I2C1CONbits.ACKDT = 1u;
+   I2C1CONbits.ACKEN = 1u;
+   while(I2C1CONbits.ACKEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
+   I2C1CONbits.ACKDT=0u;
 }
 
 /*****************************************************************************
@@ -91,17 +116,29 @@ void NotAckI2C1(void)
 *****************************************************************************/
 unsigned char MasterWriteI2C1(unsigned char data_out)
 {
-   unsigned char status = 0;
+   volatile unsigned char status = 0u;
+   volatile unsigned long exit_cnt=0u;
    
    I2C1TRN = data_out;
    if ( I2C1STATbits.IWCOL )           // test for bus collision
    {
-       status = 0;// return with Bus Collision error 
+       status = 0u;// return with Bus Collision error 
    }
    else
    {
-      while(I2C1STATbits.TBF);
-      status = 1;
+      status = 1u;
+      while(I2C1STATbits.TBF)
+      {
+         #if defined(EXIT_LOOP_I2C)
+         exit_cnt++;
+         if(exit_cnt > MAX_EXIT_LOOP_TH)
+         {
+            exit_cnt = MAX_EXIT_LOOP_TH;
+            status = 0u;
+            break;
+         }
+         #endif
+      }
    }
    return status;
 }
@@ -117,10 +154,21 @@ unsigned char MasterWriteI2C1(unsigned char data_out)
 *****************************************************************************/
 unsigned char MasterReadI2C1(void)
 {
+   volatile unsigned long exit_cnt=0u;
    
-   I2C1CONbits.RCEN = 1;
-   while(I2C1CONbits.RCEN);
-   I2C1STATbits.I2COV = 0;
+   I2C1CONbits.RCEN = 1u;
+   while(I2C1CONbits.RCEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
+   I2C1STATbits.I2COV = 0u;
    return(I2C1RCV);
 }
 
@@ -135,7 +183,7 @@ unsigned char MasterReadI2C1(void)
 *****************************************************************************/
 unsigned char MasterGetsI2C1(unsigned int length, unsigned char * rdptr, unsigned int I2C1_data_wait)
 {
-   volatile unsigned char status = 1;
+   volatile unsigned char status = 1u;
    volatile unsigned char temp_data;
    
    while(length)                    /* Receive the number of bytes specified by length */
@@ -167,8 +215,19 @@ unsigned char MasterGetsI2C1(unsigned int length, unsigned char * rdptr, unsigne
 *****************************************************************************/
 void IdleI2C1(void)
 {
+   volatile unsigned long exit_cnt=0u;
    /* Wait until I2C Bus is Inactive */
-   while(I2C1CONbits.SEN || I2C1CONbits.PEN || I2C1CONbits.RCEN || I2C1CONbits.ACKEN || I2C1STATbits.TRSTAT);
+   while(I2C1CONbits.SEN || I2C1CONbits.PEN || I2C1CONbits.RCEN || I2C1CONbits.ACKEN || I2C1STATbits.TRSTAT)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
 }
 /*****************************************************************************
 * Function   : 
@@ -181,9 +240,20 @@ void IdleI2C1(void)
 *****************************************************************************/
 void AckI2C1(void)
 {
-   I2C1CONbits.ACKDT = 0;
-   I2C1CONbits.ACKEN = 1;
-   while(I2C1CONbits.ACKEN);
+   volatile unsigned long exit_cnt=0u;
+   I2C1CONbits.ACKDT = 0u;
+   I2C1CONbits.ACKEN = 1u;
+   while(I2C1CONbits.ACKEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
 }
 /*****************************************************************************
 * Function   : 
@@ -196,8 +266,19 @@ void AckI2C1(void)
 *****************************************************************************/
 void StopI2C1(void)
 {
-   I2C1CONbits.PEN = 1;                /* initiate Stop on SDA and SCL pins */
-   while(I2C1CONbits.PEN);
+   volatile unsigned long exit_cnt=0u;
+   I2C1CONbits.PEN = 1u;                /* initiate Stop on SDA and SCL pins */
+   while(I2C1CONbits.PEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
 }
 /*****************************************************************************
 * Function   : 
@@ -211,29 +292,29 @@ void StopI2C1(void)
 unsigned char SendI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char num_of_bytes)
 {
    
-   unsigned char write_status=0,ack_status=0,wr_cnt=0;
+   unsigned char write_status=0u,ack_status=0u,wr_cnt=0u;
    IdleI2C1();                      // ensure module is idle
    StartI2C1();  
    if ( I2C1STATbits.BCL )           // test for bus collision
    {
-      write_status = 0;// return with Bus Collision error 
-      I2C1STATbits.BCL = 0;
+      write_status = 0u;// return with Bus Collision error 
+      I2C1STATbits.BCL = 0u;
    }
    else
    {
       if (MasterWriteI2C1(slave_id))    // write 1 byte
       {
-         write_status = 1;              // return with write collision error
+         write_status = 1u;              // return with write collision error
          IdleI2C1();                    // ensure module is idle
          if (!I2C1STATbits.ACKSTAT)   // test for ACK condition, if received
          {
-            ack_status = 1;
+            ack_status = 1u;
          }
       }
       else//safe
       {
-         write_status = 0;
-         ack_status = 0 ; // return with Not Ack error
+         write_status = 0u;
+         ack_status = 0u ; // return with Not Ack error
       }
 
       if((write_status) && (ack_status) )
@@ -242,19 +323,19 @@ unsigned char SendI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char n
          {
             if ( MasterWriteI2C1(*ptr) )    // write 1 byte
             {
-               write_status = 1;              // return with write collision error
+               write_status = 1u;              // return with write collision error
                IdleI2C1();                    // ensure module is idle
                if ( !I2C1STATbits.ACKSTAT )   // test for ACK condition, if received
                {
-                  ack_status = 1;
+                  ack_status = 1u;
                   wr_cnt++;
                   *ptr++;
                }
             }
             else
             {
-               write_status = 0;
-               ack_status = 0;
+               write_status = 0u;
+               ack_status = 0u;
             }
              
          }
@@ -277,8 +358,19 @@ unsigned char SendI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char n
 *****************************************************************************/
 void RestartI2C1(void)
 { 
-   I2C1CONbits.RSEN = 1;   /* initiate restart on SDA and SCL pins */
-   while(I2C1CONbits.RSEN);
+   volatile unsigned long exit_cnt=0u;
+   I2C1CONbits.RSEN = 1u;   /* initiate restart on SDA and SCL pins */
+   while(I2C1CONbits.RSEN)
+   {
+      #if defined(EXIT_LOOP_I2C)
+      exit_cnt++;
+      if(exit_cnt > MAX_EXIT_LOOP_TH)
+      {
+         exit_cnt = MAX_EXIT_LOOP_TH;
+         break;
+      }
+      #endif
+   }
 }
 
 /*****************************************************************************
@@ -293,30 +385,30 @@ void RestartI2C1(void)
 unsigned char ReadI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char num_of_bytes)
 {
    
-   unsigned char write_status=0,ack_status=0;
+   unsigned char write_status=0u,ack_status=0u;
 
    IdleI2C1();                      // ensure module is idle
    StartI2C1();                     // initiate START condition
    if ( I2C1STATbits.IWCOL )           // test for bus collision
    {
-      write_status = 0;// return with Bus Collision error 
-      I2C1STATbits.IWCOL = 0;
+      write_status = 0u;// return with Bus Collision error 
+      I2C1STATbits.IWCOL = 0u;
    }
    else
    {
-      if ( MasterWriteI2C1( slave_id+1) )    // write 1 byte
+      if ( MasterWriteI2C1( slave_id+1u) )    // write 1 byte
       {
-         write_status = 1;              // return with write collision error
+         write_status = 1u;              // return with write collision error
          IdleI2C1();                    // ensure module is idle
          if ( !I2C1STATbits.ACKSTAT )   // test for ACK condition, if received
          {
-            ack_status = 1;
+            ack_status = 1u;
          }
       }
       else//safe
       {
-         write_status = 0;
-         ack_status = 0 ; // return with Not Ack error
+         write_status = 0u;
+         ack_status = 0u ; // return with Not Ack error
       }
       if((write_status) && (ack_status) )
       {
@@ -327,33 +419,6 @@ unsigned char ReadI2C1(unsigned char slave_id,unsigned char *ptr,unsigned char n
    StopI2C1();    
 
    return ((ack_status) & (write_status))  ;     // return with data
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-unsigned char exitLoop(unsigned char id)
-{
-   volatile unsigned char status = 0;//means timeout
-   static unsigned int cnt = 0;
-   static unsigned char prev_id = 0;
-   
-   if(id != prev_id)
-   {
-      cnt = 0;
-   }
-   else
-   {
-      cnt++;
-   }
-   if(cnt > MAX_EXIT_LOOP_TH)
-   {
- //     status = 1;
-   }
-   prev_id = id;
-   return status;
 }
 
 

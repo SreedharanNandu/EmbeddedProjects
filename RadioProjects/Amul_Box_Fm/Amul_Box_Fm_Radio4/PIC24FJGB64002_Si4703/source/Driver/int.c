@@ -13,9 +13,9 @@
 *****************************************************************************/
 void Init_Ext_INT0(void)      // Init the remappable Port
 {
-   _INT0EP=0;         // INT0 Edge is High , This is test code  
-   _INT0IP=3;            // Interrupt Priority is 3 - Test 
-   _INT0IF=0;            // Clearing the interrupt 
+   _INT0EP=0u;         // INT0 Edge is High , This is test code  
+   _INT0IP=3u;            // Interrupt Priority is 3 - Test 
+   _INT0IF=0u;            // Clearing the interrupt 
    
 }
 /*****************************************************************************
@@ -29,8 +29,8 @@ void Init_Ext_INT0(void)      // Init the remappable Port
 *****************************************************************************/
 void Enable_Ext_INT0(void)   // Enable Externel Interrupt
 {
-   _INT0IF=0;            // Clearing the flag    
-   _INT0IE=1;            // Enbaled the Externel INterrupt
+   _INT0IF=0u;            // Clearing the flag    
+   _INT0IE=1u;            // Enbaled the Externel INterrupt
 }
 /*****************************************************************************
 * Function   : void Disable_Externel_Int1(void)
@@ -43,9 +43,9 @@ void Enable_Ext_INT0(void)   // Enable Externel Interrupt
 *****************************************************************************/
 void Disable_Ext_INT0(void)   // Disable Externel Interrupt
 {
-   _INT0IF=0;               
-   _INT0EP=0;         
-   _INT0IP=0;            
-   _INT0IE=0;            
+   _INT0IF=0u;               
+   _INT0EP=0u;         
+   _INT0IP=0u;            
+   _INT0IE=0u;            
 }
 //EOF

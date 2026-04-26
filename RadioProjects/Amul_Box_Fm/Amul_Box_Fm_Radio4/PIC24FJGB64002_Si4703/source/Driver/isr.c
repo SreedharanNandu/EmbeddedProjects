@@ -43,7 +43,7 @@ void __attribute__((interrupt, no_auto_psv)) _U2RXInterrupt(void)
      }
      else
      {
-        UARTData[0] = UARTData[1] = 0;
+        UARTData[0] = UARTData[1] = 0u;
         rx_cnt = 0u;
      }
    }
@@ -83,7 +83,7 @@ void __attribute__((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 *****************************************************************************/
 void __attribute__((interrupt, no_auto_psv)) _SPI1Interrupt(void) 
 {
-    _SPI1IF=0;
+    _SPI1IF=0u;
 }
 /*****************************************************************************
 * ISR        : Ext0 Interrupt
@@ -93,7 +93,7 @@ void __attribute__((interrupt, no_auto_psv)) _SPI1Interrupt(void)
 *****************************************************************************/
 void __attribute__((interrupt, no_auto_psv)) _INT0Interrupt(void) 
 {
-   _INT0IF=0;     
+   _INT0IF=0u;     
 }
 /*****************************************************************************
 * ISR        : Timer 1 Interrupt
@@ -103,7 +103,7 @@ void __attribute__((interrupt, no_auto_psv)) _INT0Interrupt(void)
 *****************************************************************************/
 void  __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void)
 {
-   _T1IF = 0; // Clear Timer falg 
+   _T1IF = 0u; // Clear Timer falg 
   _10msCounter++;
   _100msCounter++;
   _1sCounter++;
@@ -111,10 +111,25 @@ void  __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void)
   //safety
   if(_100msCounter > 400u)
   {
-     //means overflow and could be stuck at while loop 
-     asm( "RESET ");
+     _10msCounter=0u;  
+     _100msCounter=0u;
+     _1sCounter=0u;
   }
-
 }
 
+/*****************************************************************************
+* ISR        : CN Interrupt
+* Created By : 
+* Overview   : 
+* Note       : 
+  CN Interrupt — fires on any change on enabled CN pins.
+ Used exclusively as a sleep wake source; actual button debounce
+  is handled by Scan_Buttons() once the CPU is running again.
+*****************************************************************************/
+void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void)
+{
+   unsigned char dummy;
+   dummy = PORTB;
+   _CNIF = 0u;              // Clear flag first (required before returning)
+}
 //EOF

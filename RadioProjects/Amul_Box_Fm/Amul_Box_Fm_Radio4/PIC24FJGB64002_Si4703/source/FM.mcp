@@ -5,10 +5,10 @@ device=PIC24FJ64GB002
 [PATH_INFO]
 BuildDirPolicy=BuildDirIsProjectDir
 dir_src=
-dir_bin=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Output
-dir_tmp=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Output
+dir_bin=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Output
+dir_tmp=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Output
 dir_sin=
-dir_inc=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Common;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Interface;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Driver;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3Source\Common;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\v3\Source\Application
+dir_inc=C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Application;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Common;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Driver;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source\Interface;C:\Nandu\Per\Projects\Fm_Radio\PIC24FJGB64002_Si4703\Source
 dir_lib=
 dir_lkr=
 [CAT_FILTERS]
@@ -221,7 +221,7 @@ suite_state=
 [TOOL_SETTINGS]
 TS{7D9C6ECE-785D-44CB-BA22-17BF2E119622}=-g
 TS{25AC22BD-2378-4FDB-BFB6-7345A15512D3}=-g -Wall
-TS{7DAC9A1D-4C45-45D6-B25A-D117C74E8F5A}=-o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)" -Map="$(BINDIR_)$(TARGETBASE).map" --report-mem
+TS{7DAC9A1D-4C45-45D6-B25A-D117C74E8F5A}=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
 TS{509E5861-1E2A-483B-8B6B-CA8DB7F2DD78}=
 [INSTRUMENTED_TRACE]
 enable=0

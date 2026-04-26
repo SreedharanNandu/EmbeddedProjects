@@ -76,19 +76,5 @@ void Get_Reset_Type(void)
 #endif    
    
 }
-/*****************************************************************************
-* Function   : void Get_Wakeup_Method(void)
-* Created By : Nandu
-* Date       : 
-* Overview   : 
-* Argument   : 
-* Output     : 
-* Note       : 
-*            : 
-*****************************************************************************/
-void Get_Wakeup_Method(void)
-{
-   
-}
 
 //EOF

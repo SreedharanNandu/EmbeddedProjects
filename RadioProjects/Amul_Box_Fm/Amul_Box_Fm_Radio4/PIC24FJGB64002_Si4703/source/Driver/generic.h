@@ -70,6 +70,7 @@ typedef unsigned short      UINT16;             // other name for 16-bit integer
 typedef unsigned long       UINT32;             // other name for 32-bit integer
 
 typedef enum _BOOL { FALSE = 0, TRUE } BOOL;   // Undefined size
+typedef enum _ON_OFF { OFF = 0, ON } ON_OFF;   // Undefined size
 typedef enum _bool { false = 0, true } bool;
 
 //#define false   0

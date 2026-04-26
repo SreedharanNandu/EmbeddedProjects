@@ -9,6 +9,7 @@
 #include "i2c.h"
 #include "types.h"
 #include "dee.h"
+#include "memory.h"
 
 /*****************************************************************************
 * Function   : 
@@ -21,6 +22,7 @@
 *****************************************************************************/
 void Init_EEPROM(void)
 {
+   ee_state=INIT_EE;
    DataEEInit();
-   dataEEFlags.val = 0;
+   dataEEFlags.val = 0u;
 }

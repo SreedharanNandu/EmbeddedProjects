@@ -10,12 +10,19 @@
 #define BREAK_TIMEOUT           (1000u/10u) /*10msec sample*/
 #define BREAK_TIMEOUT1          (2000u/10u) /*10msec sample*/
 
-#define TouchBtn_Pin()   _RB3
-#define RotBtn_Pin()     _RA4
+#define VolRotBtn_Pin()   _RB3
+#define TuneRotBtn_Pin()    _RA4
 
-extern void Scan_Touch_Button(void);
+typedef enum
+{
+   VOL_BTN=0,
+   TUNE_BTN,
+   MAX_BTNS
+}Button_T;
+
+
+extern void Init_Buttons(void);
 extern void Scan_Buttons(void);
-extern void Scan_Rotary_Button(void);
 
 
 

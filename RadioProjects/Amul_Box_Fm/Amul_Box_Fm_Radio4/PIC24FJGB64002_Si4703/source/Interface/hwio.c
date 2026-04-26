@@ -36,16 +36,13 @@ void Init_HWIO(void)
    Init_Ports();
    Clear_All_Interrupt();
    Disable_Ext_INT0();
-   Init_UART();
    Get_Reset_Type();
    Init_Timer1();
    Init_Timer2();
+   Turn_Off_Timer1();
    Turn_Off_Timer2();
    Init_EEPROM();
-   Init_PWM1();
-
-
-
+   Init_UART();
 }
 
 

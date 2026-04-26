@@ -12,14 +12,14 @@
 #define CRC16_INITIAL_VALUE        0xFFFFu
 
 
-uint8_t ee_state=INIT_EE;
+volatile uint8_t ee_state;
 volatile unsigned char tempRead1[MAX_EE_SIZE];
 volatile unsigned char tempRead2[MAX_EE_SIZE];
 volatile unsigned char tempWrite[MAX_EE_SIZE];
-volatile uint16_t calcCrc=0;
-volatile unsigned char crc1Good=0 ,crc2Good=0;
-volatile unsigned short int storedCrc1=0,storedCrc2=0;
-volatile unsigned short int calcCrc1=0,calcCrc2=0;
+volatile uint16_t calcCrc;
+volatile unsigned char crc1Good ,crc2Good;
+volatile unsigned short int storedCrc1,storedCrc2;
+volatile unsigned short int calcCrc1,calcCrc2;
 
 
 
@@ -35,15 +35,12 @@ void Process_Eeprom(void)
    switch(ee_state)
    {
     case INIT_EE:
-             ee_state = IDLE_EE;
+             Change_Mode_EE(IDLE_EE);
              Update_EE_To_RAM();
              break;
     case UPDATE_EE:
-             if(power_state == ON_STATE)
-             {
-                ee_state = IDLE_EE;
-                Update_RAM_To_EE();
-             }
+             Change_Mode_EE(IDLE_EE);
+             Update_RAM_To_EE();
              break;
     case IDLE_EE:
     default:
@@ -84,10 +81,6 @@ void Update_RAM_To_EE(void)
 ** parameters     : 
 ** Returned value : 
 *****************************************************************************/
-void Change_Mode_EE(unsigned char state)
-{
-   ee_state = state;
-}
 
 /*****************************************************************************
 ** Function name  : 
@@ -102,15 +95,15 @@ void EE_Read(unsigned char *data,
    unsigned int tempData = 0u;
    unsigned char cnt=0u;
 
-   if((length > 0u) && ((length%2)!= 0u))
+   if((length > 0u) && ((length%2u)!= 0u))
    {
       length = length + 1u;
    }
    for(cnt=0;cnt<length;)
    {
       tempData = DataEERead(address);
-      data[cnt] = (unsigned char)(tempData >> 8);
-      data[cnt+1] = (unsigned char)tempData;
+      data[cnt] = (unsigned char)(tempData >> 8u);
+      data[cnt+1u] = (unsigned char)tempData;
       cnt = cnt + 2u;
       address = address + 1u ;
    }
@@ -129,13 +122,13 @@ void EE_Write(unsigned char *data,
    unsigned char address =0u;
    unsigned int tempData=0u;
 
-   if((length > 0u) && ((length%2)!= 0u))
+   if((length > 0u) && ((length%2u)!= 0u))
    {
       length = length + 1u;
    }
-   for(cnt=0;cnt<length;)
+   for(cnt=0u;cnt<length;)
    {
-      tempData = (data[cnt]<<8u)|data[cnt+1];
+      tempData = (data[cnt]<<8u)|data[cnt+1u];
       cnt = cnt + 2u ;
       DataEEWrite(tempData,address);
       address = address + 1u ;
@@ -149,51 +142,59 @@ void EE_Write(unsigned char *data,
 *****************************************************************************/
 void Validate_EE_Read_Data(void)
 {
-   unsigned char i=0;	
+   unsigned char i=0u;	
    //[0.....19],[20,21],[22.23]
-   calcCrc1 = CRC16_CCITT((uint8_t*)&tempRead1[0],(MAX_CH_SIZE+2u));
-   storedCrc1 = (tempRead1[MAX_EE_SIZE-1u]<<8) | tempRead1[MAX_EE_SIZE-2u];
+   calcCrc1 = CRC16_CCITT((uint8_t*)&tempRead1[0],(MAX_EE_SIZE-2u));
+   storedCrc1 = (tempRead1[MAX_EE_SIZE-1u]<<8u) | tempRead1[MAX_EE_SIZE-2u];
    
    //[24.....43],[44,45],[46.47]
-   calcCrc2 = CRC16_CCITT((uint8_t*)&tempRead2[0],(MAX_CH_SIZE+2u));
-   storedCrc2 = (tempRead2[MAX_EE_SIZE-1u]<<8) | tempRead2[MAX_EE_SIZE-2u];
+   calcCrc2 = CRC16_CCITT((uint8_t*)&tempRead2[0],(MAX_EE_SIZE-2u));
+   storedCrc2 = (tempRead2[MAX_EE_SIZE-1u]<<8u) | tempRead2[MAX_EE_SIZE-2u];
 
    if(calcCrc1 == storedCrc1)
    {
-      crc1Good = 1;
+      crc1Good = 1u;
    } 
    if(calcCrc2 == storedCrc2)
    {
-      crc2Good = 1;
+      crc2Good = 1u;
    }    
 
-   if((crc1Good == 1) && 
-      (crc2Good == 1))
+   if((crc1Good == 1u) && 
+      (crc2Good == 1u))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
-   else if((crc1Good == 1) && 
-           (crc2Good != 1))
+   else if((crc1Good == 1u) && 
+           (crc2Good != 1u))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead1[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead1[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
-   else if((crc1Good != 1) && 
-           (crc2Good == 1))
+   else if((crc1Good != 1u) && 
+           (crc2Good == 1u))
    {
-      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead2[0],MAX_CH_SIZE+2u);
+      memcpy((unsigned char*)&K_Radio_Data_Read[0],(unsigned char*)&tempRead2[0],MAX_CH_SIZE);
+      memcpy((unsigned char*)&K_Radio_Index_Read[0],(unsigned char*)&tempRead2[MAX_CH_SIZE],MAX_INDEX_SIZE);
+      memcpy((unsigned char*)&K_Radio_Vol_Read[0],(unsigned char*)&tempRead2[MAX_CH_SIZE+MAX_INDEX_SIZE],MAX_VOL_SIZE);
    }
-   else if((crc1Good != 1) && 
-           (crc2Good != 1))
+   else if((crc1Good != 1u) && 
+           (crc2Good != 1u))
    {
-      for(i=0;i<MAX_CH;i++)
+      for(i=0u;i<MAX_CH;i++)
       {
-         K_Radio_Data_Read[i] = FM_MIN_FREQ;
+         K_Radio_Data_Read[i] = K_Radio_Data_Write[i] = FM_MIN_FREQ;
       }
+      K_Radio_Index_Read[0] = K_Radio_Index_Write[0] = 0u;
+      K_Radio_Vol_Read[0] = K_Radio_Vol_Write[0] = 0u;
    }
    else
    {
    }
-   App_Si_EE_Check_Pending = 1;
+   App_Si_EE_Check_Pending = 1u;
 }
 
 /*****************************************************************************
@@ -204,10 +205,12 @@ void Validate_EE_Read_Data(void)
 *****************************************************************************/
 void Validate_EE_Write_Data(void)
 {
-   memcpy((unsigned char*)&tempWrite[0],(unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE+2u);
-   calcCrc = CRC16_CCITT((unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE+2u);
+   memcpy((unsigned char*)&tempWrite[0],(unsigned char*)&K_Radio_Data_Write[0],MAX_CH_SIZE);
+   memcpy((unsigned char*)&tempWrite[MAX_CH_SIZE],(unsigned char*)&K_Radio_Index_Write[0],MAX_INDEX_SIZE);
+   memcpy((unsigned char*)&tempWrite[MAX_CH_SIZE+MAX_INDEX_SIZE],(unsigned char*)&K_Radio_Vol_Write[0],MAX_VOL_SIZE);
+   calcCrc = CRC16_CCITT((unsigned char*)&tempWrite[0],MAX_EE_SIZE-2u);
    tempWrite[MAX_EE_SIZE-2u] = (unsigned char)calcCrc;
-   tempWrite[MAX_EE_SIZE-1u] = (unsigned char)(calcCrc>>8);
+   tempWrite[MAX_EE_SIZE-1u] = (unsigned char)(calcCrc>>8u);
 }
 
 

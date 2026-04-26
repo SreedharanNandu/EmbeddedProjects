@@ -2,7 +2,7 @@
 * Function   : pwm.c
 * Created By : Nandu
 * Date       : 
-* Overview   : PWM Driver for Driving the buzzer
+* Overview   : PWM Driver 
 *****************************************************************************/
 #include "hardware.h"
 #include "pwm.h"
@@ -18,14 +18,14 @@
 *****************************************************************************/
 void Init_PWM1(void)
 {
-   OC1CON1 = 0;
-   OC1CON1bits.OCTSEL = 0x07; 
-   OC1R = 200; 
-   OC1RS = 200; 
-   PR3 = 500; 
+   OC1CON1 = 0u;
+   OC1CON1bits.OCTSEL = 0x07u; 
+   OC1R = 200u; 
+   OC1RS = 200u; 
+   PR3 = 500u; 
    OC1CON2bits.SYNCSEL = 0b01101;    // Timer 3
-   OC1CON1bits.OCM = 5;          // Continous Mode 
-   T3CONbits.TON = 0;           // Turn off the Timer 
+   OC1CON1bits.OCM = 5u;          // Continous Mode 
+   T3CONbits.TON = 0u;           // Turn off the Timer 
 }
 /*****************************************************************************
 * Function   : void Set_PWM(uint16_t)

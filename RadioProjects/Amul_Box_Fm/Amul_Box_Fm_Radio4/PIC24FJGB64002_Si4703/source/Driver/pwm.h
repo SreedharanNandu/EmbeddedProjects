@@ -8,8 +8,8 @@
 #include "hardware.h"
 
 
-#define Buzzer_On()  (T3CONbits.TON = 1)
-#define Buzzer_Off() (T3CONbits.TON = 0)
+#define Pwm_On()  (T3CONbits.TON = 1)
+#define Pwm_Off() (T3CONbits.TON = 0)
 
 extern void Init_PWM1(void);
 extern void Set_PWM_Duty(uint16_t);

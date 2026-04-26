@@ -4,7 +4,34 @@
 #include "buttons.h"
 #include "radio.h"
 
+ volatile unsigned char pin[MAX_BTNS],prev_pin[MAX_BTNS];
+ volatile unsigned long break_timer[MAX_BTNS];
+ volatile unsigned char btn_state[MAX_BTNS];
 
+/*******************************************************************************
+ Func Name    :
+ Arguments    :
+ Return       :
+ Description  :   
+*******************************************************************************/
+void Init_Buttons(void)
+{
+   unsigned char i;
+   for(i=0u;i<MAX_BTNS;i++)
+   {   
+      if(i == VOL_BTN)
+      {
+         prev_pin[i] = pin[i] = VolRotBtn_Pin();
+      }
+      else if(i == TUNE_BTN)
+      {
+         prev_pin[i] = pin[i] = TuneRotBtn_Pin();
+      }
+      btn_state[i] = 0u;
+      break_timer[i] = 0u;
+   }
+
+}
 /*******************************************************************************
  Func Name    :
  Arguments    :
@@ -13,116 +40,69 @@
 *******************************************************************************/
 void Scan_Buttons(void)
 {
-  Scan_Rotary_Button();
-  Scan_Touch_Button();
-
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Scan_Rotary_Button(void)
-{
-   static volatile unsigned char pin,prev_pin;
-   static volatile unsigned long break_timer=0;
-   static volatile unsigned char btn_state;
-
-   pin = RotBtn_Pin();
-
-   if(!pin && prev_pin)
-   {
-      //button pressed
-      break_timer=0;
-      btn_state = 1;
-   }
-   else if(!pin && !prev_pin)
-   {
-     //button pressed low
-      if(btn_state == 1)
+   unsigned char i;
+   for(i=0u;i<MAX_BTNS;i++)
+   {   
+      if(i == VOL_BTN)
       {
-        break_timer++; 
+         pin[i] = VolRotBtn_Pin();
       }
-   }
-   else if(pin && !prev_pin)
-   {
-     //button release
-     if(break_timer > 0)
-     {
-        btn_state = 2;
-     }       
-   }
-   else if(pin && prev_pin)
-   {
-     //released & normal run
-     if((btn_state == 2) && (break_timer > 0) && (break_timer <= BREAK_TIMEOUT))//short press
-     {
-        break_timer = 0;
-        btn_state = 0;
-        Radio_Enc_Button(SHORT_PRESS);
-     }
-     else if((btn_state == 2) && (break_timer > BREAK_TIMEOUT))//long press
-     {
-        break_timer = 0;
-        btn_state = 0;
-        Radio_Enc_Button(LONG_PRESS);
-     }
-   }
-   prev_pin = pin;
-}
-/*******************************************************************************
- Func Name    :
- Arguments    :
- Return       :
- Description  :   
-*******************************************************************************/
-void Scan_Touch_Button(void)
-{
-   static volatile unsigned char pin1,prev_pin1;
-   static volatile unsigned long break_timer1=0;
-   static volatile unsigned char btn_state1;
-
-   //Touch is active low
-   pin1 = !TouchBtn_Pin();
-
-   if(!pin1 && prev_pin1)
-   {
-      //button pressed
-      break_timer1=0;
-      btn_state1 = 1;
-   }
-   else if(!pin1 && !prev_pin1)
-   {
-     //button pressed low
-      if(btn_state1 == 1)
+      else if(i == TUNE_BTN)
       {
-        break_timer1++; 
+         pin[i] = TuneRotBtn_Pin();
       }
+      if(!pin[i] && prev_pin[i])
+      {
+         //button pressed
+         break_timer[i]=0u;
+         btn_state[i] = 1u;
+      }
+      else if(!pin[i] && !prev_pin[i])
+      {
+        //button pressed low
+         if(btn_state[i] == 1u)
+         {
+           break_timer[i]++; 
+         }
+      }
+      else if(pin[i] && !prev_pin[i])
+      {
+        //button release
+        if(break_timer[i] > 0u)
+        {
+           btn_state[i] = 2u;
+        }       
+      }
+      else if(pin[i] && prev_pin[i])
+      {
+        //released & normal run
+        if((btn_state[i] == 2u) && (break_timer[i] > 0u) && (break_timer[i] <= BREAK_TIMEOUT))//short press
+        {
+           break_timer[i] = 0u;
+           btn_state[i] = 0u;
+           if(i == VOL_BTN)
+           {
+              Radio_Enc_Vol_Button(SHORT_PRESS);
+           }
+           else if(i == TUNE_BTN)
+           {
+              Radio_Enc_Tune_Button(SHORT_PRESS);
+           }
+        }
+        else if((btn_state[i] == 2u) && (break_timer[i] > BREAK_TIMEOUT))//long press
+        {
+           break_timer[i] = 0u;
+           btn_state[i] = 0u;
+           if(i == VOL_BTN)
+           {
+              Radio_Enc_Vol_Button(LONG_PRESS);
+           }
+           else if(i == TUNE_BTN)
+           {
+              Radio_Enc_Tune_Button(LONG_PRESS);
+           }
+        }
+      }
+      prev_pin[i] = pin[i];
    }
-   else if(pin1 && !prev_pin1)
-   {
-     //button release
-      if(break_timer1 > 0)
-      { 
-         btn_state1 = 2;
-      }         
-   }
-   else if(pin1 && prev_pin1)
-   {
-     //released & normal run
-     if((btn_state1 == 2) && (break_timer1 > 0) && (break_timer1 <= BREAK_TIMEOUT1))//short press
-     {
-        break_timer1 = 0;
-        btn_state1 = 0;
-        Radio_Touch_Button(SHORT_PRESS);
-     }
-     else if((btn_state1 == 2) && (break_timer1 > BREAK_TIMEOUT1))//long press
-     {
-        break_timer1 = 0;
-        btn_state1 = 0;
-        Radio_Touch_Button(LONG_PRESS);
-     }
-   }
-   prev_pin1 = pin1;
 }

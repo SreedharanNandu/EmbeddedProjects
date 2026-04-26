@@ -14,6 +14,7 @@
 
 void Delay_Ms(unsigned long timer_val);
 void Init_Timer1(void);
+void Enable_Timer1_Interrupt(void);
 void Turn_On_Timer1(void);
 void Turn_Off_Timer1(void);
 void Init_Timer2(void);

@@ -16,43 +16,43 @@ RESET_t Read_MCU_RCON_Reg(void)
 {   
    if(WDTO_RESET)
    {
-      WDTO_RESET=0;
+      WDTO_RESET=0u;
       return WDT;
    }
    else if(TRAPR_RESET)
    {
-      TRAPR_RESET=0;
+      TRAPR_RESET=0u;
       return TRAPR;
    }      
    else if(IOPUWR_RESET)
    {
-      IOPUWR_RESET=0;
+      IOPUWR_RESET=0u;
       return IOPUWR;
    }   
    else if(CM_RESET)
    {
-      CM_RESET=0;
+      CM_RESET=0u;
       return CM;
    }      
    else if(SWR_RESET)
    {
-      SWR_RESET=0;
+      SWR_RESET=0u;
       return SWR;
    }      
 
    else if(BOR_RESET)
    {
-      BOR_RESET=0;
+      BOR_RESET=0u;
       return BOR;
    }         
     else if(POR_RESET)
     {
-       POR_RESET=0;
+       POR_RESET=0u;
        return POR;
     }
     else if(EXTR_RESET)
    {
-      EXTR_RESET=0;
+      EXTR_RESET=0u;
       return MCLR;
    }    
     return INVALID ;          

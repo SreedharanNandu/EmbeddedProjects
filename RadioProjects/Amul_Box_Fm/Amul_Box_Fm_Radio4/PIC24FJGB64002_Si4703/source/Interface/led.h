@@ -59,7 +59,6 @@ typedef struct
    unsigned char state;
    unsigned long startTick;
    unsigned char startedFlag;
-   unsigned char buzzerFlag;
 
 } LED_Struct_T; 
 
@@ -73,8 +72,7 @@ void Start_LED(LED_Type_T ledID,
                unsigned char count,
                unsigned long onTime,
                unsigned long offTime,
-               unsigned char startState,
-               unsigned char buzz_on);
+               unsigned char startState);
 
 void LED_On(LED_Type_T type);
 void LED_Off(LED_Type_T type);

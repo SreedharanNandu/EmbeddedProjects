@@ -17,14 +17,26 @@
 *****************************************************************************/ 
 void Init_Timer1(void)
 {
-   T1CON = 0x0000;         //timer config
-   TMR1 = 0;               //Clr TMRq
+   T1CON = 0x0000u;         //timer config
+   TMR1 = 0u;               //Clr TMRq
    PR1 = TMR1_VALUE;       //Load Period register
+}
+/*****************************************************************************
+* Function    : void Enable_Timer1_Interrupt(void)
+* Created By  : Nandu
+* Date        :    
+* Overview    : 
+* Argument    : None 
+* Output      : None
+* Note        : 
+*****************************************************************************/ 
+void Enable_Timer1_Interrupt(void)
+{
    
    #ifdef TIMER_INTERRUPT
-      _T1IP = 0x01;    //Intr priority level
-      _T1IF = 0;       //Clear the Timer1 interrupt status flag
-      _T1IE = 1;       //Enable Timer1 interrupts
+      _T1IP = 0x01u;    //Intr priority level
+      _T1IF = 0u;       //Clear the Timer1 interrupt status flag
+      _T1IE = 1u;       //Enable Timer1 interrupts
    #endif 
 
 }
@@ -39,9 +51,9 @@ void Init_Timer1(void)
 *****************************************************************************/ 
 void Init_Timer2(void)
 {
-   T2CON = 0x0000; // Clr timer vaue
+   T2CON = 0x0000u; // Clr timer vaue
    PR2 = TMR1_VALUE; //same as TMR1 1ms
-   TMR2 = 0;       // Clr TMRq
+   TMR2 = 0u;       // Clr TMRq
 
 }
 /*****************************************************************************
@@ -56,8 +68,8 @@ void Init_Timer2(void)
 void Turn_On_Timer2(void)
 
 {
-   TMR2 = 0;           //Clr TMRq   
-   T2CONbits.TON = 1;  //Start Timer2 with prescaler settings at 1:1 and
+   TMR2 = 0u;           //Clr TMRq   
+   T2CONbits.TON = 1u;  //Start Timer2 with prescaler settings at 1:1 and
 }
 /*****************************************************************************
 * Function   : void Turn_Off_Timer1(void)
@@ -70,9 +82,9 @@ void Turn_On_Timer2(void)
 *****************************************************************************/ 
 void Turn_Off_Timer2(void)
 {
-   T2CONbits.TON = 0;       //Turn off Timer 
-   _T2IF = 0;       //Clear the Timer1 interrupt status flag
-   _T2IE = 0;       //Turn OFF Timer 1
+   T2CONbits.TON = 0u;       //Turn off Timer 
+   _T2IF = 0u;       //Clear the Timer1 interrupt status flag
+   _T2IE = 0u;       //Turn OFF Timer 1
 }
 /*****************************************************************************
 * Function   : Turn_On_Timer1(void)
@@ -87,7 +99,7 @@ void Turn_On_Timer1(void)
 
 {
    TMR1 = TMR1_VALUE;          //Clr TMRq   
-   _TON = 1;       //Start Timer1 with prescaler settings at 1:1 and
+   _TON = 1u;       //Start Timer1 with prescaler settings at 1:1 and
 }
 /*****************************************************************************
 * Function   : void Turn_Off_Timer1(void)
@@ -100,9 +112,9 @@ void Turn_On_Timer1(void)
 *****************************************************************************/ 
 void Turn_Off_Timer1(void)
 {
-   _TON = 0;       //Turn off Timer 
-   _T1IF = 0;       //Clear the Timer1 interrupt status flag
-   _T1IE = 0;       //Turn OFF Timer 1
+   _TON = 0u;       //Turn off Timer 
+   _T1IF = 0u;       //Clear the Timer1 interrupt status flag
+   _T1IE = 0u;       //Turn OFF Timer 1
 }
 
 
@@ -117,16 +129,16 @@ void Turn_Off_Timer1(void)
 *****************************************************************************/ 
 void Delay_Ms(unsigned long timer_val)
 {
-   unsigned long t_cnt = 0;
-   _T2IF = 0;
-   _T2IE = 0;
-   TMR2 = 0;
+   unsigned long t_cnt = 0u;
+   _T2IF = 0u;
+   _T2IE = 0u;
+   TMR2 = 0u;
    Turn_On_Timer2();
    do
    {
      t_cnt++;
      while(!_T2IF);
-     _T2IF = 0;
+     _T2IF = 0u;
    }while(t_cnt < timer_val);
    Turn_Off_Timer2();
 }

@@ -8,6 +8,7 @@
 *****************************************************************************/
 #include "led.h"
 #include "io.h"
+#include "radio.h"
 
 
 
@@ -32,8 +33,7 @@ void Start_LED(LED_Type_T ledID,
                unsigned char count,
                unsigned long onTime,
                unsigned long offTime,
-               unsigned char startState,
-               unsigned char buzz_on
+               unsigned char startState
                )
 {
    
@@ -46,7 +46,6 @@ void Start_LED(LED_Type_T ledID,
       ledStructQue[ledID].offTime = (unsigned long)offTime;
       ledStructQue[ledID].state = startState;
       ledStructQue[ledID].startedFlag = (unsigned char)0u;
-      ledStructQue[ledID].buzzerFlag = (unsigned char)buzz_on;
    } 
    else
    {
@@ -58,7 +57,6 @@ void Start_LED(LED_Type_T ledID,
       ledStruct[ledID].count = count-(unsigned char)1u;
       ledStruct[ledID].state = startState;
       ledStruct[ledID].startedFlag = (unsigned char)0u;
-      ledStruct[ledID].buzzerFlag = (unsigned char)buzz_on;
    }
 } 
 
@@ -87,10 +85,6 @@ static void LED_Action(LED_Type_T index)
          ledStruct[index].startedFlag = (unsigned char)0u;
          ledStruct[index].state = (unsigned char)TURN_OFF;
          LED_Off(index);
-         if(ledStruct[index].buzzerFlag == (unsigned char)1u)
-         {
-            Buzzer_Off();
-         }
          break;
    
    default: //(blink)
@@ -101,18 +95,10 @@ static void LED_Action(LED_Type_T index)
             if(ledStruct[index].state == (unsigned char)TURN_ON)
             {
                LED_On(index);
-               if(ledStruct[index].buzzerFlag == (unsigned char)1u)
-               {
-                  Buzzer_On();
-               }
             }
             else  
             {
                LED_Off(index);
-               if(ledStruct[index].buzzerFlag == (unsigned char)1u)
-               {
-                  Buzzer_Off();
-               }
             }
          }
          else
@@ -124,11 +110,7 @@ static void LED_Action(LED_Type_T index)
                   //timeout 
                   ledStruct[index].state = (unsigned char)TURN_OFF;
                   ledStruct[index].startTick = 0;
-                  LED_Off(index);
-                  if(ledStruct[index].buzzerFlag == (unsigned char)1u)
-                  {
-                      Buzzer_Off();
-                  }
+                  LED_On(index);
                }
             }
             else //TURN OFF
@@ -145,11 +127,7 @@ static void LED_Action(LED_Type_T index)
                      }
                      ledStruct[index].state = (unsigned char)TURN_ON;
                      ledStruct[index].startTick = 0u;
-                     LED_On(index);
-                     if(ledStruct[index].buzzerFlag == (unsigned char)1u)
-                     {
-                        Buzzer_On();
-                     }
+                     LED_Off(index);
                   }
                   else
                   {   //stop blink
@@ -173,7 +151,6 @@ static void LED_Action(LED_Type_T index)
          ledStruct[index].offTime = ledStructQue[index].offTime;
          ledStruct[index].state =ledStructQue[index].state;
          ledStruct[index].startedFlag = (unsigned char)0u;
-         ledStruct[index].buzzerFlag = (unsigned char)0u;
       }
    }
 }    
@@ -188,47 +165,43 @@ static void LED_Action(LED_Type_T index)
 *****************************************************************************/
 void Init_LED(void)
 {
-      ledStructQue[LED_A].startTick = (unsigned char)0u;
-      ledStructQue[LED_A].active = (unsigned char)0u;
-      ledStructQue[LED_A].mode = 0u;
-      ledStructQue[LED_A].count = 0u;
-      ledStructQue[LED_A].onTime = 0u;
-      ledStructQue[LED_A].offTime = 0u;
-      ledStructQue[LED_A].state = 0u;
-      ledStructQue[LED_A].startedFlag = (unsigned char)0u;
-      ledStructQue[LED_A].buzzerFlag = (unsigned char)0u;
-      ledStructQue[LED_A].active = (unsigned char)0u; // in case there is something enabled to run
+   ledStructQue[LED_A].startTick = (unsigned char)0u;
+   ledStructQue[LED_A].active = (unsigned char)0u;
+   ledStructQue[LED_A].mode = 0u;
+   ledStructQue[LED_A].count = 0u;
+   ledStructQue[LED_A].onTime = 0u;
+   ledStructQue[LED_A].offTime = 0u;
+   ledStructQue[LED_A].state = 0u;
+   ledStructQue[LED_A].startedFlag = (unsigned char)0u;
+   ledStructQue[LED_A].active = (unsigned char)0u; // in case there is something enabled to run
 
-      ledStruct[LED_A].startTick = (unsigned char)0u;
-      ledStruct[LED_A].active = (unsigned char)0u;
-      ledStruct[LED_A].mode = 0u;
-      ledStruct[LED_A].onTime = 0u;
-      ledStruct[LED_A].offTime = 0u;
-      ledStruct[LED_A].count = 0u;
-      ledStruct[LED_A].state = 0u;
-      ledStruct[LED_A].startedFlag = (unsigned char)0u;
-      ledStruct[LED_A].buzzerFlag = (unsigned char)0u;
+   ledStruct[LED_A].startTick = (unsigned char)0u;
+   ledStruct[LED_A].active = (unsigned char)0u;
+   ledStruct[LED_A].mode = 0u;
+   ledStruct[LED_A].onTime = 0u;
+   ledStruct[LED_A].offTime = 0u;
+   ledStruct[LED_A].count = 0u;
+   ledStruct[LED_A].state = 0u;
+   ledStruct[LED_A].startedFlag = (unsigned char)0u;
 
-      ledStructQue[LED_B].startTick = (unsigned char)0u;
-      ledStructQue[LED_B].active = (unsigned char)0u;
-      ledStructQue[LED_B].mode = 0u;
-      ledStructQue[LED_B].count = 0u;
-      ledStructQue[LED_B].onTime = 0u;
-      ledStructQue[LED_B].offTime = 0u;
-      ledStructQue[LED_B].state = 0u;
-      ledStructQue[LED_B].startedFlag = (unsigned char)0u;
-      ledStructQue[LED_B].buzzerFlag = (unsigned char)0u;
-      ledStructQue[LED_B].active = (unsigned char)0u; // in case there is something enabled to run
+   ledStructQue[LED_B].startTick = (unsigned char)0u;
+   ledStructQue[LED_B].active = (unsigned char)0u;
+   ledStructQue[LED_B].mode = 0u;
+   ledStructQue[LED_B].count = 0u;
+   ledStructQue[LED_B].onTime = 0u;
+   ledStructQue[LED_B].offTime = 0u;
+   ledStructQue[LED_B].state = 0u;
+   ledStructQue[LED_B].startedFlag = (unsigned char)0u;
+   ledStructQue[LED_B].active = (unsigned char)0u; // in case there is something enabled to run
 
-      ledStruct[LED_B].startTick = (unsigned char)0u;
-      ledStruct[LED_B].active = (unsigned char)0u;
-      ledStruct[LED_B].mode = 0u;
-      ledStruct[LED_B].onTime = 0u;
-      ledStruct[LED_B].offTime = 0u;
-      ledStruct[LED_B].count = 0u;
-      ledStruct[LED_B].state = 0u;
-      ledStruct[LED_B].startedFlag = (unsigned char)0u;
-      ledStruct[LED_B].buzzerFlag = (unsigned char)0u;
+   ledStruct[LED_B].startTick = (unsigned char)0u;
+   ledStruct[LED_B].active = (unsigned char)0u;
+   ledStruct[LED_B].mode = 0u;
+   ledStruct[LED_B].onTime = 0u;
+   ledStruct[LED_B].offTime = 0u;
+   ledStruct[LED_B].count = 0u;
+   ledStruct[LED_B].state = 0u;
+   ledStruct[LED_B].startedFlag = (unsigned char)0u;
 
 
 }
@@ -293,11 +266,11 @@ void LED_On(LED_Type_T type)
 {
    if(type == LED_A)
    {
-      Set_Green_LED();
+      Set_GPIO1(1u);
    }
    else if(type == LED_B)
    {
-      Set_Red_LED();
+      Set_GPIO2(1u);
    }
 }
 
@@ -314,11 +287,11 @@ void LED_Off(LED_Type_T type)
 {
    if(type == LED_A)
    {
-      Clear_Green_LED();
+      Set_GPIO1(0u);
    }
    else if(type == LED_B)
    {
-      Clear_Red_LED();
+      Set_GPIO2(0u);
    }
 }
 
