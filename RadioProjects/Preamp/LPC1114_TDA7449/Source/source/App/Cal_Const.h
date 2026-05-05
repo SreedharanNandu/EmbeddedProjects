@@ -1,0 +1,17 @@
+/*filename:-Cal_Const.h*/
+#ifndef CAL_CONST_H
+#define CAL_CONST_H
+
+#include <stdio.h>
+#include "type_sys.h"
+#include "App_Led.h"
+
+extern const unsigned long K_Break_Timeout; /*( X 10ms)sec sample*/
+extern const BlinkRequest_T blink_ModeChange; // blinks, on and off
+extern const BlinkRequest_T blink_Store; // blinks, on and off
+extern const BlinkRequest_T blink_PwnOnOff; // blinks, on and off
+extern const unsigned char K_Tda_Bass_Reg[15];
+extern const unsigned char K_Tda_Treble_Reg[15];
+extern const unsigned char K_Tda_Vol_Reg[48];
+
+#endif  /* __CAL_CONST_H__ */
