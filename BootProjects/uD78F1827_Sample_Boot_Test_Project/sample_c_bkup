@@ -1,0 +1,894 @@
+/*============================================================================*/
+/*                                                                            */
+/* Project     = Sample program for flash self-programming library            */
+/* Module      = sample_c.c                                                   */
+/* Version     = V3.00                                                        */
+/* Target CPU  = 78K0R/KE3-L( uPD78F1009 / QB-78K0RKE3L-TB )                  */
+/* Environment = PM plus(V6.31)                                               */
+/*               RA78K0R(V1.31)                                               */
+/*               CC78K0R(V2.10)                                               */
+/* Date        = Nov 13, 2009                                                 */
+/*                                                                            */
+/*============================================================================*/
+/*                                COPYRIGHT                                   */
+/*============================================================================*/
+/*                                                                            */
+/*     Copyright (C) NEC Electronics Corporation 2008                         */
+/*     NEC ELECTRONICS CONFIDENTIAL AND PROPRIETARY                           */
+/*     All rights reserved by NEC Electronics Corporation.                    */
+/*     This program must be used solely for the purpose for which             */
+/*     it was furnished by NEC Electronics Corporation. No part of this       */
+/*     program may be reproduced or disclosed to others, in any               */
+/*     form, without the prior written permission of NEC Electronics          */
+/*     Corporation. Use of copyright notice dose not evidence                 */
+/*     publication of the program.                                            */
+/*                                                                            */
+/*============================================================================*/
+
+/*----------------------------------------------------------------------------*/
+/* Expanded functions                                                         */
+/*----------------------------------------------------------------------------*/
+#pragma sfr                 /* Describes SFR name in C       */
+#pragma DI                  /* interrupt disable instruction */
+#pragma EI                  /* interrupt enable instruction  */
+#pragma NOP                 /* NOP instruction               */
+
+
+/*----------------------------------------------------------------------------*/
+/* section and switch                                                         */
+/*----------------------------------------------------------------------------*/
+/****************/
+/* section name */
+/****************/
+/* Segment for code portion */
+#ifdef __K0R_SMALL__ 
+  #pragma section @@CODE  SAM_CODE
+#else
+  #pragma section @@CODEL SAM_CODE
+#endif 
+
+/* Segment for const variable */
+#ifdef __K0R_LARGE__
+  #pragma section @@CNSTL SAM_CNST
+#else
+  #pragma section @@CNST  SAM_CNST
+#endif
+
+
+/* Segment for data area */
+/*
+#ifdef __K0R_LARGE__
+  #pragma section @@DATAL SAM_DATA
+#else
+  #pragma section @@DATA  SAM_DATA
+#endif
+*/
+
+/***********************************/
+/* sample code                     */
+/***********************************/
+#if 0
+#define __QB_78K0RKE3L_TB__
+#endif
+
+/*----------------------------------------------------------------------------*/
+/* Include files                                                              */
+/*----------------------------------------------------------------------------*/
+/* Common library header files */
+#include <string.h>             /* string header */
+
+/* flash self-programming library header files */
+#include "fsl.h"                /* library header file   */
+#include "fsl_user.h"           /* user header file */
+
+
+/*----------------------------------------------------------------------------*/
+/* structure                                                                  */
+/*----------------------------------------------------------------------------*/
+/* write parameter structure */
+typedef struct {
+    fsl_u08 *pDataBuffer;       /* Data buffer pointer          */
+    fsl_u08  startBlock;        /* Number of Block              */
+    fsl_u08 *pWriteData;        /* Write data pointer           */
+    fsl_u32  writeDataSize;     /* Write data size              */
+    fsl_u08  endOption;         /* Otption code                 */
+} SAM_FSL_PARM_T;
+
+
+/*----------------------------------------------------------------------------*/
+/* Constant definitions                                                       */
+/*----------------------------------------------------------------------------*/
+/**************************************/
+/* Definition symbol for sample codes */
+/**************************************/
+/* error code */
+#define SAM_ERR_PARM        0x7F        /* parameter error */
+#define SAM_ERR_OPT         0x80        /* option error    */
+
+/* personal data */
+#define SAM_BLOCK_SIZE      0x400l      /* Block size         */
+#define SAM_WORD_SIZE       4           /* Word size          */
+#define SAM_DUMYY_DATA      0xFF        /* Dummy data         */
+
+/* sample option code */
+#define SAM_OPT_NON         0x00        /* non                          */
+#define SAM_OPT_RST         0x01        /* Reset                        */
+#define SAM_OPT_CBOOT       0x02        /* Cheanges boot flag           */
+#define SAM_OPT_ACT_SWAP    0x03        /* Cheanges boot flag and reset */
+#define SAM_OPT_CBOOT_RST   0x04        /* Cheanges boot flag and reset */
+#define SAM_OPT_CBOOT_SUP   0x05        /* Cheanges boot flag and Swap, */
+
+/* WDT control macro */
+#define SAM_WDT_RESET()     WDTE = 0xAC /* Resets WDT */
+
+
+/****************/
+/* Usual symbol */
+/****************/
+#ifndef __QB_78K0RKE3L_TB__
+#define SAM_DATA_SIZE   0x571           /* Size of dummy data(write data)   */
+#define SAM_START_BLOCK 0x20            /* write start block                */
+#define SAM_SET_OPTION  SAM_OPT_NON     /* write mode option                */
+
+/* LED control macro */
+#define SAM_LED1_INIT()
+#define SAM_LED1_ON()
+#define SAM_LED1_OFF()
+#define SAM_LED2_INIT()
+#define SAM_LED2_ON()
+#define SAM_LED2_OFF()
+
+/******************************/
+/* Symbol for QB-78K0RKE3L-TB */
+/******************************/
+#else
+#define SAM_DATA_SIZE   0x571           /* Size of dummy data(write data)   */
+#define SAM_START_BLOCK 0x04            /* write start block                */
+#define SAM_SET_OPTION  SAM_OPT_CBOOT   /* write mode option                */
+
+/* LED control macro */
+#define SAM_LED1_INIT() P7.6 = 1, PM7.6 = 0
+                                        /* LED1 initialization              */
+#define SAM_LED1_ON()   P7.6 = 0        /* Switches the light on  of LED1   */
+#define SAM_LED1_OFF()  P7.6 = 1        /* Switches the light off of LED1   */
+
+#define SAM_LED2_INIT() P7.7 = 1, PM7.7 = 0
+                                        /* LED2 initialization              */
+#define SAM_LED2_ON()   P7.7 = 0        /* Switches the light on  of LED2   */
+#define SAM_LED2_OFF()  P7.7 = 1        /* Switches the light off of LED2   */
+
+#endif
+
+
+/*----------------------------------------------------------------------------*/
+/* external reference parameter                                               */
+/*----------------------------------------------------------------------------*/
+/* Data buffer */
+extern       fsl_u08 fsl_data_buffer[ FSL_DATA_BUFFER_SIZE ];
+
+/* Dummy data table */
+extern const fsl_u08 samWriteData   [ SAM_DATA_SIZE        ];
+
+
+/*----------------------------------------------------------------------------*/
+/* prototype declarations                                                     */
+/*----------------------------------------------------------------------------*/
+/* Target initialization function */
+void    samTargetInit( void );                  /* Target initialization function */
+void    samTargetEnd ( void );                  /* Target termination function    */
+
+#define TEST_BLOCK   0x20            /* block 0x20 = 8000H-83FFH */
+#define TEST_ADDR    0x8000UL
+
+fsl_u08 gStage;
+fsl_u08 gInitSt, gBlankBefore, gEraseSt, gBlankAfter, gVerifySt;
+fsl_u08 gWriteSt[ 4 ];
+
+/* Sample program for flash self-programming function */
+fsl_u08 samFslBlockWrite( SAM_FSL_PARM_T * );   /* write function */
+fsl_u08 samFslStart     ( fsl_u08 * );          /* flash self-programming start function */
+void    samFslEnd       ( void );               /* flash self-programming end function   */
+
+fsl_u16 gMisErase;      /* mismatches after erase, expect 0 */
+fsl_u16 gMisWrite;      /* mismatches after write, expect 0 */
+fsl_u16 gFirstDiff;     /* offset of first mismatch, 0xFFFF if none */
+
+void samTestWrite( void );
+void samTestErase( void );
+fsl_u08 samTestOpen( void );
+fsl_u16 samTestReadBack( fsl_u08 expectErased );
+
+/*----------------------------------------------------------------------------*/
+/* functions                                                                  */
+/*----------------------------------------------------------------------------*/
+/*============================================================================*/
+/* Function name : main                                                       */
+/* IN            : void                                                       */
+/* OUT           : void                                                       */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/04/17                                                 */
+/*============================================================================*/
+void main( void )
+{
+    fsl_u08         fslRetCode;                     /* Retune code     */
+    SAM_FSL_PARM_T  typFslData;                     /* Write parameter */
+    
+    /* Target initialization */
+    samTargetInit();
+    
+    /* Sets parameter */
+    typFslData.pDataBuffer   = fsl_data_buffer;     /* Data buffer pointer  */
+    typFslData.startBlock    = SAM_START_BLOCK;     /* Write block          */
+    typFslData.pWriteData    = samWriteData;        /* Write data pointer   */
+    typFslData.writeDataSize = SAM_DATA_SIZE;       /* Write data size      */
+    typFslData.endOption     = SAM_SET_OPTION;      /* Option code          */
+    
+    gStage = 0;
+    samTestErase();
+    gMisErase = samTestReadBack( 1 );
+    gStage = 1;            /* BREAKPOINT A on this line */
+
+    samTestWrite();
+    gMisWrite = samTestReadBack( 0 );
+    gStage = 2;            /* BREAKPOINT B on this line */
+
+    while( 1 ) ;           /* nothing below this runs */
+    
+    /* flash self-programming */
+    fslRetCode = samFslBlockWrite( &typFslData );
+    
+    /* Normal end */
+    if( fslRetCode == FSL_OK )
+    { }
+    /* Error end */
+    else {
+        /* Error judgment */
+        /* Abnormality consequent to parameter check and flash self-programming */ 
+        if( ( fslRetCode & SAM_ERR_OPT ) != SAM_ERR_OPT )
+        {
+            /* error check */
+            switch( fslRetCode )
+            {
+                /* Error for flash self-programming */
+                case FSL_ERR_FLMD0:             /* FLMD0 is at low level        */
+                case FSL_ERR_PARAMETER:         /* Parameter error              */
+                case FSL_ERR_PROTECTION:        /* Protect error                */
+                case FSL_ERR_ERASE:             /* Erase error                  */
+                case FSL_ERR_IVERIFY:           /* Internal verification error  */
+                case FSL_ERR_WRITE:             /* Write error                  */
+                    break;
+                
+                /* Error for parameter check        */
+                case SAM_ERR_PARM:              /* prameter check error */
+                    break;
+                
+                /* etc... */
+                default:
+                    break;
+            }
+        }
+        /* etc */
+        else {
+            fslRetCode &= ~SAM_ERR_OPT;         /* Clears option error flag */
+            
+            /* Error check */
+            switch( fslRetCode )
+            {
+                /* Error for flash self-programming */
+                case FSL_ERR_PARAMETER:         /* Parameter error              */
+                case FSL_ERR_PROTECTION:        /* Protect error                */
+                case FSL_ERR_ERASE:             /* Erase error                  */
+                case FSL_ERR_IVERIFY:           /* Internal verification error  */
+                case FSL_ERR_WRITE:             /* Write error                  */
+                    break;
+                
+                /* etc... */
+                default:
+                    break;
+            }
+        }
+    }
+    
+    /* Target termination */
+    samTargetEnd();
+    
+    /* Resets WDT   */
+    SAM_WDT_RESET();
+    
+    /* End loop     */
+    while( 1 )
+    {
+        NOP();
+        NOP();
+    }
+}
+
+fsl_u16 samTestReadBack( fsl_u08 expectErased )
+{
+    const __far fsl_u08 *p;
+    fsl_u16 i;
+    fsl_u16 bad;
+    fsl_u08 expect;
+
+    bad = 0;
+    gFirstDiff = 0xFFFF;
+    p = (const __far fsl_u08 *)TEST_ADDR;
+
+    for( i = 0; i < 1024; i++ )
+    {
+        if( expectErased != 0 )
+        {
+            expect = 0xFF;
+        }
+        else
+        {
+            expect = (fsl_u08)i;        /* 00 01 02 ... FF, repeated */
+        }
+        if( p[ i ] != expect )
+        {
+            if( bad == 0 ) { gFirstDiff = i; }
+            bad++;
+        }
+    }
+    return bad;
+}
+
+/*============================================================================*/
+/* Function name : samFslBlockWrite                                           */
+/* IN            : SAM_FSL_PARM_T / Write parameter                           */
+/* OUT           : fsl_u08        / Return code                               */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/04/17                                                 */
+/*============================================================================*/
+fsl_u08 samFslBlockWrite( SAM_FSL_PARM_T *pTypFslData  )
+{
+    fsl_u08 fslRetCode;             /* Return code           */
+    fsl_u32 fslWriteBlockNum;       /* Write blcok number    */
+    fsl_u16 fslWriteBufSize;        /* Write bffer size      */
+    
+    /**************************************/
+    /* Parameter check and initialization */
+    /**************************************/
+    if( ( pTypFslData->writeDataSize == 0 ) ||
+        ( pTypFslData->pDataBuffer   == 0 ) )
+    {
+        fslRetCode = SAM_ERR_PARM;  /* Parameter error */
+    }
+    else {
+        /*  */
+        /*  */
+        fslWriteBufSize = FSL_DATA_BUFFER_SIZE - FSL_DATA_BUFFER_SIZE % SAM_WORD_SIZE;
+        
+        /* flash self-programming start function */
+        fslRetCode = samFslStart( pTypFslData->pDataBuffer );
+    }
+    
+    /*******************/
+    /* Writing of data */
+    /*******************/
+    /* write loop */
+    for( fslWriteBlockNum = ( ( pTypFslData->writeDataSize - 1 ) / SAM_BLOCK_SIZE ) + 1 ;
+         ( fslWriteBlockNum != 0 ) && ( fslRetCode == FSL_OK )                          ;
+         fslWriteBlockNum-- ,pTypFslData->startBlock++                                  )
+    {
+        /* Performs a blank check of a specified block */
+        do {
+            fslRetCode = FSL_BlankCheck( pTypFslData->startBlock );
+            
+            /* When an interrupt error occurred, it carry it out again. */
+        } while( fslRetCode == FSL_ERR_INTERRUPTION );
+        
+        /* Blank check error */
+        if( fslRetCode == FSL_ERR_BLANKCHECK )
+        {
+            /* Erases a specified block */
+            do {
+                fslRetCode = FSL_Erase( pTypFslData->startBlock );
+                
+                /* When an interrupt error occurred, it carry it out again. */
+            } while( fslRetCode == FSL_ERR_INTERRUPTION );
+        }
+        
+        /* Write program */
+        if( fslRetCode == FSL_OK )
+        {
+            fsl_u32 fslRemDataSize;     /* Remaining data size */
+            fsl_u32 fslWriteAddress;    /* Write address       */
+            fsl_u32 fslOneWriteSize;    /* Write size          */
+            
+            /* Calculation of write address */
+            fslWriteAddress = pTypFslData->startBlock * SAM_BLOCK_SIZE;
+            
+            /* When write block remains */
+            if( fslWriteBlockNum > 1 )
+            {
+                /* Write size is set to the size of block */
+                fslRemDataSize = SAM_BLOCK_SIZE;
+            }
+            else {
+                /* Data of the remainder is set to the writing size */
+                fslRemDataSize = pTypFslData->writeDataSize;
+            }
+            
+            /* Block write Loop */
+            for( ; ( fslRemDataSize != 0 ) && ( fslRetCode == FSL_OK ) ;
+                   fslWriteAddress += fslWriteBufSize                  )
+            {
+                /* When the data of the remainder is larger than that of the buffer size */
+                if( fslRemDataSize >= fslWriteBufSize )
+                {   
+                    /* Write size is set of the buffer size */
+                    fslOneWriteSize = fslWriteBufSize;
+                }
+                else {
+                    /* Write size is set to the buffer size of remainder */
+                    fslOneWriteSize = fslRemDataSize;
+                }
+                
+                /* It copies it onto data Buffer */
+                memcpy( pTypFslData->pDataBuffer        ,
+                        pTypFslData->pWriteData         ,
+                        (unsigned int)fslOneWriteSize   );
+                
+                /* Size of remainder is calculated */
+                fslRemDataSize             -= fslOneWriteSize;
+                pTypFslData->writeDataSize -= fslOneWriteSize;
+                pTypFslData->pWriteData    += fslOneWriteSize;
+                
+                /* Write size adjustment          */
+                /* It adjusts it every four bytes */
+                for( ; ( fslOneWriteSize % SAM_WORD_SIZE ) != 0 ; fslOneWriteSize++ )
+                {
+                    pTypFslData->pDataBuffer[ fslOneWriteSize ] = SAM_DUMYY_DATA;
+                }
+                
+                /* Writes 1- to 64-word data to a specified address */
+                do {
+                    fslRetCode = FSL_Write( fslWriteAddress                              ,
+                                            (fsl_u08)( fslOneWriteSize / SAM_WORD_SIZE ) );
+                    
+                    /* When an interrupt error occurred, it carry it out again. */
+                } while( fslRetCode == FSL_ERR_INTERRUPTION );
+            }
+        }
+        /* Normal end */
+        if( fslRetCode == FSL_OK )
+        {
+            /* Verifies a specified block */
+            do {
+                fslRetCode = FSL_IVerify( pTypFslData->startBlock );
+                
+                /* When an interrupt error occurred, it carry it out again. */
+            } while( fslRetCode == FSL_ERR_INTERRUPTION );
+        }
+    }
+    
+    /* After executing fsl */
+    if( fslRetCode != SAM_ERR_PARM )
+    {
+        /* Normal end */
+        if( fslRetCode == FSL_OK )
+        {
+            /************************************************************************************************************/
+            /* Notes when boot swap is used                                                                             */
+            /* Please write the setting necessary for the movement of the object microcomputer of an optional byte etc. */
+            /* In area (1000H-1FFFH) before it swaps when you execute the boot swap.                                    */
+            /* It becomes impossible the normal movement of the object microcomputer when there is no setting.          */
+            /************************************************************************************************************/
+            switch( pTypFslData->endOption )
+            {
+                /* Resets the microcontroller that is being used. */
+                case SAM_OPT_RST:
+                    /* Resets the microcontroller that is being used. */
+                    /* note:If this function is executed when using MINICUBE or IECUBE,a break occurs and processing stops. */
+                    /*      Manually execute a reset, because normal operation cannot be performed after the break occurs.  */
+                    FSL_ForceReset();
+                    break;
+                    
+                /* Inverts the current boot flag value. */
+                case SAM_OPT_CBOOT:
+                    /* Inverts the current boot flag value.                                              */
+                    /* note:The address of a program arranged in BCL0,BCL1 is changed.                   */
+                    /*      Therefore, As for the program how an address is arranged to less than 2000H, */
+                    /*      confirmation becomes difficult.                                              */
+                    fslRetCode = FSL_InvertBootFlag();
+                    
+                    break;
+                    
+                /* Inverts the current boot flag value and executes boot swapping. */
+                case SAM_OPT_ACT_SWAP:
+                    
+                    do {
+                        /* Inverts the current boot flag value and executes boot swapping.                    */
+                        /* note1:Please arrange the program at the address since 2000H.                       */
+                        /*       When the program is arranged at the address of less than 2000H,              */
+                        /*       it is not possible to operate normally.                                      */
+                        /* note2:The address of a program arranged in BCL0,BCL1 is changed.                   */
+                        /*       Therefore, As for the program how an address is arranged to less than 2000H, */
+                        /*       confirmation becomes difficult.                                              */
+                        /*                                                                                    */
+                        /*                                                                                    */
+                        fslRetCode = FSL_SwapActiveBootCluster();
+                        
+                    /* When an interrupt error occurred, it carry it out again. */
+                    } while( fslRetCode == FSL_ERR_INTERRUPTION );
+                    
+                    break;
+                    
+                /* Inverts the current boot flag value. And resets the microcontroller that is being used. */
+                case SAM_OPT_CBOOT_RST:
+                    /* Inverts the current boot flag value.                                              */
+                    /* note:The address of a program arranged in BCL0,BCL1 is changed.                   */
+                    /*      Therefore, As for the program how an address is arranged to less than 2000H, */
+                    /*      confirmation becomes difficult.                                              */
+                    fslRetCode = FSL_InvertBootFlag();
+                    
+                    if( fslRetCode == FSL_OK )
+                    {
+                        /* Resets the microcontroller that is being used. */
+                        /* note:If this function is executed when using MINICUBE or IECUBE,a break occurs and processing stops. */
+                        /*      Manually execute a reset, because normal operation cannot be performed after the break occurs.  */
+                        FSL_ForceReset();
+                    }
+                    break;
+                    
+                /* Inverts the current boot flag value. And executes boot swapping and then executes processing from the address registered to the reset vector of area after boot swapping. */
+                case SAM_OPT_CBOOT_SUP:
+                    /* Inverts the current boot flag value.                                              */
+                    /* note:The address of a program arranged in BCL0,BCL1 is changed.                   */
+                    /*      Therefore, As for the program how an address is arranged to less than 2000H, */
+                    /*      confirmation becomes difficult.                                              */
+                    fslRetCode = FSL_InvertBootFlag();
+                    
+                    if( fslRetCode == FSL_OK )
+                    {
+                        /* Executes boot swapping and then executes processing from the address registered to the reset vector of area after boot swapping. */
+                        /* note:The address of a program arranged in BCL0,BCL1 is changed.                   */
+                        /*      Therefore, As for the program how an address is arranged to less than 2000H, */
+                        /*      confirmation becomes difficult.                                              */
+                        FSL_SwapBootCluster();
+                    }
+                    break;
+                    
+                /* etc... */
+                default:
+                    break;
+            }
+            
+            /* otion error */
+            if( fslRetCode != FSL_OK )
+            {
+                fslRetCode |= SAM_ERR_OPT;
+            }
+        }
+        
+        /* flash self-programming end function */
+        samFslEnd();
+    }
+    
+    return fslRetCode;
+}
+
+
+/*============================================================================*/
+/* Function name : samTargetInit                                              */
+/* IN            : void                                                       */
+/* OUT           : void                                                       */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/02/03                                                 */
+/*============================================================================*/
+void samTargetInit( void )
+{
+ 
+
+    DI();                   /* Disabled interrupt */
+    
+    /******************************************************/
+    /* System clock control register (CKC) initialization */
+    /******************************************************/
+    /* System clock control register */
+    CKC = 0x00;             /* Selects the internal high-speed oscillation clock */
+                            
+    
+    /* Operation speed mode control register */
+    OSMC =0x01;             /* Operates at a frequency higher than 10 MHz */
+    
+    
+    /************************/
+    /* Changes of frequency */
+    /************************/
+    /* Clock operation mode control register (CMC)  */
+    CMC = 0x41;             /* Selects X1 oscillation mode (10 MHz < fMX < 20 MHz) */
+    
+    /* Oscillation stabilization time select register (OSTS) */
+    OSTS = 0x07;            /* Sets stabilization time (07H) */
+    
+    /* High-speed system clock operation control    */
+    GUARD |= 0x01;          /* Fx3: enable writes to CSC (added) */
+    MSTOP = 0;              /* X1 oscillator operating (X1 clock starts) */
+    
+    /* Oscillation Stabilization Time Counter Status Register (OSTC) */
+    while( ( OSTC & 0xFF ) != 0xFF );    /* Waits the oscillation stability time for X1 clock */
+    OSMC  = 0x01;                       /* fCLK > 10 MHz */
+    /* Main system clock operation control (MCM0)   */
+    MCM0 = 1;               /* Selects high-Speed system clock   */
+    while( MCS == 0 );
+    GUARD &= (unsigned char)~0x01;   /* lock CSC again (added) */      /* Waits the High-speed system clock */
+    
+    /*************************/
+    /* Low-voltage detection */
+    /*************************/
+    LVIM = 0x00;            /* Clears Low-voltage detection register              */
+    LVIS = 0x00;            /* Clears Low-voltage detection level select register */
+    
+    /************************/
+    /* WDT                  */
+    /************************/
+    SAM_WDT_RESET();        /* Resets WDT */
+    
+    /**********************/
+    /* LED initialization */
+    /**********************/
+    SAM_LED1_INIT();        /* LED1 initialization           */
+    SAM_LED2_INIT();        /* LED2 initialization           */
+    SAM_LED1_ON();          /* Switches the light on of LED1 */
+    SAM_LED2_ON();          /* Switches the light on of LED2 */
+    
+    EI();                   /* Enabled interrupt */
+}
+
+/*============================================================================*/
+/* Function name : samTargetEnd                                               */
+/* IN            : void                                                       */
+/* OUT           : void                                                       */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/02/03                                                 */
+/*============================================================================*/
+void samTargetEnd( void )
+{
+    SAM_LED1_OFF();         /* Switches the light off of LED1 */
+    SAM_LED2_OFF();         /* Switches the light off of LED2 */
+}
+
+/*============================================================================*/
+/* Function name : samFslStart                                                */
+/* IN            : fsl_u08* /  Buffer pointer                                 */
+/* OUT           : fsl_u08  /  Return code                                    */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/02/03                                                 */
+/*============================================================================*/
+fsl_u08 samFslStart( fsl_u08 *pDataBuffer )
+{
+    fsl_u08 fslRetCode;
+    
+    /* Declares the start of flash self programming */
+    FSL_Open();
+    
+    /* Initializes the flash self programming environment */
+    fslRetCode = FSL_Init( pDataBuffer );
+    
+    /* Interrupt error */
+    while( fslRetCode == FSL_ERR_INTERRUPTION )
+    {
+        /* Continues initialization after interrupt */
+        fslRetCode = FSL_Init_cont( pDataBuffer );
+    }
+    
+    /* Normal end */
+    if( fslRetCode == FSL_OK )
+    {
+        
+        
+        /* Checks the voltage level of the FLMD0 pin */
+        fslRetCode = FSL_ModeCheck();
+        
+    }
+    
+    return fslRetCode;
+}
+
+
+/*============================================================================*/
+/* Function name : samFslEnd                                                  */
+/* IN            : void                                                       */
+/* OUT           : void                                                       */
+/* Description   : Sample program for flash self-programming                  */
+/* Date          : 2009/02/03                                                 */
+/*============================================================================*/
+void samFslEnd( void )
+{
+    /* Declares the end of flash self programming */
+    FSL_Close();
+}
+
+
+
+fsl_u08 samTestOpen( void )
+{
+    fsl_u08 st;
+    FSL_Open();
+    st = FSL_Init( fsl_data_buffer );
+    while( st == FSL_ERR_INTERRUPTION )
+    {
+        st = FSL_Init_cont( fsl_data_buffer );
+    }
+    if( st == FSL_OK )
+    {
+        st = FSL_ModeCheck();
+    }
+    return st;
+}
+
+void samTestErase( void )
+{
+    gInitSt = gBlankBefore = gEraseSt = gBlankAfter = 0xEE;
+    gInitSt = samTestOpen();
+    if( gInitSt == FSL_OK )
+    {
+        do { gBlankBefore = FSL_BlankCheck( TEST_BLOCK ); }
+        while( gBlankBefore == FSL_ERR_INTERRUPTION );
+
+        do { gEraseSt = FSL_Erase( TEST_BLOCK ); }
+        while( gEraseSt == FSL_ERR_INTERRUPTION );
+
+        do { gBlankAfter = FSL_BlankCheck( TEST_BLOCK ); }
+        while( gBlankAfter == FSL_ERR_INTERRUPTION );
+    }
+    FSL_Close();
+}
+
+void samTestWrite( void )
+{
+    fsl_u08 k;
+    fsl_u16 i;
+
+    gVerifySt = 0xEE;
+    for( k = 0; k < 4; k++ ) { gWriteSt[ k ] = 0xEE; }
+
+    gInitSt = samTestOpen();
+    if( gInitSt == FSL_OK )
+    {
+        for( k = 0; k < 4; k++ )
+        {
+            for( i = 0; i < 256; i++ )
+            {
+                fsl_data_buffer[ i ] = (fsl_u08)i;      /* 00 01 02 ... FF */
+            }
+            do { gWriteSt[ k ] = FSL_Write( TEST_ADDR + ( (fsl_u32)k * 256UL ), 64 ); }
+            while( gWriteSt[ k ] == FSL_ERR_INTERRUPTION );
+            if( gWriteSt[ k ] != FSL_OK ) { break; }
+        }
+        if( gWriteSt[ 3 ] == FSL_OK )
+        {
+            do { gVerifySt = FSL_IVerify( TEST_BLOCK ); }
+            while( gVerifySt == FSL_ERR_INTERRUPTION );
+        }
+    }
+    FSL_Close();
+}
+
+/************************************************************************************/
+/*                                                                                  */
+/*  LED lighting program. ( QB-78K0RKE3L-TB only )                                  */
+/*                                                                                  */
+/*    Two LED lights alternately.                                                   */
+/*    SW1 is pushed, Boot-swap is done.                                             */
+/*                                                                                  */
+/*    EPlease set it as follows when you use the program on QB-78K0RKE3L-TB.       */
+/*      EThere's switch from "if 0" to "if 1" in the 70th line from the top.       */
+/*        The LED lighting program starts when boot swapping with this program      */
+/*        written in boot cluster 1.                                                */
+/*                                                                                  */
+/*                                                                                  */
+/*                                                                                  */
+/*                                                                                  */
+/*                                                                                  */
+/*                                                                                  */
+/*==================================================================================*/
+/*                                                                                  */
+/*      Please do not reset it by the debugger at this time.                        */
+/*      It doesn't operate normally.                                                */
+/*                                                                                  */
+/*==================================================================================*/
+/*                                                                                  */
+/*      Blinking LED changes if SW1 is pushed and after a few seconds,              */
+/*      reset is generated. Then, the boot swap is executed and it returns to       */
+/*      former program.                                                             */
+/*                                                                                  */
+/*      Note:This execution program is a sample made to confirm the boot-swap       */
+/*           simply. It is likely not to operate normally according to the          */
+/*           setting of the project and the connection of QB-78K0RKE3L-TB.          */
+/*                                                                                  */
+/************************************************************************************/
+const  fsl_u08 samWriteData[ SAM_DATA_SIZE ] = 
+{
+/* 0000 */  0xD0, 0x00, 0xD4, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x84, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0010 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0020 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0030 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0040 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0050 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0060 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0070 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0080 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0090 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 00A0 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 00B0 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 00C0 */  0xFF, 0xFF, 0xFF, 0x83, 0x14, 0x00, 0x71, 0x7A, 0xBE, 0xD7, 0x71, 0x7B, 0xBE, 0xD7, 0xD8, 0x00,
+/* 00D0 */  0xEC, 0xC0, 0xFF, 0x00, 0xEC, 0xBA, 0xFF, 0x00, 0x61, 0xCF, 0x51, 0x00, 0x71, 0x8C, 0x71, 0x09,
+/* 00E0 */  0xFE, 0xCB, 0xF8, 0x20, 0xFE, 0xFC, 0x47, 0x05, 0x00, 0xF6, 0xBF, 0x96, 0xFB, 0xBF, 0x80, 0xFB,
+/* 00F0 */  0xBF, 0x84, 0xFB, 0xE6, 0xBF, 0x82, 0xFB, 0x30, 0x9A, 0xFB, 0xBF, 0x98, 0xFB, 0x53, 0xC0, 0xF6,
+/* 0100 */  0x93, 0x93, 0x58, 0x20, 0xFE, 0xDF, 0xF9, 0x41, 0x00, 0x36, 0x02, 0x00, 0x34, 0xBA, 0xFB, 0xEF,
+/* 0110 */  0x05, 0x11, 0x8B, 0x99, 0xA7, 0xA5, 0x17, 0x44, 0x02, 0x00, 0xDF, 0xF5, 0x36, 0x02, 0x00, 0x34,
+/* 0120 */  0xCA, 0xFC, 0xEF, 0x0A, 0x41, 0x00, 0x11, 0x8B, 0x41, 0x0F, 0x11, 0x99, 0xA7, 0xA5, 0x17, 0x44,
+/* 0130 */  0x02, 0x00, 0xDF, 0xF0, 0x36, 0xBA, 0xFB, 0x30, 0xBA, 0xFB, 0xEF, 0x04, 0xCC, 0x00, 0x00, 0xA7,
+/* 0140 */  0x47, 0xDF, 0xF9, 0x41, 0x0F, 0x36, 0xCA, 0xFC, 0x30, 0xCA, 0xFC, 0xEF, 0x05, 0x11, 0xCC, 0x00,
+/* 0150 */  0x00, 0xA7, 0x47, 0xDF, 0xF8, 0x41, 0x00, 0x36, 0x02, 0x00, 0x34, 0xBA, 0xFC, 0xEF, 0x05, 0x11,
+/* 0160 */  0x8B, 0x99, 0xA7, 0xA5, 0x17, 0x44, 0x02, 0x00, 0xDF, 0xF5, 0x36, 0xBA, 0xFC, 0x30, 0xBA, 0xFC,
+/* 0170 */  0xEF, 0x04, 0xCC, 0x00, 0x00, 0xA7, 0x47, 0xDF, 0xF9, 0xFC, 0x29, 0x02, 0x00, 0xF6, 0xFC, 0x48,
+/* 0180 */  0x05, 0x00, 0xEF, 0xFE, 0x71, 0x7B, 0xFA, 0xC1, 0xC3, 0xC5, 0xC7, 0x52, 0x0C, 0x92, 0x92, 0x69,
+/* 0190 */  0xD4, 0xFE, 0xC1, 0xDF, 0xF8, 0x8E, 0xFD, 0x70, 0x8E, 0xFC, 0xC1, 0x20, 0x06, 0xFB, 0xF8, 0xFF,
+/* 01A0 */  0xFD, 0xC6, 0x00, 0x30, 0xBA, 0xFB, 0xFD, 0x44, 0x03, 0x62, 0x9C, 0x01, 0xD1, 0xDF, 0x06, 0xFD,
+/* 01B0 */  0xCF, 0x02, 0x62, 0x9C, 0x01, 0x8C, 0x01, 0xD1, 0xDF, 0x06, 0xFD, 0x2C, 0x04, 0x62, 0x9C, 0x01,
+/* 01C0 */  0x8C, 0x01, 0xD1, 0xDF, 0x44, 0xCE, 0xAB, 0xAC, 0xCC, 0x00, 0x01, 0x8B, 0xD1, 0xDF, 0x0B, 0xCC,
+/* 01D0 */  0x00, 0x01, 0x71, 0x62, 0x07, 0x71, 0x72, 0x07, 0xEF, 0x09, 0xCC, 0x00, 0x00, 0x71, 0x63, 0x07,
+/* 01E0 */  0x71, 0x73, 0x07, 0xF6, 0xBC, 0x02, 0xBC, 0x04, 0x30, 0x06, 0x00, 0x61, 0x49, 0x04, 0xDF, 0x06,
+/* 01F0 */  0x30, 0x7F, 0x1A, 0x61, 0x49, 0x02, 0xDC, 0xD3, 0xFD, 0xC4, 0x02, 0x61, 0x79, 0x02, 0xF6, 0x61,
+/* 0200 */  0x49, 0x02, 0xDF, 0xE4, 0x61, 0x79, 0x04, 0xEF, 0xDF, 0xFD, 0xCA, 0x00, 0x10, 0x06, 0xC0, 0x9E,
+/* 0210 */  0xFC, 0x60, 0x9E, 0xFD, 0x34, 0xD4, 0xFE, 0x52, 0x06, 0xC0, 0xB9, 0xA5, 0xA5, 0x92, 0xDF, 0xF9,
+/* 0220 */  0xC6, 0xC4, 0xC2, 0xC0, 0x71, 0x7A, 0xFA, 0x61, 0xFC, 0xC7, 0x20, 0x06, 0xFB, 0xF8, 0xFF, 0xF6,
+/* 0230 */  0xBB, 0xFD, 0x77, 0x02, 0xF6, 0x61, 0x49, 0x00, 0xDF, 0x0A, 0xE6, 0xBB, 0x71, 0x62, 0x07, 0x71,
+/* 0240 */  0x73, 0x07, 0xEF, 0x08, 0xF6, 0xBB, 0x71, 0x63, 0x07, 0x71, 0x72, 0x07, 0xF6, 0xBC, 0x02, 0xBC,
+/* 0250 */  0x04, 0xE6, 0x61, 0x49, 0x04, 0xDF, 0x06, 0x30, 0x9F, 0x86, 0x61, 0x49, 0x02, 0xDC, 0xD5, 0xFD,
+/* 0260 */  0xC4, 0x02, 0xCE, 0xAB, 0xAC, 0x61, 0x79, 0x02, 0xF6, 0x61, 0x49, 0x02, 0xDF, 0xE3, 0x61, 0x79,
+/* 0270 */  0x04, 0xEF, 0xDE, 0x10, 0x06, 0xC6, 0xD7, 0x71, 0x7B, 0xFA, 0xF5, 0xA4, 0xFF, 0xE5, 0xF3, 0x00,
+/* 0280 */  0xCE, 0xA0, 0x41, 0xCE, 0xA3, 0x07, 0x71, 0x7B, 0xA1, 0x31, 0x82, 0xA2, 0x02, 0xEF, 0xFA, 0x71,
+/* 0290 */  0x4A, 0xA4, 0x31, 0xD2, 0xA4, 0x02, 0xEF, 0xFA, 0xF5, 0xA9, 0xFF, 0xF5, 0xAA, 0xFF, 0x71, 0x63,
+/* 02A0 */  0x07, 0x71, 0x73, 0x07, 0x71, 0x6B, 0x27, 0x71, 0x7B, 0x27, 0x71, 0x00, 0x3C, 0x00, 0x71, 0x0B,
+/* 02B0 */  0x38, 0x71, 0x0A, 0x39, 0x71, 0x2B, 0xE8, 0x71, 0x2A, 0xEC, 0x71, 0x2B, 0xE0, 0x71, 0x2B, 0xE4,
+/* 02C0 */  0x71, 0x7A, 0xFA, 0xD7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD7, 0xF2,
+/* 02D0 */  0x31, 0xA2, 0xC4, 0x01, 0xE2, 0xD7, 0x9D, 0xE2, 0x61, 0xDD, 0x4C, 0x09, 0xDF, 0x12, 0x71, 0x7B,
+/* 02E0 */  0xFA, 0xC1, 0x8F, 0x06, 0x08, 0x9F, 0xC9, 0xFC, 0xC0, 0xCF, 0x06, 0x08, 0x00, 0xEE, 0x27, 0x00,
+/* 02F0 */  0x31, 0xF2, 0xFA, 0x04, 0xCF, 0x06, 0x08, 0x00, 0x4C, 0x00, 0xDF, 0x05, 0xD5, 0x00, 0x08, 0xDD,
+/* 0300 */  0x16, 0x61, 0xDD, 0x71, 0x7B, 0xFA, 0xD5, 0x06, 0x08, 0xDD, 0x0A, 0xCD, 0xE3, 0x1F, 0x61, 0xCD,
+/* 0310 */  0x61, 0xCD, 0xEE, 0x16, 0x00, 0x61, 0xCD, 0xFE, 0xE2, 0x00, 0x61, 0xFF, 0xFE, 0xA8, 0x00, 0xFC,
+/* 0320 */  0xF8, 0xFF, 0x0E, 0xFE, 0xC0, 0x00, 0x61, 0xCD, 0xFE, 0xE3, 0x00, 0x4C, 0x09, 0xDF, 0x0E, 0xC1,
+/* 0330 */  0x8F, 0x06, 0x08, 0x6F, 0xC9, 0xFC, 0x9F, 0x06, 0x08, 0xC0, 0xEE, 0x04, 0x00, 0xCF, 0x06, 0x08,
+/* 0340 */  0x00, 0xF8, 0xE3, 0xD7, 0x52, 0x00, 0xEF, 0x02, 0x52, 0x02, 0xFE, 0x45, 0x00, 0xCF, 0xC8, 0xFC,
+/* 0350 */  0x00, 0xCF, 0x06, 0x08, 0x00, 0xBF, 0x04, 0x08, 0xC7, 0x16, 0x62, 0x9F, 0x00, 0x08, 0x61, 0xDD,
+/* 0360 */  0x71, 0x7B, 0xFA, 0x8E, 0xFD, 0x72, 0x41, 0x00, 0x11, 0x8F, 0xC4, 0x00, 0x9B, 0x41, 0x00, 0x11,
+/* 0370 */  0x8F, 0xC5, 0x00, 0x9F, 0x01, 0x08, 0x61, 0x8A, 0x9E, 0xFD, 0x61, 0xCD, 0xC6, 0x51, 0x00, 0xFE,
+/* 0380 */  0x54, 0xFF, 0xEF, 0x02, 0x52, 0x05, 0xCF, 0x06, 0x08, 0x00, 0xC1, 0x51, 0x0C, 0xFE, 0x0A, 0x00,
+/* 0390 */  0xC0, 0xD7, 0xC1, 0x51, 0x1D, 0xFE, 0x02, 0x00, 0xC0, 0xD7, 0x61, 0xDD, 0x71, 0x7B, 0xFA, 0x70,
+/* 03A0 */  0xCE, 0xC0, 0xA5, 0x9E, 0xC4, 0x7C, 0xFF, 0x9E, 0xC4, 0x60, 0x9E, 0xC4, 0x61, 0xCD, 0xD7, 0x61,
+/* 03B0 */  0xDD, 0x71, 0x7B, 0xFA, 0xC1, 0x8E, 0xC4, 0x5C, 0x1B, 0xFE, 0xD6, 0xFF, 0xCF, 0x06, 0x08, 0x01,
+/* 03C0 */  0xFE, 0xD7, 0xFF, 0xC0, 0x61, 0xCD, 0xD7, 0x31, 0xF2, 0xFA, 0x1A, 0xC1, 0xAE, 0xE4, 0xBF, 0xBA,
+/* 03D0 */  0xFC, 0xAE, 0xE6, 0xBF, 0xBC, 0xFC, 0xAE, 0xD4, 0xBF, 0xBE, 0xFC, 0x30, 0xFF, 0xFF, 0xBE, 0xE4,
+/* 03E0 */  0xBE, 0xE6, 0xBE, 0xD4, 0xC0, 0xD7, 0x31, 0xF2, 0xFA, 0x11, 0xC1, 0xAF, 0xBA, 0xFC, 0xBE, 0xE4,
+/* 03F0 */  0xAF, 0xBC, 0xFC, 0xBE, 0xE6, 0xAF, 0xBE, 0xFC, 0xBE, 0xD4, 0xC0, 0xD7, 0xC1, 0xBF, 0xC0, 0xFC,
+/* 0400 */  0x13, 0xBF, 0xC2, 0xFC, 0x15, 0xBF, 0xC4, 0xFC, 0x17, 0xBF, 0xC6, 0xFC, 0xC0, 0xD7, 0xAF, 0xC0,
+/* 0410 */  0xFC, 0xDB, 0xC2, 0xFC, 0xEB, 0xC4, 0xFC, 0xFB, 0xC6, 0xFC, 0xD7, 0x53, 0x4B, 0x30, 0x52, 0x54,
+/* 0420 */  0x30, 0x32, 0x4E, 0x32, 0x30, 0x30, 0x47, 0x56, 0x31, 0x31, 0x30, 0x00, 0xC1, 0x50, 0xFE, 0xFE,
+/* 0430 */  0xB4, 0x00, 0x61, 0xDD, 0x71, 0x7B, 0xFA, 0xCF, 0x06, 0x08, 0x00, 0xFE, 0x0A, 0x00, 0xFE, 0xA5,
+/* 0440 */  0xFF, 0x61, 0xCD, 0xF8, 0xE3, 0xEE, 0xD8, 0x00, 0xC7, 0xFB, 0x04, 0x08, 0xBF, 0xBA, 0xFC, 0x8F,
+/* 0450 */  0xC0, 0x00, 0x9C, 0x05, 0xC5, 0xC3, 0x37, 0x04, 0x06, 0x00, 0xBF, 0xBC, 0xFC, 0x35, 0x36, 0x90,
+/* 0460 */  0x04, 0x30, 0x00, 0x00, 0x52, 0x2B, 0xFE, 0x63, 0x00, 0xC2, 0xC4, 0xC6, 0x30, 0x3E, 0x04, 0xB8,
+/* 0470 */  0x00, 0x30, 0x00, 0x00, 0xB8, 0x02, 0x20, 0x04, 0xAF, 0xBC, 0xFC, 0xB8, 0x00, 0x30, 0x0F, 0x00,
+/* 0480 */  0xB8, 0x02, 0xAF, 0xBA, 0xFC, 0x61, 0xFF, 0x52, 0x0A, 0xFE, 0x3B, 0xFF, 0xEC, 0xF8, 0xFF, 0x0E,
+/* 0490 */  0x71, 0x7B, 0xFA, 0xC1, 0xC7, 0xFB, 0x04, 0x08, 0x8C, 0x05, 0xC6, 0x5C, 0x80, 0xFE, 0x02, 0x00,
+/* 04A0 */  0xC0, 0xD7, 0x61, 0xDD, 0x71, 0x7B, 0xFA, 0x70, 0xCF, 0xC0, 0xFF, 0xA5, 0x9F, 0xC0, 0x00, 0x7C,
+/* 04B0 */  0xFF, 0x9F, 0xC0, 0x00, 0x60, 0x9F, 0xC0, 0x00, 0x61, 0xCD, 0xD7, 0x61, 0x8B, 0xFE, 0xE2, 0xFF,
+/* 04C0 */  0x41, 0x00, 0x11, 0xFB, 0x00, 0x00, 0x17, 0xCE, 0xFC, 0x00, 0x61, 0xCB, 0x61, 0xDD, 0x71, 0x7B,
+/* 04D0 */  0xFA, 0x8E, 0xFD, 0x08, 0x9E, 0xFD, 0xF3, 0x11, 0x61, 0xC9, 0x99, 0xA5, 0x83, 0x92, 0xDF, 0xF7,
+/* 04E0 */  0x08, 0x9E, 0xFD, 0x61, 0xCD, 0xD7, 0xFE, 0xA9, 0xFE, 0xD5, 0xC8, 0xFC, 0xDF, 0x23, 0xC1, 0xCF,
+/* 04F0 */  0x03, 0x08, 0x03, 0x51, 0x09, 0xFE, 0xDE, 0xFD, 0xC0, 0xD2, 0xDF, 0x37, 0xFE, 0x38, 0x00, 0xA2,
+/* 0500 */  0x04, 0x08, 0xCF, 0x03, 0x08, 0x07, 0x51, 0x09, 0xFE, 0xCB, 0xFD, 0xD2, 0xB2, 0x04, 0x08, 0xDF,
+/* 0510 */  0x22, 0xC7, 0xFB, 0x04, 0x08, 0x31, 0x83, 0x02, 0xC6, 0xD7, 0xC6, 0x51, 0x0A, 0xFE, 0xB6, 0xFD,
+/* 0520 */  0x62, 0x4C, 0x1F, 0xDF, 0x06, 0xCF, 0xC8, 0xFC, 0x01, 0xEF, 0x04, 0xCF, 0xC8, 0xFC, 0x00, 0xC0,
+/* 0530 */  0xEE, 0x53, 0xFE, 0xC0, 0xEE, 0x4D, 0xFE, 0xC7, 0xC1, 0xFB, 0x04, 0x08, 0x8B, 0x31, 0x19, 0x6C,
+/* 0540 */  0x01, 0x61, 0x58, 0x9B, 0xC0, 0xC6, 0xD7, 0xD7, 0xFB, 0x80, 0xFB, 0xF6, 0x47, 0xDD, 0x13, 0xB7,
+/* 0550 */  0xC7, 0x17, 0x31, 0x2D, 0x04, 0x00, 0xFB, 0x16, 0x8C, 0x02, 0x9E, 0xFC, 0xAB, 0xC6, 0x61, 0xCA,
+/* 0560 */  0xEF, 0xE9, 0xEF, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+/* 0570 */  0xFF,
+};
+

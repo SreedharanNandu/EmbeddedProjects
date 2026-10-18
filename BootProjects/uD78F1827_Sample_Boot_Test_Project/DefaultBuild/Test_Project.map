@@ -1,0 +1,322 @@
+
+
+
+78K0R Linker W1.80                            Date:18 Oct 2026 Page:   1
+
+Command:   -yC:\Program Files (x86)\Renesas Electronics\CS+\CACX\Device\
+           78K0R\Devicefile -_msgoff -dsample_c.dr -oDefaultBuild\Test_P
+           roject.lmf -gi0ffffffffffffffffffffh -mi0 -s -pDefaultBuild\T
+           est_Project.map C:\Program Files (x86)\Renesas Electronics\CS
+           +\CACX\CA78K0R\V1.72\lib78k0r\s0rll.rel DefaultBuild\fsl_user
+           .rel DefaultBuild\sample_c.rel -bfsl.lib -bcl0rdm.lib -bcl0rm
+           .lib -bcl0rmf.lib -iC:\Program Files (x86)\Renesas Electronic
+           s\CS+\CACX\CA78K0R\V1.72\lib78k0r
+Para-file:
+Out-file:  DefaultBuild\Test_Project.lmf
+Map-file:  DefaultBuild\Test_Project.map
+Direc-file:sample_c.dr
+Directive: ;===========================================================
+           ;                                                           
+           ;  Project     = Sample program for flash self-programming  
+           ;  Module      = sample_c.dr                                
+           ;  Version     = V2.30                                      
+           ;  Target CPU  = 78K0R/KE3-L( uPD78F1009 / QB-78K0RKE3L-TB )
+           ;  Environment = PM plus(V6.31)                             
+           ;                RA78K0R(V1.31)                             
+           ;                CC78K0R(V2.10)                             
+           ;  Date        = July 23, 2009                              
+           ;                                                           
+           ;===========================================================
+           ;                       COPYRIGHT                           
+           ;===========================================================
+           ;                                                           
+           ;  Copyright (C) NEC Electronics Corporation 2008           
+           ;  NEC ELECTRONICS CONFIDENTIAL AND PROPRIETARY             
+           ;  All rights reserved by NEC Electronics Corporation.      
+           ;  This program must be used solely for the purpose for     
+           ;  which it was furnished by NEC Electronics Corporation.   
+           ;  No part of this program may be reproduced or disclosed   
+           ;  to others, in any form, without the prior written        
+           ;  permission of NEC Electronics Corporation.               
+           ;  Use of copyright notice dose not evidence publication    
+           ;  of the program.                                          
+           ;                                                           
+           ;===========================================================
+           ;
+           ;***********************************************************
+           ; Redefined ROM area
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Define new memory entry for boot cluster 0
+           ; ----------------------------------------------------------
+           MEMORY BCL0      : ( 000000H, 002000H )
+           
+           ; ----------------------------------------------------------
+           ; Define new memory entry for boot cluster 1
+           ; ----------------------------------------------------------
+           MEMORY BCL1      : ( 002000H, 002000H )
+           
+           ; ----------------------------------------------------------
+           ; Redefined default code segment ROM
+           ; ----------------------------------------------------------
+           MEMORY ROM       : ( 004000H, 000800H )
+           
+           ; ----------------------------------------------------------
+           ; Define new memory entry for fsl-code area
+           ; ----------------------------------------------------------
+           MEMORY ROM_FSL   : ( 004800H, 000400H )
+           
+           ; ----------------------------------------------------------
+           ; Define new memory entry for write-data area
+           ; ----------------------------------------------------------
+           MEMORY ROM_DATA  : ( 004C00H, 000800H )
+           
+           
+           ;***********************************************************
+           ; Redefined RAM area
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Redefined default data segment RAM
+           ; ----------------------------------------------------------
+           MEMORY RAM       : ( 0FFB00H, 000320H )
+           
+           ; ----------------------------------------------------------
+           ; Define new memory entry for saddr area
+           ; ----------------------------------------------------------
+           MEMORY RAM_SADDR : ( 0FFE20H, 0001E0H )
+           
+           
+           ;***********************************************************
+           ; Library(fsl.lib) segment
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Merge FSL_CODE segment
+           ; ----------------------------------------------------------
+           MERGE FSL_CODE := ROM_FSL
+           
+           ; ----------------------------------------------------------
+           ; Merge FSL_CNST segment
+           ; ----------------------------------------------------------
+           MERGE FSL_CNST := ROM_FSL
+           
+           ; ----------------------------------------------------------
+           ; Merge FSL_DATA segment
+           ; ----------------------------------------------------------
+           MERGE FSL_DATA := RAM
+           
+           
+           ;***********************************************************
+           ; fsl_user.c segment
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Merge FSL_UCOD segment
+           ; ----------------------------------------------------------
+           MERGE FSL_UCOD := ROM_FSL
+           
+           ; ----------------------------------------------------------
+           ; Merge FSL_UDAT segment
+           ; ----------------------------------------------------------
+           MERGE FSL_UDAT := RAM
+           
+           
+           ;***********************************************************
+           ; sample_c.c segment
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Merge SAM_CODE segment
+           ; ----------------------------------------------------------
+           MERGE SAM_CODE := ROM
+           
+           ; ----------------------------------------------------------
+           ; Merge SAM_CNST segment
+           ; ----------------------------------------------------------
+           MERGE SAM_CNST := ROM_DATA
+           
+           ;***********************************************************
+           ; run-time library segment ( 0000H - FFFFH )
+           ;***********************************************************
+           ; ----------------------------------------------------------
+           ; Merge @@LCODE,@@LCODEL(run-time library) segment
+           ; ----------------------------------------------------------
+           MERGE @@LCODE  := ROM
+           MERGE @@LCODEL := ROM
+
+
+*** Link information ***
+
+    30 output segment(s)
+  DAFH byte(s) real data
+   521 symbol(s) defined
+
+
+*** Memory map ***
+
+
+  SPACE=REGULAR
+
+  MEMORY=BCL0
+  BASE ADDRESS=00000H   SIZE=02000H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         @@VECT00                     00000H    00002H  CSEG AT
+                  @@VECT00 @cstart    00000H    00002H
+* gap *                               00002H    000BEH
+         ?CSEGOB0                     000C0H    00004H  CSEG OPT_BYTE
+         @@CODE                       000C4H    00000H  CSEG BASE
+                  @@CODE   user_C     000C4H    00000H
+                  @@CODE   sample_c   000C4H    00000H
+         @@BASE                       000C4H    00000H  CSEG BASE
+                  @@BASE   user_C     000C4H    00000H
+                  @@BASE   sample_c   000C4H    00000H
+         ?CSEGSI                      000C4H    0000AH  CSEG
+* gap *                               000CEH    01F32H
+
+  MEMORY=BCL1
+  BASE ADDRESS=02000H   SIZE=02000H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+* gap *                               02000H    02000H
+
+  MEMORY=ROM
+  BASE ADDRESS=04000H   SIZE=00800H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         @@LCODE                      04000H    00144H  CSEG
+                  @@LCODE  @cstart    04000H    000ADH
+                  @@LCODE  @lurem     040ADH    0003CH
+                  @@LCODE  @ladd      040E9H    0000FH
+                  @@LCODE  @lsub      040F8H    00012H
+                  @@LCODE  @llsh      0410AH    0001BH
+                  @@LCODE  @lursh     04125H    0001FH
+         @@CNST                       04144H    00000H  CSEG UNITP
+                  @@CNST   @cstart    04144H    00000H
+         SAM_CODE                     04144H    004ABH  CSEG
+                  SAM_CODE sample_c   04144H    004ABH
+         @@LCODEL                     045EFH    0007BH  CSEG
+                  @@LCODEL @hdwinit   045EFH    00001H
+                  @@LCODEL @stkinit   045F0H    00044H
+                  @@LCODEL exit       04634H    0001CH
+                  @@LCODEL memcpy_n   04650H    0001AH
+         @@CNSTL                      0466AH    00000H  CSEG PAGE64KP
+                  @@CNSTL  @cstart    0466AH    00000H
+         @@CNSTL                      0466AH    00000H  CSEG PAGE64KP
+                  @@CNSTL  user_C     0466AH    00000H
+         @@CNSTL                      0466AH    00000H  CSEG PAGE64KP
+                  @@CNSTL  sample_c   0466AH    00000H
+         @@R_INIT                     0466AH    00000H  CSEG UNIT64KP
+                  @@R_INIT @cstart    0466AH    00000H
+                  @@R_INIT user_C     0466AH    00000H
+                  @@R_INIT sample_c   0466AH    00000H
+                  @@R_INIT @rom       0466AH    00000H
+         @@RLINIT                     0466AH    00000H  CSEG UNIT64KP
+                  @@RLINIT @cstart    0466AH    00000H
+                  @@RLINIT user_C     0466AH    00000H
+                  @@RLINIT sample_c   0466AH    00000H
+                  @@RLINIT @rom       0466AH    00000H
+         @@R_INIS                     0466AH    00000H  CSEG UNIT64KP
+                  @@R_INIS @cstart    0466AH    00000H
+                  @@R_INIS user_C     0466AH    00000H
+                  @@R_INIS sample_c   0466AH    00000H
+                  @@R_INIS @rom       0466AH    00000H
+         @@CALT                       0466AH    00000H  CSEG
+                  @@CALT   @cstart    0466AH    00000H
+                  @@CALT   user_C     0466AH    00000H
+                  @@CALT   sample_c   0466AH    00000H
+* gap *                               0466AH    00196H
+
+  MEMORY=ROM_FSL
+  BASE ADDRESS=04800H   SIZE=00400H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         FSL_CNST                     04800H    00002H  CSEG
+                  FSL_CNST user_C     04800H    00002H
+         FSL_CODE                     04802H    0032BH  CSEG
+                  FSL_CODE fsl_block_cmd
+                                      04802H    0002BH
+                  FSL_CODE fsl_block_check
+                                      0482DH    00013H
+                  FSL_CODE fsl_common
+                                      04840H    0014FH
+                  FSL_CODE fsl_reset
+                                      0498FH    00001H
+                  FSL_CODE fsl_si_ibf
+                                      04990H    00064H
+                  FSL_CODE fsl_phySwap
+                                      049F4H    0004DH
+                  FSL_CODE fsl_si_common
+                                      04A41H    00061H
+                  FSL_CODE fsl_swap   04AA2H    00030H
+                  FSL_CODE fsl_write
+                                      04AD2H    00052H
+                  FSL_CODE fsl_si_swap
+                                      04B24H    00009H
+         FSL_UCOD                     04B2DH    00008H  CSEG
+                  FSL_UCOD user_C     04B2DH    00008H
+* gap *                               04B35H    000CBH
+
+  MEMORY=ROM_DATA
+  BASE ADDRESS=04C00H   SIZE=00800H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         SAM_CNST                     04C00H    00400H  CSEG
+                  SAM_CNST sample_c   04C00H    00400H
+* gap *                               05000H    00400H
+
+  MEMORY=RAM
+  BASE ADDRESS=FFB00H   SIZE=00320H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+         FSL_UDAT                     FFB00H    00100H  DSEG
+                  FSL_UDAT user_C     FFB00H    00100H
+         @@DATA                       FFC00H    000C6H  DSEG BASEP
+                  @@DATA   @cstart    FFC00H    000BAH
+                  @@DATA   sample_c   FFCBAH    0000CH
+                  @@DATA   @rom       FFCC6H    00000H
+         @@INIT                       FFCC6H    00000H  DSEG BASEP
+                  @@INIT   @cstart    FFCC6H    00000H
+                  @@INIT   user_C     FFCC6H    00000H
+                  @@INIT   sample_c   FFCC6H    00000H
+                  @@INIT   @rom       FFCC6H    00000H
+         FSL_DATA                     FFCC6H    00010H  DSEG UNITP
+                  FSL_DATA fsl_common
+                                      FFCC6H    00010H
+         @@INIS                       FFCD6H    00000H  DSEG UNITP
+                  @@INIS   @cstart    FFCD6H    00000H
+                  @@INIS   user_C     FFCD6H    00000H
+                  @@INIS   sample_c   FFCD6H    00000H
+                  @@INIS   @rom       FFCD6H    00000H
+         @@DATS                       FFCD6H    00000H  DSEG UNITP
+                  @@DATS   @cstart    FFCD6H    00000H
+                  @@DATS   user_C     FFCD6H    00000H
+                  @@DATS   sample_c   FFCD6H    00000H
+                  @@DATS   @rom       FFCD6H    00000H
+         @@INITL                      FFCD6H    00000H  DSEG UNIT64KP
+                  @@INITL  @cstart    FFCD6H    00000H
+                  @@INITL  user_C     FFCD6H    00000H
+                  @@INITL  sample_c   FFCD6H    00000H
+                  @@INITL  @rom       FFCD6H    00000H
+         @@DATAL                      FFCD6H    00000H  DSEG UNIT64KP
+                  @@DATAL  @cstart    FFCD6H    00000H
+                  @@DATAL  user_C     FFCD6H    00000H
+                  @@DATAL  sample_c   FFCD6H    00000H
+                  @@DATAL  @rom       FFCD6H    00000H
+         @@BITS                       FFCD6H    00000H  BSEG
+                  @@BITS   @cstart    FFCD6H.0  00000H.0
+                  @@BITS   user_C     FFCD6H.0  00000H.0
+                  @@BITS   sample_c   FFCD6H.0  00000H.0
+* gap *                               FFCD6H    0014AH
+
+  MEMORY=RAM_SADDR
+  BASE ADDRESS=FFE20H   SIZE=001E0H
+         OUTPUT   INPUT    INPUT      BASE      SIZE
+         SEGMENT  SEGMENT  MODULE     ADDRESS
+* gap *                               FFE20H    000B8H
+         @@RTARG0                     FFED8H    00008H  DSEG AT
+                  @@RTARG0 @RTARG0    FFED8H    00008H
+* gap *                               FFEE0H    00020H
+* gap (Not Free Area) *               FFF00H    00100H
+
+
+ Target chip : uPD78F1827_48
+ Device file : V1.01
+
