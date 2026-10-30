@@ -1,0 +1,20 @@
+;***********************************************************
+; App Layout
+;***********************************************************
+MEMORY RST_VECT            : ( 000000H, 000004H )   ; Reset Vector 
+MEMORY FBL_VECT            : ( 000004H, 00007CH )   ; Interrupt Vector Table
+MEMORY HDR_AREA            : ( 000080H, 000058H )   ; CALLT, option byte, security ID, OCD (linker-made segments)
+MEMORY APP_FBL_ID          : ( 004000H, 000001H )   ; Interrupt Vector relocated or not Id
+MEMORY APP_VECT            : ( 004001H, 0000BFH )   ; Relocated Interrupt Vector Table
+MEMORY APP_FBL_SHARED      : ( 0000D8H, 000018H )   ; Shared Between App and Boot 
+MEMORY ROM                 : ( 0040C0H, 00BF3FH )   ; Code of App
+MEMORY RAM_NOINIT          : ( 0FE700H, 000008H )   ; Un intialized RAM for Boot Prog Request
+MEMORY RAM                 : ( 0FE708H, 001718H )   ; App scratchpad RAM
+MEMORY RAM_SADDR           : ( 0FFE20H, 0001E0H )   ; App SFR Address
+
+MERGE APPVECT       := APP_VECT        ; segment name in App_Vect.asm
+MERGE APPFBLID      := APP_FBL_ID      ; segment name in App_Vect.asm
+MERGE APPFBLSH      := APP_FBL_SHARED  ; segment name in App_Vect.asm
+MERGE FBL_NOIN      := RAM_NOINIT      ; 
+
+

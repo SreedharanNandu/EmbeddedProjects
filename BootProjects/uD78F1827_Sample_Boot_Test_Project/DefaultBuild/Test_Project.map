@@ -1,7 +1,7 @@
 
 
 
-78K0R Linker W1.80                            Date:18 Oct 2026 Page:   1
+78K0R Linker W1.80                            Date:22 Oct 2026 Page:   1
 
 Command:   -yC:\Program Files (x86)\Renesas Electronics\CS+\CACX\Device\
            78K0R\Devicefile -_msgoff -dsample_c.dr -oDefaultBuild\Test_P
@@ -70,6 +70,9 @@ Directive: ;===========================================================
            ; Define new memory entry for write-data area
            ; ----------------------------------------------------------
            MEMORY ROM_DATA  : ( 004C00H, 000800H )
+           
+           
+           
            
            
            ;***********************************************************

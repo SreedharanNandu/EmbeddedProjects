@@ -1,0 +1,270 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\ftmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:ftmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neovidriver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:neovidriver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neovicanbus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:neovicanbus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\udsflasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:udsflasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|c:\\nandu\\per\\projects\\boot_project\\flash_tool\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\ftmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:ftmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|c:\\nandu\\per\\projects\\boot_project\\flash_tool\\ftmain.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:ftmain.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\isotp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:isotp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neovithread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:neovithread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neoviutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:neoviutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\partition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:partition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\flashimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|FlashTool.csproj|solutionrelative:flashimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neovithread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|solutionrelative:neovithread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\neoviutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|solutionrelative:neoviutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\icsneo40.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66FA5839-BE4D-4A66-A0A4-71C4E43D6A94}|U625FPS.csproj|solutionrelative:icsneo40.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UdsFlasher.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\UdsFlasher.cs",
+              "RelativeDocumentMoniker": "UdsFlasher.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\UdsFlasher.cs",
+              "RelativeToolTip": "UdsFlasher.cs",
+              "ViewState": "AgIAAPoCAAAAAAAAAAAtwAsDAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T10:02:11.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T03:56:24.802Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NeoViCanBus.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoViCanBus.cs",
+              "RelativeDocumentMoniker": "NeoViCanBus.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoViCanBus.cs",
+              "RelativeToolTip": "NeoViCanBus.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T15:34:36.044Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NeoVIDriver.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIDriver.cs",
+              "RelativeDocumentMoniker": "NeoVIDriver.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIDriver.cs",
+              "RelativeToolTip": "NeoVIDriver.cs",
+              "ViewState": "AgIAADEBAAAAAAAAAAAAAD4BAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T15:34:32.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FTMain.cs [Design]",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.cs",
+              "RelativeDocumentMoniker": "FTMain.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.cs [Design]",
+              "RelativeToolTip": "FTMain.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T06:24:50.951Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FTMain.Designer.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.Designer.cs",
+              "RelativeDocumentMoniker": "FTMain.Designer.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.Designer.cs",
+              "RelativeToolTip": "FTMain.Designer.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAD4v0EAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T05:41:56.73Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FTMain.resx",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.resx",
+              "RelativeDocumentMoniker": "FTMain.resx",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FTMain.resx",
+              "RelativeToolTip": "FTMain.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2026-10-30T04:37:12.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IsoTp.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\IsoTp.cs",
+              "RelativeDocumentMoniker": "IsoTp.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\IsoTp.cs",
+              "RelativeToolTip": "IsoTp.cs",
+              "ViewState": "AgIAAEEBAAAAAAAAAAAUwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T10:44:25.785Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "NeoVIUtil.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIUtil.cs",
+              "RelativeDocumentMoniker": "NeoVIUtil.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIUtil.cs",
+              "RelativeToolTip": "NeoVIUtil.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T05:18:29.194Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Partition.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\Partition.cs",
+              "RelativeDocumentMoniker": "Partition.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\Partition.cs",
+              "RelativeToolTip": "Partition.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAA6wEQAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T03:56:37.66Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "NeoviThread.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoviThread.cs",
+              "RelativeDocumentMoniker": "NeoviThread.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoviThread.cs",
+              "RelativeToolTip": "NeoviThread.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAANkAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T05:18:29.161Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FlashImage.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FlashImage.cs",
+              "RelativeDocumentMoniker": "FlashImage.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\FlashImage.cs",
+              "RelativeToolTip": "FlashImage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T03:55:10.98Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "NeoviThread.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoviThread.cs",
+              "RelativeDocumentMoniker": "NeoviThread.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoviThread.cs",
+              "RelativeToolTip": "NeoviThread.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAANkAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T03:59:01.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "NeoVIUtil.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIUtil.cs",
+              "RelativeDocumentMoniker": "NeoVIUtil.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\NeoVIUtil.cs",
+              "RelativeToolTip": "NeoVIUtil.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T03:58:18.51Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "icsneo40.cs",
+              "DocumentMoniker": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\icsneo40.cs",
+              "RelativeDocumentMoniker": "icsneo40.cs",
+              "ToolTip": "C:\\Nandu\\Per\\Projects\\Boot_Project\\Flash_Tool\\icsneo40.cs",
+              "RelativeToolTip": "icsneo40.cs",
+              "ViewState": "AgIAAJQCAAAAAAAAAAAYwKECAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T03:57:46.791Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

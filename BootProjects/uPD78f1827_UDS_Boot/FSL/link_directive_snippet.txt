@@ -1,0 +1,14 @@
+FSL segment placement for the bootloader (add to your lk.dr / CS+ link directive).
+Adapt MEMORY names to the ones already in your directive; I have not seen your lk.dr.
+FSL code + constants must live in the boot block (0x0000-0x3FFF), never in the app area
+that is being erased. The FSL RAM segments go to normal RAM.
+
+MERGE FSL_UCOD := ROM        ; fsl_user.c code   (ROM = boot-block region)
+MERGE FSL_CODE := ROM        ; fsl.lib code
+MERGE FSL_CNST := ROM        ; fsl.lib + fsl_user.c constants
+MERGE FSL_UDAT := RAM        ; fsl_data_buffer (256 bytes)
+MERGE FSL_DATA := RAM        ; fsl.lib data
+
+If your directive has no MEMORY entry that is limited to 000000H-003FFFH, add e.g.
+MEMORY BOOT_ROM : ( 000000H, 004000H )
+and merge the three ROM segments to BOOT_ROM instead.

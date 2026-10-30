@@ -1,0 +1,27 @@
+;***********************************************************
+; Keep the stack out of FFE20H-FFEFFH.
+; Flash self-programming cannot use that range as stack
+; (78K0R/Fx3 manual, 24.10 caution 5).
+; Same RAM / saddr split as the FSL sample (sample_c.dr).
+;***********************************************************
+MEMORY RST_VECT            : ( 000000H, 000004H )   ; Reset Vector 
+MEMORY FBL_VECT            : ( 000004H, 00007CH )   ; Interrupt Vector Table
+MEMORY HDR_AREA            : ( 000080H, 000058H )   ; CALLT, option byte, security ID, OCD (linker-made segments)
+MEMORY APP_FBL_ID          : ( 004000H, 000001H )   ; Interrupt Vector relocated or not Id
+MEMORY APP_VECT            : ( 004001H, 0000BFH )   ; Relocated Interrupt Vector Table
+MEMORY APP_FBL_SHARED      : ( 0000D8H, 000018H )   ; Shared Between App and Boot 
+MEMORY ROM                 : ( 0000F0H, 003F10H )   ; Code of Boot
+MEMORY RAM_NOINIT          : ( 0FE700H, 000008H )   ; Un intialized RAM for Boot Prog Request
+MEMORY RAM                 : ( 0FE708H, 001718H )   ; Boot scratchpad RAM
+MEMORY RAM_SADDR           : ( 0FFE20H, 0001E0H )   ; Boot SFR Address
+
+MERGE APPVECT       := APP_VECT        ; segment name in App_Vect.asm
+MERGE APPFBLID      := APP_FBL_ID      ; segment name in App_Vect.asm
+MERGE APPFBLSH      := APP_FBL_SHARED  ; segment name in App_Vect.asm
+MERGE FSL_UCOD      := ROM             ; fsl_user.c code   (ROM = boot-block region)
+MERGE FSL_CODE      := ROM             ; fsl.lib code
+MERGE FSL_CNST      := ROM             ; fsl.lib + fsl_user.c constants
+MERGE FSL_UDAT      := RAM             ; fsl_data_buffer (256 bytes)
+MERGE FSL_DATA      := RAM             ; fsl.lib data
+MERGE FBL_NOIN      := RAM_NOINIT
+

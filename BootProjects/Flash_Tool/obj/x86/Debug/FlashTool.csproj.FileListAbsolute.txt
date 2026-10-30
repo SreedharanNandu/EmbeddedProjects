@@ -1,0 +1,12 @@
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\bin\Debug\icsneo40.dll
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\bin\Debug\FlashTool.ini
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\bin\Debug\FlashTool.exe.config
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\bin\Debug\FlashTool.exe
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\bin\Debug\FlashTool.pdb
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.csproj.AssemblyReference.cache
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.FTMain.resources
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.Properties.Resources.resources
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.csproj.GenerateResource.cache
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.csproj.CoreCompileInputs.cache
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.exe
+C:\Nandu\Per\Projects\Boot_Project\Flash_Tool\obj\x86\Debug\FlashTool.pdb
