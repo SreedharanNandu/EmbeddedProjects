@@ -55,6 +55,9 @@
     <Compile Include="FTCommMessage.cs" />
     <Compile Include="FTCommReceiveMessage.cs" />
     <Compile Include="FlashTrace.cs" />
+    <Compile Include="FTProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FlashSettings.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="FTUtil.cs" />

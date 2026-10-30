@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FTMain));
             this.Connect = new System.Windows.Forms.Button();
             this.Program = new System.Windows.Forms.Button();
-            this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.ProgressBar = new FlashTool.FTProgressBar();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.Open = new System.Windows.Forms.Button();
             this.Progress = new System.Windows.Forms.Label();
@@ -62,8 +62,6 @@
             // 
             // ProgressBar
             // 
-            this.ProgressBar.BackColor = System.Drawing.SystemColors.Control;
-            this.ProgressBar.ForeColor = System.Drawing.Color.DodgerBlue;
             this.ProgressBar.Location = new System.Drawing.Point(134, 88);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(631, 23);
@@ -129,6 +127,10 @@
             // FTMain
             // 
             this.ClientSize = new System.Drawing.Size(900, 151);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;   // size locked: no dragging on edges or corners
+            this.MaximizeBox = false;
+            this.MinimizeBox = true;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelCAN);
             this.Controls.Add(this.Progress);
@@ -137,12 +139,9 @@
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.Program);
             this.Controls.Add(this.Connect);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "FTMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FlashTool - 1.0";
+            this.Text = "FlashTool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.ResumeLayout(false);
@@ -165,7 +164,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Connect;
         private System.Windows.Forms.Button Program;
-        private System.Windows.Forms.ProgressBar ProgressBar;
+        private FlashTool.FTProgressBar ProgressBar;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button Open;
         private System.Windows.Forms.Label Progress;

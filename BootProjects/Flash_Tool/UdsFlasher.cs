@@ -421,6 +421,7 @@ namespace FlashTool
                 Array.Copy(r, 3, data, 0, data.Length);
                 if (ModeBootData != null && StartsWith(data, ModeBootData)) return EcuMode.Boot;
                 if (ModeAppData != null && StartsWith(data, ModeAppData)) return EcuMode.App;
+
                 return ModeBootData == null ? EcuMode.Boot : EcuMode.App;
             }
             catch (UdsException ex)
@@ -480,6 +481,48 @@ namespace FlashTool
             uds.Request(send);
         }
 
+        // ---- ECU info right after Connect (before the user decides to flash) ----
+        public bool ReadInfoOnConnect = true;
+        public ushort InfoHwDid = 0xF191;                   // hardware version
+        public ushort InfoSwDid = 0xF181;                   // application software version / part number
+
+        // Called after Connect: 10 01, 10 03, then the mode DID (F180) to see what is running. In the application
+        // the hardware version (F191) and the application software (F181) are read, in the boot the boot's own info.
+        // The result goes to Info (shown on the panel) and into the log. Nothing is flashed or changed.
+        public void ReadEcuInfo()
+        {
+            FlashTrace.Reset();
+            Step("ECU info after connect");
+
+            // both session requests are tolerant: a boot may refuse one of them, a silent ECU is handled below
+            Tolerant("Default session (10 01)", 0x10, 0x01);
+            Tolerant("Extended session (10 03)", 0x10, 0x03);
+
+            EcuMode mode = ProbeModeLogged("Mode check");
+            if (mode == EcuMode.Silent)
+            {
+                Thread.Sleep(300);
+                mode = ProbeModeLogged("Mode check (2nd try)");
+            }
+
+            if (mode == EcuMode.Silent)
+            {
+                Info("ECU: no answer (check power, CAN wiring, baud rate and IDs)");
+                return;
+            }
+
+            if (mode == EcuMode.Boot)
+            {
+                if (LogBootInfoEnabled) LogBootInfo();
+                else Info("Boot running");
+                return;
+            }
+
+            string hw = ReadText(InfoHwDid, "Hardware version");
+            string sw = ReadText(InfoSwDid, "Application software");
+            Info("Application running  |  HW " + hw + "  |  App SW " + sw);
+        }
+
         // log what the boot reports before the flash: serial number (F18C) and programmed status (F1A0)
         public bool LogBootInfoEnabled = true;
         private string infoBoot = "?", infoHw = "?", infoSerial = "?";
@@ -505,8 +548,8 @@ namespace FlashTool
                 Step("ECU serial number (F18C): " + serial + "  [" + Hex(s) + "]");
             }
 
-            string hwVersion = ReadText(0xF191, "Hardware version");
-            string appPart = ReadText(0xF181, "Application part number");
+            string hwVersion = ReadText(InfoHwDid, "Hardware version");
+            string appPart = ReadText(InfoSwDid, "Application software");
 
             r = ReadInfo(0xF1A0);
             if (r != null)
@@ -527,7 +570,7 @@ namespace FlashTool
             }
 
             infoBoot = version; infoHw = hwVersion; infoSerial = serial;
-            Info("Boot " + version + "  |  HW " + hwVersion + "  |  S/N " + serial + "  |  App P/N " + appPart + "  |  App: " + status);
+            Info("Boot " + version + "  |  HW " + hwVersion + "  |  S/N " + serial + "  |  App SW " + appPart + "  |  App: " + status);
         }
 
         // after the reset: session change (10 03, else 10 01), then 22 F181 to read the part number of what is now running
@@ -561,7 +604,7 @@ namespace FlashTool
                 Step(msg);
                 return;
             }
-            Info("Boot " + infoBoot + "  |  HW " + infoHw + "  |  S/N " + infoSerial + "  |  App P/N " + pn
+            Info("Boot " + infoBoot + "  |  HW " + infoHw + "  |  S/N " + infoSerial + "  |  App SW " + pn
                  + "  |  App: programmed (" + (mode == EcuMode.Boot ? "boot" : "application") + " running)");
         }
 

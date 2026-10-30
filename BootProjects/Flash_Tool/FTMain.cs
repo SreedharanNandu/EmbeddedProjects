@@ -77,7 +77,7 @@ namespace FlashTool
 
         private string lastFlashStatus = "";
         private int completeTick = 0;                       // when the flash reported complete (0 = not yet)
-        private const int BarSettleMs = 800;                // time the progress bar animation needs to reach the end
+        private const int BarSettleMs = 250;                // the bar is drawn without animation: only a short pause before "Complete"
         public bool setDefaultValuesNeeded = true;
         private void MainTimerTick(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -129,7 +129,7 @@ namespace FlashTool
             if (started)
             {
                 if (Progress.Text != progressText) Progress.Text = progressText;
-                if (ProgressBar.Value != level) ProgressBar.Value = level;
+                if (ProgressBar.Value != level) { ProgressBar.Value = level; ProgressBar.Invalidate(); }
             }
 
             // tool version + what the boot reported (version, serial, programmed status)

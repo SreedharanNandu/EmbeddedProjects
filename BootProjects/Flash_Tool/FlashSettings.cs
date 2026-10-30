@@ -118,6 +118,9 @@ namespace FlashTool
             f.TesterPresentIntervalMs = ini.GetInt(S, "TesterPresentIntervalMs", f.TesterPresentIntervalMs);
 
             // ---- reads / writes before the erase
+            f.ReadInfoOnConnect = ini.GetBool(S, "ReadInfoOnConnect", f.ReadInfoOnConnect);
+            f.InfoHwDid = GetUShort(ini, S, "InfoHwDid", f.InfoHwDid);
+            f.InfoSwDid = GetUShort(ini, S, "InfoSwDid", f.InfoSwDid);
             f.LogBootInfoEnabled = ini.GetBool(S, "ReadBootInfo", f.LogBootInfoEnabled);
             f.ReadDids = ini.GetHexList(S, "ReadDids", f.ReadDids);
             f.ReadDidsMustSucceed = ini.GetBool(S, "ReadDidsMustSucceed", f.ReadDidsMustSucceed);

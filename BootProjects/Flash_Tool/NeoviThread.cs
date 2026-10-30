@@ -188,6 +188,48 @@ namespace FlashTool
             if (this.flashRunning) return;
             this.flashStatus = "";
             this.progress_level = 0;
+            this.ecuInfo = "";                          // the info belongs to the ECU of the connection that ended
+        }
+
+        // Right after Connect: find out what the ECU is running and show its software version, so that the user
+        // knows what is in the ECU before reflashing. Disconnect or Program ends it early.
+        private void ReadEcuInfoOnConnect()
+        {
+            try
+            {
+                IniFile ini = FlashSettings.Load();
+                int requestId = FlashSettings.RequestId(ini, this.commMessages_CAN[(int)FTCommMessageId_CAN.DiagReq].messageId);
+                int responseId = FlashSettings.ResponseId(ini, this.commMessages_CAN[(int)FTCommMessageId_CAN.DiagResp].messageId);
+
+                NeoViCanBus bus = new NeoViCanBus(this.myNeovi);
+                bus.AbortCheck = () => this.requestedState != NeoviState.Connected || this.flashRequested;
+                IsoTp tp = new IsoTp(bus, requestId, responseId);
+                UdsClient uds = new UdsClient(tp);
+                UdsFlasher flasher = new UdsFlasher(uds);
+                flasher.Log = s => { };                         // the steps go to the log file only: no progress bar for this
+                flasher.Info = s => this.ecuInfo = s;
+                flasher.CancelCheck = bus.AbortCheck;
+
+                FlashSettings.Apply(ini, tp, uds, flasher);
+                FlashSettings.Report(ini);
+                if (!flasher.ReadInfoOnConnect) return;
+
+                this.ecuInfo = "reading ECU info...";
+                flasher.ReadEcuInfo();
+            }
+            catch (OperationCanceledException)
+            {
+                this.ecuInfo = "";
+            }
+            catch (Exception ex)
+            {
+                FlashTrace.Write("ERROR", "ECU info after connect: " + ex.Message);
+                this.ecuInfo = "ECU info not read: " + ex.Message;
+            }
+            finally
+            {
+                DrainReceiveBuffer();
+            }
         }
 
         // throw away what the driver buffered while the flash was running and clear the CAN error flag
@@ -221,6 +263,7 @@ namespace FlashTool
                         {
                             this.currentState = NeoviState.Connected;
                             ClearFlashDisplay();                    // a new connection starts without the old progress / result
+                            ReadEcuInfoOnConnect();                 // 10 01, 10 03, F180, then F191 / F181 in the application
                             #if TEST_A_CAN_MESSAGE
                             // one test frame right after connect: ID 0x7E0, 8 bytes
                             transmitMessage(FTCommBus.CAN, new FTCommMessage(FTMessageType.WriteCAN, 0x7E0, new byte[] { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 }));                        
