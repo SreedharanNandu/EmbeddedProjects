@@ -15,10 +15,10 @@
 /*----------------------------------------------------------------------------------------------*
  * Layout of the last 16 bytes of the application area (end of the last 1 KB erase block)       *
  *                                                                                              *
- *   0x17BF0  sum       16-bit sum in the low half, upper half stays FFFF   \ written first,    *
- *   0x17BF4  length    image length in bytes, little endian                 / one FSL write    *
- *   0x17BF8  PATTERN   APP_VALID_MAGIC                                       written LAST      *
- *   0x17BFC  MASK      erased (FFFFFFFF) while valid or blank; programmed with the inverse     *
+ *   0xXXX0  sum       16-bit sum in the low half, upper half stays FFFF   \ written first,    *
+ *   0xXXX4  length    image length in bytes, little endian                 / one FSL write    *
+ *   0xXXX8  PATTERN   APP_VALID_MAGIC                                       written LAST      *
+ *   0xXXXC  MASK      erased (FFFFFFFF) while valid or blank; programmed with the inverse     *
  *                      of the magic to REVOKE the application (no erase needed)                *
  *                                                                                              *
  *   state PRESENT : pattern == magic and mask erased and length plausible                      *
