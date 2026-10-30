@@ -118,6 +118,7 @@ static void UDS_HandleRequestDownload(u8 *msg, u16 length);
 static void UDS_HandleTransferData(u8 *msg, u16 length);
 static void UDS_HandleRequestTransferExit(u8 *msg, u16 length);
 static void UDS_HandleControlDTC(u8 *msg, u16 length);
+static void UDS_CommunicationControl(u8 *msg, u16 length);
 
 
 extern void UDS_ForceReset(void);      /* App_Reset.asm */
@@ -214,11 +215,13 @@ static void UDS_ProcessRequest(u8 *msg, u16 length)
         case UDS_SID_REQUEST_TRANSFER_EXIT:
             UDS_HandleRequestTransferExit(msg, length);
             break;
-        case UDS_SID_CONTROL_DTC:	    
+        case UDS_SID_CONTROL_DTC:
             UDS_HandleControlDTC(msg, length);
             break;
-
-	    default:
+        case UDS_SID_COMMUNICATION_CONTROL:
+            UDS_CommunicationControl(msg, length);
+            break;
+        default:
             UDS_SendNegativeResponse(msg, msg[0], UDS_NRC_SERVICE_NOT_SUPPORTED);
             break;
     }
@@ -265,6 +268,56 @@ static void UDS_HandleDiagnosticSessionControl(u8 *msg, u16 length)
         UDS_SendNegativeResponse(msg, UDS_SID_DIAGNOSTIC_SESSION_CONTROL, UDS_NRC_SUB_FUNCTION_NOT_SUPPORTED);
     }
 }
+
+/*==============================================================================================*/
+/* Function: UDS_CommunicationControl (0x28)                                                        */
+/*==============================================================================================*/
+static void UDS_CommunicationControl(u8 *msg, u16 length)
+{
+    u8 controlType;
+    u8 commType;
+
+    if(length != 3)
+    {
+        UDS_SendNegativeResponse(msg, UDS_SID_COMMUNICATION_CONTROL, UDS_NRC_INCORRECT_MESSAGE_LENGTH);
+        return;
+    }
+
+    controlType = msg[1];
+    commType = msg[2];
+
+    if(controlType == 0x00)/*Enable RX and enable TX*/
+    {
+        /* Send positive response */
+        msg[0] = UDS_SID_COMMUNICATION_CONTROL + UDS_POSITIVE_RESPONSE_OFFSET;
+        msg[1] = controlType;
+        UDS_SendResponse(2);
+    }
+    else if(controlType == 0x01)/*Enable RX and disable TX*/
+    {
+        msg[0] = UDS_SID_COMMUNICATION_CONTROL + UDS_POSITIVE_RESPONSE_OFFSET;
+        msg[1] = controlType;
+        UDS_SendResponse(2);
+    }
+    else if(controlType == 0x02)/*Disable RX and enable TX*/
+    {
+        /* Send positive response */
+        msg[0] = UDS_SID_COMMUNICATION_CONTROL + UDS_POSITIVE_RESPONSE_OFFSET;
+        msg[1] = controlType;
+        UDS_SendResponse(2);
+    }
+    else if(controlType == 0x03)/*Disable RX and disable TX*/
+    {
+        msg[0] = UDS_SID_COMMUNICATION_CONTROL + UDS_POSITIVE_RESPONSE_OFFSET;
+        msg[1] = controlType;
+        UDS_SendResponse(2);
+    }
+    else
+    {
+        UDS_SendNegativeResponse(msg, UDS_SID_COMMUNICATION_CONTROL, UDS_NRC_SUB_FUNCTION_NOT_SUPPORTED);
+    }
+}
+
 
 
 /*==============================================================================================*/
