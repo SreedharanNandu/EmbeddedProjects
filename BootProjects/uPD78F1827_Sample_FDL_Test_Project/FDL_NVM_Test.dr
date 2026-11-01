@@ -1,0 +1,8 @@
+MEMORY RST_VECT            : ( 000000H, 000004H )   ; Reset Vector 
+MEMORY FBL_VECT            : ( 000004H, 00007CH )   ; Interrupt Vector Table
+MEMORY HDR_AREA            : ( 000080H, 000058H )   ; CALLT, option byte, security ID, OCD (linker-made segments)
+MEMORY ROM                 : ( 0000D8H, 00FF27H )   ; Code of Boot
+MEMORY RAM                 : ( 0FE700H, 001800H )   ; RAM
+
+
+
